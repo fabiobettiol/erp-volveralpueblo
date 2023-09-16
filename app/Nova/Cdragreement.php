@@ -1,0 +1,125 @@
+<?php
+
+namespace App\Nova;
+
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\File;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Http\Requests\NovaRequest;
+
+class Cdragreement extends Resource
+{
+    public static function label() {
+        return 'Convenios';
+    }
+
+    public static function indexQuery(NovaRequest $request, $query) {
+        if ($request->user()->is_admin) {
+            return $query;
+        } else {
+            return $query->where('cdr_id', $request->user()->cdr_id);
+        }
+    }
+
+    public static function availableForNavigation(Request $request) {
+        return
+            ($request->user()->is_admin ||
+            ($request->user()->is_cdr_admin && $request->user()->cdr_id));
+    }
+
+    /**
+     * The model the resource corresponds to.
+     *
+     * @var string
+     */
+    public static $model = \App\Models\Cdragreement::class;
+
+    /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $title = 'name';
+
+    /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'name',
+        'organisation'
+    ];
+
+    /**
+     * Get the fields displayed by the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function fields(Request $request)
+    {
+        return [
+            ID::make(__('ID'), 'id')->sortable(),
+            BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr'),
+            Text::make('Nombre', 'name'),
+            Text::make('Organización', 'organisation'),
+            Date::make('Desde', 'from'),
+            Date::make('Hasta', 'to'),
+            Textarea::make('Detalles', 'details')
+                ->alwaysShow(),
+            File::make('Documento', 'file')
+                ->disk('cdr-convenios'),
+            Boolean::make('Activo', 'active')
+        ];
+    }
+
+    /**
+     * Get the cards available for the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function cards(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * Get the filters available for the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function filters(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * Get the lenses available for the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function lenses(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * Get the actions available for the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function actions(Request $request)
+    {
+        return [];
+    }
+}
