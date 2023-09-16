@@ -94,7 +94,12 @@ class Cdr extends Resource {
 		return [
 			// ID::make(__('ID'), 'id')->sortable(),
 
-			URL::make('URL para demandantes', 'url_registro'),
+			URL::make('URL para demandantes', function () {
+				return 'https://erp-recursos.volveralpueblo.org/personas/' . $this->hash;
+			})->hideFromIndex()
+				->hideWhenCreating()
+				->hideWhenUpdating()
+				->filterable(),
 			Text::make('Nombre', 'name'),
 			Boolean::make('Mapa', 'mapinfo')
 				->hideWhenCreating()
