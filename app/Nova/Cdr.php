@@ -13,6 +13,7 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\Url;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Cdr extends Resource {
@@ -92,6 +93,8 @@ class Cdr extends Resource {
 	public function fields(Request $request) {
 		return [
 			// ID::make(__('ID'), 'id')->sortable(),
+
+			URL::make('URL para demandantes', 'url_registro'),
 			Text::make('Nombre', 'name'),
 			Boolean::make('Mapa', 'mapinfo')
 				->hideWhenCreating()
@@ -128,11 +131,6 @@ class Cdr extends Resource {
 				->help('Equiqueta que se mostrará para el anterior enlace (Por ejemplo, "Formulario") - 20 caracteres')
 				->rules('max:20')
 				->hideFromIndex(),
-
-			Boolean::make('Intervenciones', 'family_contacts')
-				->canSee(function ($request) {
-					return $request->user()->is_admin;
-				}),
 
 			Boolean::make('Web Coceder', 'web_coceder')
 				->canSee(function ($request) {

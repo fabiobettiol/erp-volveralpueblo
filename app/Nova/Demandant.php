@@ -67,6 +67,12 @@ class Demandant extends Resource {
 	public function fields(Request $request) {
 		return [
 			ID::make(__('ID'), 'id')->sortable(),
+			BelongsTo::make('Cdr')
+				->hideFromIndex()
+				->hideFromDetail()
+				->hideWhenCreating()
+				->hideWhenUpdating()
+				->filterable(),
 			BelongsTo::make('Sexo', 'gender', 'App\Nova\Gender'),
 			Text::make('Nombre', 'name'),
 			Text::make('Apellido', 'surname'),

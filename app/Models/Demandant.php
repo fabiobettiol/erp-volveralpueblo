@@ -9,6 +9,10 @@ class Demandant extends Model {
 		'birthdate' => 'date',
 	];
 
+	public function cdr() {
+		return $this->belongsTo(Cdr::class);
+	}
+
 	public function gender() {
 		return $this->belongsTo(Gender::class);
 	}
