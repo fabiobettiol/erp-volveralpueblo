@@ -9792,7 +9792,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "erp/info-familias-intervenciones": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

@@ -119,15 +119,15 @@ class Family extends Resource {
 			Textarea::make('Detalles', 'positive_comments')
 				->alwaysShow(),
 
-			// - Removidas pues Rating no es conpatible con Nova v4
-			// - Adicionalmente, este campo no vá en familias sino en sus seguimientos
-			// -
+			// - Se remueven los campos Rating for falta de soporte para Nova v4
+			// - Reemplazar por selectores (BelongsTo)
+			// - Este campo no debería ir en familias sino en seguimientos (de familias)
+
 			// Rating::make('Adaptación', 'adaptation_rating')->min(0)->max(5)->increment(1)
 			// 	->withStyles([
 			// 		'star-size' => 20,
 			// 	])
-			// 	->help("1 = Muy complicado ... 5 = Muy bien")
-			// 	->hideFromIndex(),
+			// 	->help("1 = Muy complicado ... 5 = Muy bien"),
 
 			// Rating::make('Valorar experiencia', 'experience_rating')->min(0)->max(5)->increment(1)
 			// 	->withStyles([
