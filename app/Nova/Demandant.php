@@ -53,6 +53,9 @@ class Demandant extends Resource {
 		'phone',
 		'identification',
 		'subject',
+		'followups.subject',
+		'followups.text',
+		'followups.comments',
 	];
 
 	/**

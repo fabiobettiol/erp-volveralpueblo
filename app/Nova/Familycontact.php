@@ -55,6 +55,8 @@ class Familycontact extends Resource {
 	 */
 	public static $search = [
 		'subject',
+		'text',
+		'comments',
 	];
 
 	public static $globallySearchable = false;

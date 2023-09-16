@@ -2,13 +2,13 @@
 
 namespace App\Nova;
 
+use App\Nova\Filters\ByCdr;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
-use App\Nova\Filters\ByCdr;
 
 class Demandantfollowup extends Resource {
 
@@ -43,6 +43,8 @@ class Demandantfollowup extends Resource {
 	 */
 	public static $search = [
 		'subject',
+		'text',
+		'comments',
 	];
 
 	/**

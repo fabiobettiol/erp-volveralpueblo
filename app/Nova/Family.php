@@ -53,6 +53,9 @@ class Family extends Resource {
 		'reference',
 		'family_name',
 		'family_description',
+		'contacts.subject',
+		'contacts.text',
+		'contacts.comments',
 	];
 
 	/**
