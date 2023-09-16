@@ -22,6 +22,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 	 */
 	public function boot() {
 		parent::boot();
+
+		Nova::withBreadcrumbs();
+
 		Nova::style('admin', public_path('assets/css/admin.css'));
 	}
 

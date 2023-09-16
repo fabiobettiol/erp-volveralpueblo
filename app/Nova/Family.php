@@ -13,7 +13,6 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Nikaia\Rating\Rating;
 
 class Family extends Resource {
 
@@ -120,19 +119,21 @@ class Family extends Resource {
 			Textarea::make('Detalles', 'positive_comments')
 				->alwaysShow(),
 
-			Rating::make('Adaptación', 'adaptation_rating')->min(0)->max(5)->increment(1)
-				->withStyles([
-					'star-size' => 20,
-				])
-				->help("1 = Muy complicado ... 5 = Muy bien")
-				->hideFromIndex(),
+			// - Se remueven los campos Rating for falta de soporte para Nova v4
+			// - Reemplazar por selectores (BelongsTo)
+			// - Este campo no debería ir en familias sino en seguimientos (de familias)
 
-			Rating::make('Valorar experiencia', 'experience_rating')->min(0)->max(5)->increment(1)
-				->withStyles([
-					'star-size' => 20,
-				])
-				->help("1 = Muy complicado ... 5 = Muy bien")
-				->hideFromIndex(),
+			// Rating::make('Adaptación', 'adaptation_rating')->min(0)->max(5)->increment(1)
+			// 	->withStyles([
+			// 		'star-size' => 20,
+			// 	])
+			// 	->help("1 = Muy complicado ... 5 = Muy bien"),
+
+			// Rating::make('Valorar experiencia', 'experience_rating')->min(0)->max(5)->increment(1)
+			// 	->withStyles([
+			// 		'star-size' => 20,
+			// 	])
+			// 	->help("1 = Muy complicado ... 5 = Muy bien"),
 
 			HasMany::make('Documentos', 'documents', 'App\Nova\Familydoc'),
 
