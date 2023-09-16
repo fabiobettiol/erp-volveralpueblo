@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c555a5d8852ce7b565c3d4cab4ca8589",
+    "content-hash": "e95d278ab527d2f0baeb8ce0fa978403",
     "packages": [
         {
             "name": "brick/math",
@@ -3198,61 +3198,6 @@
             "time": "2023-07-30T15:42:21+00:00"
         },
         {
-            "name": "nikaia/nova-rating-field",
-            "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nikaia/nova-rating-field.git",
-                "reference": "6db4fdf4fc1177af401645149cda814f1fce27c3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nikaia/nova-rating-field/zipball/6db4fdf4fc1177af401645149cda814f1fce27c3",
-                "reference": "6db4fdf4fc1177af401645149cda814f1fce27c3",
-                "shasum": ""
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.11"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Nikaia\\Rating\\RatingServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Nikaia\\Rating\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nassif Bourguig",
-                    "email": "nbourguig@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Add start rating field to Laravel Nova",
-            "homepage": "https://github.com/nikaia/nova-rating-field",
-            "keywords": [
-                "Rating",
-                "field",
-                "laravel",
-                "nova"
-            ],
-            "support": {
-                "issues": "https://github.com/nikaia/nova-rating-field/issues",
-                "source": "https://github.com/nikaia/nova-rating-field/tree/1.0.2"
-            },
-            "time": "2019-12-24T07:19:41+00:00"
-        },
-        {
             "name": "nikic/php-parser",
             "version": "v4.17.1",
             "source": {
@@ -3537,51 +3482,6 @@
                 }
             ],
             "time": "2023-09-15T14:12:06+00:00"
-        },
-        {
-            "name": "orlyapps/nova-belongsto-depend",
-            "version": "3.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/orlyapps/nova-belongsto-depend.git",
-                "reference": "796e6ec1d7447e94995b55236fa5a6b46749547f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/orlyapps/nova-belongsto-depend/zipball/796e6ec1d7447e94995b55236fa5a6b46749547f",
-                "reference": "796e6ec1d7447e94995b55236fa5a6b46749547f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Orlyapps\\NovaBelongsToDepend\\FieldServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Orlyapps\\NovaBelongsToDepend\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A Laravel Nova field.",
-            "keywords": [
-                "laravel",
-                "nova"
-            ],
-            "support": {
-                "issues": "https://github.com/orlyapps/nova-belongsto-depend/issues",
-                "source": "https://github.com/orlyapps/nova-belongsto-depend/tree/3.0.4"
-            },
-            "time": "2022-06-21T16:03:04+00:00"
         },
         {
             "name": "phpoption/phpoption",
