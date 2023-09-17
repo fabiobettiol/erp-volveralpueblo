@@ -2,10 +2,15 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Text;
 
 class Documenttype extends Resource {
+
+    public static function label() {
+        return 'Identificación - Tipos';
+    }
 
       public static function availableForNavigation(Request $request) {
               return $request->user()->is_admin;
@@ -30,9 +35,7 @@ class Documenttype extends Resource {
 	 *
 	 * @var array
 	 */
-	public static $search = [
-
-	];
+	public static $search = [];
 
 	/**
 	 * Get the fields displayed by the resource.
@@ -43,6 +46,7 @@ class Documenttype extends Resource {
 	public function fields(Request $request) {
 		return [
 			ID::make(__('ID'), 'id')->sortable(),
+			Text::make('Nombre', 'name')
 		];
 	}
 
