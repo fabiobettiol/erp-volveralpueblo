@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Nova\EventCall;
-use App\Nova\EventMeeting;
 use App\Nova\EventOther;
-use Wdelfuego\NovaCalendar\DataProvider\AbstractCalendarDataProvider;
+use App\Nova\EventMeeting;
 use Wdelfuego\NovaCalendar\Event;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Nova\Resource as NovaResource;
+use Wdelfuego\NovaCalendar\DataProvider\AbstractCalendarDataProvider;
 
 class CalendarDataProvider extends AbstractCalendarDataProvider {
 	//
@@ -109,6 +111,13 @@ class CalendarDataProvider extends AbstractCalendarDataProvider {
 			],						
 		];
 	}
+
+	// - Exclude resources from Calendar
+	protected function excludeResource(NovaResource $resource) : bool
+	{
+		// - Exclue events not related to the user's CDR
+		return ( Auth::user()->cdr_id != $resource->cdr_id );
+	}	
 }
 
 

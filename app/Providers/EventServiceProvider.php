@@ -2,30 +2,37 @@
 
 namespace App\Providers;
 
-use App\Models\Business;
-use App\Models\Demandantfollowup;
-use App\Models\Family;
-use App\Models\Familyfollowup;
-use App\Models\Familycontact;
-use App\Models\Familymember;
-use App\Models\House;
 use App\Models\Job;
 use App\Models\Land;
 use App\Models\User;
-use App\Observers\BusinessObserver;
-use App\Observers\DemandantfollowupObserver;
-use App\Observers\FamilycontactObserver;
-use App\Observers\FamilyfollowupObserver;
-use App\Observers\FamilymemberObserver;
-use App\Observers\FamilyObserver;
-use App\Observers\HouseObserver;
+use App\Models\House;
+use App\Models\Family;
+use App\Models\Business;
+use App\Models\EventCall;
+use App\Models\EventOther;
+use App\Models\EventMeeting;
+use App\Models\Familymember;
+use App\Models\Familycontact;
+use App\Models\Familyfollowup;
 use App\Observers\JobObserver;
 use App\Observers\LandObserver;
 use App\Observers\UserObserver;
+use App\Observers\HouseObserver;
+use App\Models\Demandantfollowup;
+use App\Observers\FamilyObserver;
+use App\Observers\BusinessObserver;
+use App\Observers\EventCallObserver;
+use App\Observers\EventOtherObserver;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
+use App\Observers\EventMeeintgObserver;
+use App\Observers\EventMeetingObserver;
+use App\Observers\FamilymemberObserver;
+use App\Observers\FamilycontactObserver;
+use App\Observers\FamilyfollowupObserver;
+use App\Observers\DemandantfollowupObserver;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider {
 	/**
@@ -55,5 +62,8 @@ class EventServiceProvider extends ServiceProvider {
 		Familyfollowup::observe(FamilyfollowupObserver::class);
 		Familycontact::observe(FamilycontactObserver::class);
 		Demandantfollowup::observe(DemandantfollowupObserver::class);
+		EventCall::observe(EventCallObserver::class);
+		EventMeeting::observe(EventMeetingObserver::class);
+		EventOther::observe(EventOtherObserver::class);
 	}
 }
