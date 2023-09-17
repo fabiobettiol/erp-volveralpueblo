@@ -13,6 +13,7 @@ use App\Nova\Metrics\LandPerMonth;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
+use Wdelfuego\NovaCalendar\NovaCalendar;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider {
 	/**
@@ -25,8 +26,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 		parent::boot();
 
 		Nova::withBreadcrumbs();
-
-		Nova::style('admin', public_path('assets/css/admin.css'));
 	}
 
 	/**
@@ -97,7 +96,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 	 */
 	public function tools() {
 		return [
-			// ...
+			new NovaCalendar('mi-calendario'),
 		];
 	}
 
