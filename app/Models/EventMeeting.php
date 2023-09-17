@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class EventMeeting extends Model {
 	use SoftDeletes;
 
-	protected $casts = [
-		'start' => 'datetime',
-		'end' => 'datetime',
-	];
+	// protected $casts = [
+	// 	'start' => 'datetime',
+	// 	'end' => 'datetime',
+	// ];
 }

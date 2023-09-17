@@ -60,10 +60,8 @@ class EventOther extends Resource {
 				->rules('required'),
 			Textarea::make('Descripción', 'description')
 				->alwaysShow(),
-			DateTime::make('Inicia', 'start')
-				->rules(['required']),
+			DateTime::make('Inicia', 'start'),
 			DateTime::make('Termina', 'end')
-				->help('Si no indica una fecha y hora de fin, el evento de considerará de todo el día'),
 		];
 	}
 
