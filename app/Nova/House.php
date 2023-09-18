@@ -2,32 +2,34 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\ByAvailability;
-use App\Nova\Filters\ByBusiness;
-use App\Nova\Filters\ByCdr;
-use App\Nova\Filters\ByCommunity;
-use App\Nova\Filters\ByCuadras;
-use App\Nova\Filters\ByForm;
-use App\Nova\Filters\ByLand;
-use App\Nova\Filters\ByMunicipality;
-use App\Nova\Filters\ByPatio;
-use App\Nova\Filters\ByPrice;
-use App\Nova\Filters\ByProvince;
-use App\Nova\Filters\BySource;
-use App\Nova\Filters\ByStatus;
-use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
-use Eminiarts\Tabs\Traits\HasTabs;
+use App\Nova\Filters\ByCdr;
+use App\Nova\Filters\ByForm;
+use App\Nova\Filters\ByLand;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
+use App\Nova\Filters\ByPatio;
+use App\Nova\Filters\ByPrice;
 use Laravel\Nova\Fields\Date;
-use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use App\Nova\Filters\BySource;
+use App\Nova\Filters\ByStatus;
+use App\Nova\Filters\ByCuadras;
+use Laravel\Nova\Fields\Number;
+use App\Nova\Filters\ByBusiness;
+use App\Nova\Filters\ByProvince;
+use Laravel\Nova\Fields\Boolean;
+use App\Nova\Filters\ByCommunity;
+use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\Textarea;
+use Eminiarts\Tabs\Traits\HasTabs;
+use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\ByAvailability;
+use App\Nova\Filters\ByMunicipality;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class House extends Resource {
 
@@ -104,44 +106,50 @@ class House extends Resource {
 					return $request->user()->is_admin;
 				}),
 
-			// NovaBelongsToDepend::make('Comunidad', 'Community', 'App\Nova\Community')
-			// 	->options(Community::all())
-			// 	->rules('required')
-			// 	->hideFromIndex(),
+			// - Community: Show the full name when not on index view
+			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
+				->hideFromIndex(),
+			
+			// - Community: Show acronym on index view
+			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
+				->filterable()
+				->display(function ($community) {
+					return $community->acronym;
+				})->onlyOnIndex(),		
 
-			// NovaBelongsToDepend::make('CCAA', 'Community', 'App\Nova\Community')
-			// 	->options(Community::all())
-			// 	->rules('required')
-			// 	->display(function ($community) {
-			// 		return $community->acronym;
-			// 	})->onlyOnIndex(),
+			// - Province: Show full name when not on index view
+			BelongsTo::make('Province', 'province', 'App\Nova\Province')
+				->dependsOn(['community'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
+					$field->relatableQueryUsing(function (NovaRequest $request, Builder $query) use ($formData) {
+						$query->when($formData->community, function ($query) use ($formData) {
+							$query->where('community_id', $formData->community);
+						});
+					});
+				})->hideFromIndex(),
 
-			// NovaBelongsToDepend::make('Provincia', 'Province', 'App\Nova\Province')
-			// 	->optionsResolve(function ($community) {
-			// 		return $community->provinces;
-			// 	})
-			// 	->dependsOn('Community')
-			// 	->required()
-			// 	->hideFromIndex(),
+			// - Province: Show abbreviated name on index view
+			BelongsTo::make('Province', 'province', 'App\Nova\Province')
+				->filterable()
+				->display(function ($province) {
+					return ( strlen($province->name) <= 10 ) ? $province->name : substr($province->name,0,10).'...';
+				})->onlyOnIndex(),
 
-			// NovaBelongsToDepend::make('Prov', 'Province', 'App\Nova\Province')
-			// 	->optionsResolve(function ($community) {
-			// 		return $community->provinces;
-			// 	})
-			// 	->dependsOn('Community')
-			// 	->required()
-			// 	->display(function ($community) {
-			// 		return $community->acronym;
-			// 	})->onlyOnIndex(),
+			// - Municipality: Show full name when not on index view
+			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
+				->dependsOn(['province'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
+					$field->relatableQueryUsing(function (NovaRequest $request, Builder $query) use ($formData) {
+						$query->when($formData->province, function ($query) use ($formData) {
+							$query->where('province_id', $formData->province);
+						});
+					});
+				})->hideFromIndex(),
 
-			// NovaBelongsToDepend::make('Municipio', 'Municipality', 'App\Nova\Municipality')
-			// 	->optionsResolve(function ($province) {
-			// 		return Municipality::whereHas('province', function ($q) use ($province) {
-			// 			$q->where('province_id', $province->id);
-			// 		})->get();
-			// 	})
-			// 	->dependsOn('Province')
-			// 	->rules('required'),
+			// - Municipality: Show abbreviated name when not on index view
+			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
+				->filterable()
+				->display(function ($municipality) {
+					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
+				})->onlyOnIndex(),
 
 			Text::make('Código Postal', 'postcode')
 				->rules('max:5')

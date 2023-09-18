@@ -24,6 +24,8 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Fields\FormData;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class Land extends Resource {
 
@@ -96,54 +98,51 @@ class Land extends Resource {
 					return $request->user()->is_admin;
 				}),
 
-			// NovaBelongsToDepend::make('Comunidad', 'Community', 'App\Nova\Community')
-			// 	->options(Community::all())
-			// 	->rules('required')
-			// 	->hideFromIndex(),
+			// - Community: Show the full name when not on index view
+			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
+				->hideFromIndex(),
+			
+			// - Community: Show acronym on index view
+			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
+				->filterable()
+				->display(function ($community) {
+					return $community->acronym;
+				})->onlyOnIndex(),		
 
-			// NovaBelongsToDepend::make('CCAA', 'Community', 'App\Nova\Community')
-			// 	->options(Community::all())
-			// 	->rules('required')
-			// 	->display(function ($community) {
-			// 		return $community->acronym;
-			// 	})->onlyOnIndex(),
+			// - Province: Show full name when not on index view
+			BelongsTo::make('Province', 'province', 'App\Nova\Province')
+				->dependsOn(['community'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
+					$field->relatableQueryUsing(function (NovaRequest $request, Builder $query) use ($formData) {
+						$query->when($formData->community, function ($query) use ($formData) {
+							$query->where('community_id', $formData->community);
+						});
+					});
+				})->hideFromIndex(),
 
-			// NovaBelongsToDepend::make('Provincia', 'Province', 'App\Nova\Province')
-			// 	->optionsResolve(function ($community) {
-			// 		return $community->provinces;
-			// 	})
-			// 	->dependsOn('Community')
-			// 	->required()
-			// 	->hideFromIndex(),
+			// - Province: Show abbreviated name on index view
+			BelongsTo::make('Province', 'province', 'App\Nova\Province')
+				->filterable()
+				->display(function ($province) {
+					return ( strlen($province->name) <= 10 ) ? $province->name : substr($province->name,0,10).'...';
+				})->onlyOnIndex(),
 
-			// NovaBelongsToDepend::make('Prov', 'Province', 'App\Nova\Province')
-			// 	->optionsResolve(function ($community) {
-			// 		return $community->provinces;
-			// 	})
-			// 	->dependsOn('Community')
-			// 	->required()
-			// 	->display(function ($community) {
-			// 		return $community->acronym;
-			// 	})->onlyOnIndex(),
+			// - Municipality: Show full name when not on index view
+			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
+				->dependsOn(['province'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
+					$field->relatableQueryUsing(function (NovaRequest $request, Builder $query) use ($formData) {
+						$query->when($formData->province, function ($query) use ($formData) {
+							$query->where('province_id', $formData->province);
+						});
+					});
+				})->hideFromIndex(),
 
-			// NovaBelongsToDepend::make('Municipio', 'Municipality', 'App\Nova\Municipality')
-			// 	->optionsResolve(function ($province) {
-			// 		return Municipality::whereHas('province', function ($q) use ($province) {
-			// 			$q->where('province_id', $province->id);
-			// 		})->get();
-			// 	})
-			// 	->dependsOn('Province')
-			// 	->rules('required'),
+			// - Municipality: Show abbreviated name when not on index view
+			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
+				->filterable()
+				->display(function ($municipality) {
+					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
+				})->onlyOnIndex(),
 
-			/*
-				            BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
-				                ->sortable(),
-				            BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
-				                ->sortable()
-				                ->hideFromIndex(),
-				            BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
-				                ->hideFromIndex(),
-			*/
 			Text::make('Localidad', 'town'),
 			Text::make('Código Postal', 'postcode')
 				->rules('max:5')
