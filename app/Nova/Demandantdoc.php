@@ -12,10 +12,9 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Demandantdoc extends Resource
 {
-    public static function label() {
-        return 'Documentos';
-    }
-
+	public static function label() {
+		return 'Documentos';
+	}
     /**
      * The model the resource corresponds to.
      *

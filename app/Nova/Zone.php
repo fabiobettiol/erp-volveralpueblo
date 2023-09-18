@@ -17,6 +17,12 @@ class Zone extends Resource {
 		return 'Zona';
 	}
 
+	public static function availableForNavigation(Request $request)
+    {
+        return $request->user()->is_admin;
+    }
+
+	
 	/**
 	 * The model the resource corresponds to.
 	 *

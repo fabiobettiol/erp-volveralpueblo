@@ -18,13 +18,13 @@ class Cdragreement extends Resource
         return 'Convenios';
     }
 
-    public static function indexQuery(NovaRequest $request, $query) {
-        if ($request->user()->is_admin) {
-            return $query;
-        } else {
-            return $query->where('cdr_id', $request->user()->cdr_id);
-        }
-    }
+	public static function indexQuery(NovaRequest $request, $query) {
+		if ($request->user()->is_admin) {
+			return $query;
+		} else {
+			return $query->where('cdr_id', $request->user()->cdr_id);
+		}
+	}
 
     public static function availableForNavigation(Request $request) {
         return

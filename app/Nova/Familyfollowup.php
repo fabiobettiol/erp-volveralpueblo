@@ -22,7 +22,7 @@ class Familyfollowup extends Resource {
 	public static $group = 'Asentad@s';
 
 	public static function label() {
-		return 'Seguimiento';
+		return 'Seguimientos';
 	}
 
 	public static function singularLabel() {

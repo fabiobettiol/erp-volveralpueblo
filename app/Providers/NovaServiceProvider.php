@@ -1,19 +1,63 @@
 <?php
 
 namespace App\Providers;
-use App\Nova\Metrics\BusinessCount;
-use App\Nova\Metrics\BusinessPerMonth;
-use App\Nova\Metrics\CdrCount;
-use App\Nova\Metrics\HouseCount;
-use App\Nova\Metrics\HousePerMonth;
-use App\Nova\Metrics\JobCount;
-use App\Nova\Metrics\JobPerMonth;
-use App\Nova\Metrics\LandCount;
-use App\Nova\Metrics\LandPerMonth;
-use Illuminate\Support\Facades\Gate;
+use App\Nova\Cdr;
+use App\Nova\Job;
+use App\Nova\Form;
+use App\Nova\Land;
+use App\Nova\User;
+use App\Nova\Zone;
+use Carbon\Carbon;
+use App\Nova\House;
+use App\Nova\Stove;
+use App\Nova\Water;
+use App\Nova\Cdrnew;
+use App\Nova\Family;
+use App\Nova\Gender;
+use App\Nova\Region;
+use App\Nova\Sector;
+use App\Nova\Status;
+use App\Nova\Cdrtype;
+use App\Nova\Country;
+use App\Nova\Heating;
+use App\Nova\Jobform;
+use App\Nova\Landuse;
+use App\Nova\Business;
+use App\Nova\Landtype;
+use App\Nova\Province;
 use Laravel\Nova\Nova;
-use Laravel\Nova\NovaApplicationServiceProvider;
+use App\Nova\Arearange;
+use App\Nova\Community;
+use App\Nova\Demandant;
+use App\Nova\Familydoc;
+use App\Nova\Ownership;
+use App\Nova\Pricerange;
+use App\Nova\Cdragreement;
+use App\Nova\Demandantdoc;
+use App\Nova\Familymember;
+use App\Nova\Jobownership;
+use App\Nova\Municipality;
+use App\Nova\Familycontact;
+use App\Nova\Familyfollowup;
+use App\Nova\Settlementtype;
+use App\Nova\Metrics\CdrCount;
+use App\Nova\Metrics\JobCount;
+use App\Nova\Settlementstatus;
+use App\Nova\Demandantfollowup;
+use App\Nova\Metrics\LandCount;
+use Laravel\Nova\Menu\MenuItem;
+use App\Nova\Metrics\HouseCount;
+use Laravel\Nova\Menu\MenuGroup;
+use App\Nova\Metrics\JobPerMonth;
+use App\Nova\Metrics\LandPerMonth;
+use Laravel\Nova\Menu\MenuSection;
+use App\Nova\Metrics\BusinessCount;
+use App\Nova\Metrics\HousePerMonth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Blade;
+use App\Nova\Metrics\BusinessPerMonth;
 use Wdelfuego\NovaCalendar\NovaCalendar;
+use Laravel\Nova\NovaApplicationServiceProvider;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider {
 	/**
@@ -26,6 +70,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 		parent::boot();
 
 		Nova::withBreadcrumbs();
+
+		Self::menu();
+
+		Self::footer();
 	}
 
 	/**
@@ -108,4 +156,91 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 	public function register() {
 		//
 	}
+
+	protected function footer () {
+	    Nova::footer(function () {
+
+			$year = Carbon::now()->format('Y');
+			return '<center><strong> COCEDER &copy  ' . $year . '</strong></center>';			
+		});			
+	}
+
+	protected function menu () {
+
+		Nova::mainMenu(fn($request) => [
+
+			MenuSection::make('Demandantes', [
+				MenuItem::resource(Demandant::class),
+				MenuItem::resource(Demandantfollowup::class),
+				MenuItem::resource(Demandantdoc::class),
+			])->icon('user')
+				->collapsible(),
+
+			MenuSection::make('Asentados', [
+				MenuItem::resource(Family::class),
+				MenuItem::resource(Familymember::class),
+				MenuItem::resource(Familycontact::class),
+				MenuItem::resource(Familyfollowup::class),
+				MenuItem::resource(Familydoc::class),
+			])->icon('user-group')
+				->collapsible(),
+
+			MenuSection::make('Recursos', [
+				MenuItem::resource(House::class),
+				MenuItem::resource(Business::class),
+				MenuItem::resource(Land::class),
+				MenuItem::resource(Job::class),
+			])->icon('home')
+				->collapsible(),
+
+			MenuSection::make('CDR', [
+				MenuItem::resource(Cdr::class)->name('Mi CDR'),
+				MenuItem::resource(User::class),
+				MenuItem::resource(Cdrnew::class),
+				MenuItem::resource(Cdragreement::class),
+			])->icon('cog')
+				->collapsible(),
+
+			MenuSection::make('Admin', [
+				MenuItem::resource(Gender::class),
+				MenuGroup::make('Cdrs', [
+					MenuItem::resource(Cdr::class),
+					MenuItem::resource(Cdrtype::class),
+				]),
+				MenuGroup::make('Regiones', [
+					MenuItem::resource(Country::class),
+					MenuItem::resource(Community::class),
+					MenuItem::resource(Province::class),
+					MenuItem::resource(Municipality::class),
+					MenuItem::resource(Region::class),
+					MenuItem::resource(Zone::class),
+				]),
+				MenuGroup::make('Asentamiento', [
+					MenuItem::resource(Settlementtype::class)->name('Tipos'),
+					MenuItem::resource(Settlementstatus::class)->name('Estado'),
+				]),
+				MenuGroup::make('Recursos', [
+					MenuItem::resource(Water::class),
+					MenuItem::resource(Heating::class),
+					MenuItem::resource(Stove::class),
+					MenuItem::resource(Status::class),
+					MenuItem::resource(Pricerange::class),
+					MenuItem::resource(Arearange::class),
+					MenuItem::resource(Form::class),
+					MenuItem::resource(Jobform::class),
+					MenuItem::resource(Sector::class),
+					MenuItem::resource(Landtype::class),
+					MenuItem::resource(Landuse::class),
+					MenuItem::resource(Ownership::class),
+					MenuItem::resource(Jobownership::class),
+				])				
+
+			])->icon('adjustments')
+				->collapsible(),
+	
+
+		]);
+
+	}
+
 }

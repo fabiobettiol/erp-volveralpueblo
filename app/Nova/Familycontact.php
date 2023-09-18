@@ -16,8 +16,12 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 class Familycontact extends Resource {
 
 	public static function label() {
-		return 'Intervención';
+		return 'Intervencionne';
 	}
+
+	public static function singularLabel() {
+		return 'Intervenciones';
+	}	
 
 	public static $group = 'Asentad@s';
 
