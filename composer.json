@@ -16,6 +16,7 @@
     "require": {
         "php": "^8.1",
         "ebess/advanced-nova-media-library": "^4.1",
+        "elibyy/tcpdf-laravel": "^10.0",
         "eminiarts/nova-tabs": "^2.2",
         "flagstudio/nova-actions-left": "^0.3.0",
         "guzzlehttp/guzzle": "^7.2",

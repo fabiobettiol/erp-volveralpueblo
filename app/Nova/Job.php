@@ -2,24 +2,25 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\ByAvailability;
-use App\Nova\Filters\ByCdr;
-use App\Nova\Filters\ByCommunity;
-use App\Nova\Filters\ByMunicipality;
-use App\Nova\Filters\ByProvince;
-use App\Nova\Filters\BySector;
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
-use Eminiarts\Tabs\Traits\HasTabs;
+use App\Nova\Filters\ByCdr;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Filters\BySector;
+use App\Nova\Actions\JobExport;
+use App\Nova\Filters\ByProvince;
+use Laravel\Nova\Fields\Boolean;
+use App\Nova\Filters\ByCommunity;
 use Laravel\Nova\Fields\FormData;
+use Laravel\Nova\Fields\Textarea;
+use Eminiarts\Tabs\Traits\HasTabs;
+use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\ByAvailability;
+use App\Nova\Filters\ByMunicipality;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class Job extends Resource {
@@ -261,6 +262,8 @@ class Job extends Resource {
 			// (new DownloadExcel)
 			// 	->withHeadings()
 			// 	->allFields(),
+
+			(new JobExport),
 		];
 	}
 }

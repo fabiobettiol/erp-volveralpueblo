@@ -2,29 +2,30 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\ByArea;
-use App\Nova\Filters\ByAvailability;
-use App\Nova\Filters\ByCdr;
-use App\Nova\Filters\ByCommunity;
-use App\Nova\Filters\ByForm;
-use App\Nova\Filters\ByMunicipality;
-use App\Nova\Filters\ByOwnership;
-use App\Nova\Filters\ByPrice;
-use App\Nova\Filters\ByProvince;
-use App\Nova\Filters\ByType;
-use App\Nova\Filters\ByUse;
-use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
+use App\Nova\Filters\ByCdr;
+use App\Nova\Filters\ByUse;
+use App\Nova\Filters\ByArea;
+use App\Nova\Filters\ByForm;
+use App\Nova\Filters\ByType;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
+use App\Nova\Filters\ByPrice;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Actions\LandExport;
+use App\Nova\Filters\ByProvince;
+use Laravel\Nova\Fields\Boolean;
+use App\Nova\Filters\ByCommunity;
+use App\Nova\Filters\ByOwnership;
 use Laravel\Nova\Fields\FormData;
+use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\ByAvailability;
+use App\Nova\Filters\ByMunicipality;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class Land extends Resource {
@@ -289,6 +290,8 @@ class Land extends Resource {
 			// (new DownloadExcel)
 			// 	->withHeadings()
 			// 	->allFields(),
+
+			(new LandExport),
 		];
 	}
 }

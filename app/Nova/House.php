@@ -19,6 +19,7 @@ use Laravel\Nova\Fields\Number;
 use App\Nova\Filters\ByBusiness;
 use App\Nova\Filters\ByProvince;
 use Laravel\Nova\Fields\Boolean;
+use App\Nova\Actions\HouseExport;
 use App\Nova\Filters\ByCommunity;
 use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\Textarea;
@@ -365,6 +366,8 @@ class House extends Resource {
 			// (new DownloadExcel)
 			// 	->withHeadings()
 			// 	->allFields(),
+
+			(new HouseExport),
 		];
 	}
 }
