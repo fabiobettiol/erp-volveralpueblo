@@ -15,13 +15,8 @@ class JobExport extends Action
 {
     use InteractsWithQueue, Queueable;
 
-    /**
-     * Perform the action on the given models.
-     *
-     * @param  \Laravel\Nova\Fields\ActionFields  $fields
-     * @param  \Illuminate\Support\Collection  $models
-     * @return mixed
-     */
+    public $name = 'Exportar PDF Empleos';
+
     public function handle(ActionFields $fields, Collection $models)
     {
 		$filename = 'Empleos.pdf';
