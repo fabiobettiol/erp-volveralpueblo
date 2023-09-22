@@ -56,6 +56,7 @@ class Zone extends Resource {
 		return [
 			ID::make(__('ID'), 'id')->sortable(),
 			Text::make('Zona', 'name'),
+			HasMany::make('CRDs'),
 		];
 	}
 
