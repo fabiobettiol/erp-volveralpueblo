@@ -174,6 +174,12 @@ class Cdr extends Resource {
 					return $request->user()->is_admin;
 				}),
 
+			Textarea::make('Webhook Teams', 'teams_webhook')
+				->hideFromIndex()
+				->canSee(function ($request) {
+					return $request->user()->is_admin;
+				}),
+
 			HasMany::make('Colaboradores', 'users', 'App\Nova\User'),
 			HasMany::make('Comarcas', 'comarcas', 'App\Nova\Region'),
 
