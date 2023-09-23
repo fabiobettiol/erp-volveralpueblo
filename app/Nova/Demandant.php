@@ -90,6 +90,7 @@ class Demandant extends Resource {
 			Number::make('Niños', 'children')->hideFromIndex(),
 
 			Boolean::make('Potencial poblador', 'potential')
+				->filterable()
 				->help('Indique si este solicitante podría ser un potencial poblador'),
 			Textarea::make('Detalles del potencial poblador', 'potential_details')
 				->help('Explique brevemente por qué lo considera un potencial poblador')
