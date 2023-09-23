@@ -2,12 +2,13 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\File;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Demandantdoc extends Resource
@@ -53,7 +54,11 @@ class Demandantdoc extends Resource
             Textarea::make('Detalles', 'details')
                 ->alwaysShow(),
             File::make('Documento', 'file')
-                ->disk('solicitantes-documentos'),
+            ->disk('solicitantes-documentos')
+            ->download(function ($request, $model, $disk, $value) {
+                $file = $model->demandant->name . ' ' . $model->demandant->surname . '-' . $model->name;
+                return Storage::disk($disk)->download($value, $file);
+            }),
         ];
     }
 

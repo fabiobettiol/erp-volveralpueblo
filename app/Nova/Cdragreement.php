@@ -2,14 +2,15 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Fields\File;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\BelongsTo;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\File;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Cdragreement extends Resource
@@ -74,7 +75,11 @@ class Cdragreement extends Resource
             Textarea::make('Detalles', 'details')
                 ->alwaysShow(),
             File::make('Documento', 'file')
-                ->disk('cdr-convenios'),
+            ->disk('cdr-convenios')
+            ->download(function ($request, $model, $disk, $value) {
+                $file = $model->name . '-' . $model->organisation;
+                return Storage::disk($disk)->download($value, $file);
+            }),
             Boolean::make('Activo', 'active')
         ];
     }

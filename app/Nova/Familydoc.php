@@ -2,12 +2,13 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class Familydoc extends Resource {
 
@@ -53,7 +54,11 @@ class Familydoc extends Resource {
 			Textarea::make('Detalles', 'details')
 				->alwaysShow(),
 			File::make('Documento', 'file')
-				->disk('familias-documentos'),
+			->disk('familias-documentos')
+			->download(function ($request, $model, $disk, $value) {
+				$file = $model->family->family_name . '-' . $model->name;
+				return Storage::disk($disk)->download($value, $file);
+			}),
 		];
 	}
 
