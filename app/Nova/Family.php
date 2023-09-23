@@ -3,15 +3,16 @@
 namespace App\Nova;
 
 use App\Nova\Filters\ByCdr;
-use App\Nova\Filters\ByUpdatedStatus;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Date;
-use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\BelongsTo;
+use Illuminate\Support\Facades\Auth;
+use App\Nova\Filters\ByUpdatedStatus;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Family extends Resource {
@@ -122,22 +123,21 @@ class Family extends Resource {
 			Textarea::make('Detalles', 'positive_comments')
 				->alwaysShow(),
 
-			// - Se remueven los campos Rating for falta de soporte para Nova v4
-			// - Reemplazar por selectores (BelongsTo)
-			// - Este campo no debería ir en familias sino en seguimientos (de familias)
+			Select::make('Adaptación', 'adaptation_rating')->options([
+				'1' => 'Muy complicado',
+				'2' => 'Complicado',
+				'3' => 'Regular',
+				'4' => 'Bien',
+				'5' => 'Muy bien',
+			])->hideFromIndex(),
 
-			// Rating::make('Adaptación', 'adaptation_rating')->min(0)->max(5)->increment(1)
-			// 	->withStyles([
-			// 		'star-size' => 20,
-			// 	])
-			// 	->help("1 = Muy complicado ... 5 = Muy bien"),
-
-			// Rating::make('Valorar experiencia', 'experience_rating')->min(0)->max(5)->increment(1)
-			// 	->withStyles([
-			// 		'star-size' => 20,
-			// 	])
-			// 	->help("1 = Muy complicado ... 5 = Muy bien")
-			// 	->hideFromIndex(),
+			Select::make('Valorar experiencia', 'experience_rating')->options([
+				'1' => 'Muy complicado',
+				'2' => 'Complicado',
+				'3' => 'Regular',
+				'4' => 'Bien',
+				'5' => 'Muy bien',
+			])->hideFromIndex(),
 
 			HasMany::make('Documentos', 'documents', 'App\Nova\Familydoc'),
 
