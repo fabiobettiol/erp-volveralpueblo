@@ -2,6 +2,8 @@
 
 namespace App\Nova;
 
+use App\Nova\Filters\ByCdr;
+use App\Nova\Filters\ByPotential;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
@@ -12,6 +14,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Demandant extends Resource {
 
@@ -21,6 +24,10 @@ class Demandant extends Resource {
 
 	public static function label() {
 		return 'Solicitantes';
+	}
+
+	public static function availableForNavigation(Request $request) {
+		return !$request->user()->is_collaborator;
 	}
 
 	/**
@@ -53,9 +60,6 @@ class Demandant extends Resource {
 		'phone',
 		'identification',
 		'subject',
-		'followups.subject',
-		'followups.text',
-		'followups.comments',
 	];
 
 	/**
@@ -67,12 +71,6 @@ class Demandant extends Resource {
 	public function fields(Request $request) {
 		return [
 			ID::make(__('ID'), 'id')->sortable(),
-			BelongsTo::make('Cdr')
-				->hideFromIndex()
-				->hideFromDetail()
-				->hideWhenCreating()
-				->hideWhenUpdating()
-				->filterable(),
 			BelongsTo::make('Sexo', 'gender', 'App\Nova\Gender'),
 			Text::make('Nombre', 'name'),
 			Text::make('Apellido', 'surname'),
@@ -90,7 +88,6 @@ class Demandant extends Resource {
 			Number::make('Niños', 'children')->hideFromIndex(),
 
 			Boolean::make('Potencial poblador', 'potential')
-				->filterable()
 				->help('Indique si este solicitante podría ser un potencial poblador'),
 			Textarea::make('Detalles del potencial poblador', 'potential_details')
 				->help('Explique brevemente por qué lo considera un potencial poblador')
@@ -139,7 +136,10 @@ class Demandant extends Resource {
 	 * @return array
 	 */
 	public function filters(Request $request) {
-		return [];
+		return [
+			new ByCdr,
+			new ByPotential,
+		];
 	}
 
 	/**
@@ -159,6 +159,10 @@ class Demandant extends Resource {
 	 * @return array
 	 */
 	public function actions(Request $request) {
-		return [];
+		return [
+			(new DownloadExcel)
+				->withHeadings()
+				->allFields(),
+		];
 	}
 }

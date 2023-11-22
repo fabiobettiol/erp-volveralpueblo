@@ -45,4 +45,11 @@ class User extends Authenticatable {
 	public function cdr() {
 		return $this->belongsTo(Cdr::class);
 	}
+
+    public function registerMediaConversions(Media $media = null): void 
+    {
+        $this->addMediaConversion('miniatura')
+            ->width(100)
+            ->height(100);
+    }	
 }

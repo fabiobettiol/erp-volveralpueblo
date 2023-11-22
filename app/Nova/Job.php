@@ -4,38 +4,67 @@ namespace App\Nova;
 
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
+use App\Models\Community;
 use App\Nova\Filters\ByCdr;
+use Laravel\Nova\Fields\ID;
+use App\Models\Municipality;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use App\Nova\Filters\BySector;
+use Eminiarts\Tabs\TabsOnEdit;
 use App\Nova\Actions\JobExport;
 use App\Nova\Filters\ByProvince;
 use Laravel\Nova\Fields\Boolean;
 use App\Nova\Filters\ByCommunity;
 use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\Textarea;
-use Eminiarts\Tabs\Traits\HasTabs;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\ByAvailability;
 use App\Nova\Filters\ByMunicipality;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Orlyapps\NovaBelongsToDepend\NovaBelongsToDepend;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Job extends Resource {
-
-	use HasTabs;
+	// use TabsOnEdit;
 
 	public static function label() {
 		return 'Trabajos';
 	}
 
 	public static function indexQuery(NovaRequest $request, $query) {
+
 		if ($request->user()->is_admin) {
 			return $query;
 		} else {
-			return $query->where('cdr_id', $request->user()->cdr_id);
+			$query->where('cdr_id', $request->user()->cdr_id);
+
+			if ($request->user()->is_collaborator) {
+				$query->orWhere('province_id', $request->user()->cdr->province->id);
+			}
+
+			return $query;
+		}
+	}
+
+	public function authorizedToUpdate(Request $request): bool {
+
+		if (!$request->user()->is_admin && $this->cdr_id != $request->user()->cdr_id) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public function authorizedToDelete(Request $request): bool {
+
+		if (!$request->user()->is_admin && $this->cdr_id != $request->user()->cdr_id) {
+			return false;
+		} else {
+			return true;
 		}
 	}
 
@@ -96,10 +125,6 @@ class Job extends Resource {
 					return $request->user()->is_admin;
 				}),
 
-			// - Community: Show the full name when not on index view
-			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
-				->hideFromIndex(),
-			
 			// - Community: Show acronym on index view
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
 				->filterable()
@@ -140,6 +165,7 @@ class Job extends Resource {
 				->display(function ($municipality) {
 					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
 				})->onlyOnIndex(),
+				
 			Text::make('Localidad', 'town')
 				->hideFromIndex(),
 			Text::make('Código Postal', 'postcode')
@@ -168,16 +194,31 @@ class Job extends Resource {
 
 				Tab::make('Ofertante', [
 					Text::make('Nombre', 'bidder_name')
-						->hideFromIndex(),
+						->hideFromIndex()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 					Text::make('Teléfono', 'bidder_phone')
-						->hideFromIndex(),
+						->hideFromIndex()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 					Text::make('Email', 'bidder_email')
-						->hideFromIndex(),
+						->hideFromIndex()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 					Text::make('Email para CV', 'cv_email')
-						->hideFromIndex(),
+						->hideFromIndex()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 					Textarea::make('Comentarios', 'bidder_comments')
 						->hideFromIndex()
-						->alwaysShow(),
+						->alwaysShow()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 				]),
 				Tab::make('Mapa', [
 					Boolean::make('Mapa', 'mapinfo')
@@ -259,9 +300,9 @@ class Job extends Resource {
 	 */
 	public function actions(Request $request) {
 		return [
-			// (new DownloadExcel)
-			// 	->withHeadings()
-			// 	->allFields(),
+			(new DownloadExcel)
+				->withHeadings()
+				->allFields(),
 
 			(new JobExport),
 		];

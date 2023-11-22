@@ -13,7 +13,6 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Fields\Url;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Cdr extends Resource {
@@ -54,13 +53,13 @@ class Cdr extends Resource {
 	}
 
 	public static function authorizedToCreate(Request $request) {
-
-		return ($request->user()) ? $request->user()->is_admin : false;
+		return $request->user() ? $request->user()->is_admin : true;
 	}
 
 	public function authorizedToDelete(Request $request) {
-		return ($request->user()) ? $request->user()->is_admin : false;
+		return $request->user() ? $request->user()->is_admin : false;
 	}
+
 	/**
 	 * The model the resource corresponds to.
 	 *
@@ -93,13 +92,9 @@ class Cdr extends Resource {
 	public function fields(Request $request) {
 		return [
 			// ID::make(__('ID'), 'id')->sortable(),
-
-			URL::make('URL para demandantes', function () {
+			Text::make('Enlace para demandantes', function () {
 				return 'https://erp-recursos.volveralpueblo.org/personas/' . $this->hash;
-			})->hideFromIndex()
-				->hideWhenCreating()
-				->hideWhenUpdating()
-				->filterable(),
+			})->onlyOnDetail(),
 			Text::make('Nombre', 'name'),
 			Boolean::make('Mapa', 'mapinfo')
 				->hideWhenCreating()
@@ -107,7 +102,10 @@ class Cdr extends Resource {
 					return $request->user()->is_admin;
 				}),
 			Image::make('Logo')->path('logos/cdr'),
-			BelongsTo::make('Zona', 'zone', 'App\Nova\Zone'),
+			BelongsTo::make('Zona', 'zone', 'App\Nova\Zone')
+				->canSee(function ($request) {
+					return $request->user()->is_admin;
+				}),
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community'),
 			BelongsTo::make('Provincia', 'province', 'App\Nova\Province'),
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality'),
@@ -180,10 +178,19 @@ class Cdr extends Resource {
 					return $request->user()->is_admin;
 				}),
 
-			HasMany::make('Colaboradores', 'users', 'App\Nova\User'),
-			HasMany::make('Comarcas', 'comarcas', 'App\Nova\Region'),
+			HasMany::make('Colaboradores', 'users', 'App\Nova\User')
+				->canSee(function ($request) {
+					return $request->user()->is_admin || $request->user()->is_cdr;
+				}),
+			HasMany::make('Comarcas', 'comarcas', 'App\Nova\Region')
+				->canSee(function ($request) {
+					return $request->user()->is_admin || $request->user()->is_cdr;
+				}),
 
-			HasMany::make('Convenios', 'convenios', 'App\Nova\Cdragreement'),
+			HasMany::make('Convenios', 'convenios', 'App\Nova\Cdragreement')
+				->canSee(function ($request) {
+					return $request->user()->is_admin || $request->user()->is_cdr;
+				}),
 
 			//HasMany::make('Noticias', 'news', 'App\Nova\Cdrnew'),
 		];

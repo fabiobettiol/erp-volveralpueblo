@@ -13,6 +13,10 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Familymember extends Resource {
 
+//	public static function availableForNavigation(Request $request) {
+//		return $request->user()->is_admin;
+//	}
+
 	public static $group = 'Asentad@s';
 
 	public static function label() {
@@ -27,6 +31,10 @@ class Familymember extends Resource {
 		} else {
 			return $query->where('cdr_id', $request->user()->cdr_id);
 		}
+	}
+
+	public static function availableForNavigation(Request $request) {
+		return !$request->user()->is_collaborator;
 	}
 
 	/**

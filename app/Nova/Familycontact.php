@@ -14,14 +14,9 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Familycontact extends Resource {
-
 	public static function label() {
-		return 'Intervencionne';
+		return 'Intervención';
 	}
-
-	public static function singularLabel() {
-		return 'Intervenciones';
-	}	
 
 	public static $group = 'Asentad@s';
 
@@ -34,8 +29,7 @@ class Familycontact extends Resource {
 	}
 
 	public static function availableForNavigation(Request $request) {
-
-		return ($request->user()->is_admin || $request->user()->cdr->family_contacts);
+		return !$request->user()->is_collaborator;
 	}
 
 	/**
@@ -59,8 +53,6 @@ class Familycontact extends Resource {
 	 */
 	public static $search = [
 		'subject',
-		'text',
-		'comments',
 	];
 
 	public static $globallySearchable = false;

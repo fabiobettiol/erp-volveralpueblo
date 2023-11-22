@@ -4,7 +4,10 @@ namespace App\Nova;
 
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
+use App\Models\Community;
 use App\Nova\Filters\ByCdr;
+use Laravel\Nova\Fields\ID;
+use App\Models\Municipality;
 use App\Nova\Filters\ByForm;
 use App\Nova\Filters\ByLand;
 use Illuminate\Http\Request;
@@ -14,6 +17,7 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use App\Nova\Filters\BySource;
 use App\Nova\Filters\ByStatus;
+use Eminiarts\Tabs\TabsOnEdit;
 use App\Nova\Filters\ByCuadras;
 use Laravel\Nova\Fields\Number;
 use App\Nova\Filters\ByBusiness;
@@ -23,7 +27,6 @@ use App\Nova\Actions\HouseExport;
 use App\Nova\Filters\ByCommunity;
 use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\Textarea;
-use Eminiarts\Tabs\Traits\HasTabs;
 use Laravel\Nova\Fields\BelongsTo;
 use App\Nova\Filters\ByAvailability;
 use App\Nova\Filters\ByMunicipality;
@@ -31,22 +34,48 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class House extends Resource {
-
-	use HasTabs;
+	// use TabsOnEdit;
 
 	public static $tableStyle = 'tight';
+	public static $showColumnBorders = true;
 
 	public static function label() {
 		return 'Viviendas';
 	}
 
 	public static function indexQuery(NovaRequest $request, $query) {
+
 		if ($request->user()->is_admin) {
 			return $query;
 		} else {
-			return $query->where('cdr_id', $request->user()->cdr_id);
+			$query->where('cdr_id', $request->user()->cdr_id);
+
+			if ($request->user()->is_collaborator) {
+				$query->orWhere('province_id', $request->user()->cdr->province->id);
+			}
+
+			return $query;
+		}
+	}
+
+	public function authorizedToUpdate(Request $request): bool {
+
+		if (!$request->user()->is_admin && $this->cdr_id != $request->user()->cdr_id) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public function authorizedToDelete(Request $request): bool {
+
+		if (!$request->user()->is_admin && $this->cdr_id != $request->user()->cdr_id) {
+			return false;
+		} else {
+			return true;
 		}
 	}
 
@@ -94,8 +123,7 @@ class House extends Resource {
 				->help('<a target="blank" href="/mapa/' . $this->reference . '">Ver en el mapa</a>')
 				->readonly(),
 			Boolean::make('Mapa', 'mapinfo')
-				->hideWhenCreating()
-				->hideFromIndex(),
+				->hideWhenCreating(),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->sortable()
 				->canSee(function ($request) {
@@ -287,11 +315,20 @@ class House extends Resource {
 
 				Tab::make('Contacto', [
 					Text::make('Contacto', 'contact')
-						->hideFromIndex(),
+						->hideFromIndex()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 					Text::make('Teléfono', 'phone')
-						->hideFromIndex(),
+						->hideFromIndex()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 					Text::make('Email')
-						->hideFromIndex(),
+						->hideFromIndex()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 				]),
 				Tab::make('Comentarios', [
 					Textarea::make('Comentarios', 'comments')
@@ -363,9 +400,9 @@ class House extends Resource {
 	 */
 	public function actions(Request $request) {
 		return [
-			// (new DownloadExcel)
-			// 	->withHeadings()
-			// 	->allFields(),
+			(new DownloadExcel)
+				->withHeadings()
+				->allFields(),
 
 			(new HouseExport),
 		];

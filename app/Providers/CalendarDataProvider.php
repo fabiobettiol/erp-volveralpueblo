@@ -71,6 +71,7 @@ class CalendarDataProvider extends AbstractCalendarDataProvider {
 
 		// $event->addBadges($event->resource()->calendar()['badge']);
 		$event->addStyle($event->resource()->calendar()['color'])
+			->addBadge($event->resource()->calendar()['badge'])
 			->displayTime();
 
 			// if($event->model())
@@ -116,7 +117,11 @@ class CalendarDataProvider extends AbstractCalendarDataProvider {
 	protected function excludeResource(NovaResource $resource) : bool
 	{
 		// - Exclue events not related to the user's CDR
-		return ( Auth::user()->cdr_id != $resource->cdr_id );
+		if (!Auth::user()->is_cdr) {
+			return false;
+		} else {
+			return ( Auth::user()->cdr_id != $resource->cdr_id );
+		}
 	}	
 }
 

@@ -4,8 +4,11 @@ namespace App\Nova;
 
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
+use App\Models\Community;
 use App\Nova\Filters\ByCdr;
 use App\Nova\Filters\ByUse;
+use Laravel\Nova\Fields\ID;
+use App\Models\Municipality;
 use App\Nova\Filters\ByArea;
 use App\Nova\Filters\ByForm;
 use App\Nova\Filters\ByType;
@@ -13,6 +16,7 @@ use Illuminate\Http\Request;
 use App\Nova\Filters\ByPrice;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
+use Eminiarts\Tabs\TabsOnEdit;
 use App\Nova\Actions\LandExport;
 use App\Nova\Filters\ByProvince;
 use Laravel\Nova\Fields\Boolean;
@@ -27,20 +31,46 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Land extends Resource {
 
-	//use TabsOnEdit;
+	// use TabsOnEdit;
 
 	public static function label() {
 		return 'Tierras';
 	}
 
 	public static function indexQuery(NovaRequest $request, $query) {
+
 		if ($request->user()->is_admin) {
 			return $query;
 		} else {
-			return $query->where('cdr_id', $request->user()->cdr_id);
+			$query->where('cdr_id', $request->user()->cdr_id);
+
+			if ($request->user()->is_collaborator) {
+				$query->orWhere('province_id', $request->user()->cdr->province->id);
+			}
+
+			return $query;
+		}
+	}
+
+	public function authorizedToUpdate(Request $request): bool {
+
+		if (!$request->user()->is_admin && $this->cdr_id != $request->user()->cdr_id) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public function authorizedToDelete(Request $request): bool {
+
+		if (!$request->user()->is_admin && $this->cdr_id != $request->user()->cdr_id) {
+			return false;
+		} else {
+			return true;
 		}
 	}
 
@@ -143,7 +173,7 @@ class Land extends Resource {
 				->display(function ($municipality) {
 					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
 				})->onlyOnIndex(),
-
+				
 			Text::make('Localidad', 'town'),
 			Text::make('Código Postal', 'postcode')
 				->rules('max:5')
@@ -191,14 +221,26 @@ class Land extends Resource {
 				]),
 				Tab::make('Ofertante', [
 					Text::make('Nombre', 'bidder_name')
-						->hideFromIndex(),
+						->hideFromIndex()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 					Text::make('Teléfono', 'bidder_phone')
-						->hideFromIndex(),
+						->hideFromIndex()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 					Text::make('Email', 'bidder_email')
-						->hideFromIndex(),
+						->hideFromIndex()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 					Textarea::make('Comentarios', 'bidder_comments')
 						->hideFromIndex()
-						->alwaysShow(),
+						->alwaysShow()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 				]),
 
 				Tab::make('Mapa', [
@@ -287,9 +329,9 @@ class Land extends Resource {
 	 */
 	public function actions(Request $request) {
 		return [
-			// (new DownloadExcel)
-			// 	->withHeadings()
-			// 	->allFields(),
+			(new DownloadExcel)
+				->withHeadings()
+				->allFields(),
 
 			(new LandExport),
 		];

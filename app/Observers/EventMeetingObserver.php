@@ -15,9 +15,7 @@ class EventMeetingObserver
         $user = Auth::user();
         
         $eventMeeting->user_id = $user->id;
-        if ($user->is_cdr) {
-            $eventMeeting->cdr_id = $user->cdr_id; 
-        }   
+        ($user->is_cdr) ? $EventCall->cdr_id = $user->cdr_id: NULL; 
 
     }
 

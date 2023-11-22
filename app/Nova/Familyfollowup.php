@@ -19,10 +19,14 @@ class Familyfollowup extends Resource {
 		}
 	}
 
+	public static function availableForNavigation(Request $request) {
+		return !$request->user()->is_collaborator;
+	}
+
 	public static $group = 'Asentad@s';
 
 	public static function label() {
-		return 'Seguimientos';
+		return 'Seguimiento';
 	}
 
 	public static function singularLabel() {

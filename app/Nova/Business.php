@@ -4,7 +4,10 @@ namespace App\Nova;
 
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
+use App\Models\Community;
 use App\Nova\Filters\ByCdr;
+use Laravel\Nova\Fields\ID;
+use App\Models\Municipality;
 use App\Nova\Filters\ByForm;
 use Illuminate\Http\Request;
 use App\Nova\Filters\ByPrice;
@@ -12,35 +15,60 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use App\Nova\Filters\BySector;
 use App\Nova\Filters\BySource;
+use Eminiarts\Tabs\TabsOnEdit;
 use App\Nova\Filters\ByProvince;
 use Laravel\Nova\Fields\Boolean;
 use App\Nova\Filters\ByCommunity;
 use App\Nova\Filters\ByOwnership;
 use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\Textarea;
-use Eminiarts\Tabs\Traits\HasTabs;
 use Laravel\Nova\Fields\BelongsTo;
-use App\Nova\Actions\BusinessExport;
 use App\Nova\Filters\ByAvailability;
 use App\Nova\Filters\ByMunicipality;
 use Illuminate\Support\Facades\Auth;
+use App\Nova\Actions\BusinessExport;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Business extends Resource {
-
-	use HasTabs;
+	// use TabsOnEdit;
 
 	public static function label() {
 		return 'Negocios';
 	}
 
 	public static function indexQuery(NovaRequest $request, $query) {
+
 		if ($request->user()->is_admin) {
 			return $query;
 		} else {
-			return $query->where('cdr_id', $request->user()->cdr_id);
+			$query->where('cdr_id', $request->user()->cdr_id);
+
+			if ($request->user()->is_collaborator) {
+				$query->orWhere('province_id', $request->user()->cdr->province->id);
+			}
+
+			return $query;
+		}
+	}
+
+	public function authorizedToUpdate(Request $request): bool {
+
+		if (!$request->user()->is_admin && $this->cdr_id != $request->user()->cdr_id) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public function authorizedToDelete(Request $request): bool {
+
+		if (!$request->user()->is_admin && $this->cdr_id != $request->user()->cdr_id) {
+			return false;
+		} else {
+			return true;
 		}
 	}
 
@@ -69,6 +97,7 @@ class Business extends Resource {
 		'reference',
 		'town',
 		'property_type',
+		'description',
 	];
 
 	/**
@@ -84,7 +113,6 @@ class Business extends Resource {
 				->hideWhenCreating(),
 			Text::make('Referencia', 'reference')
 				->hideWhenCreating()
-				->hideFromIndex()
 				->help('<a target="blank" href="/mapa/' . $this->reference . '">Ver en el mapa</a>')
 				->readonly(),
 			Boolean::make('Mapa', 'mapinfo')
@@ -184,14 +212,26 @@ class Business extends Resource {
 				]),
 				Tab::make('Ofertante', [
 					Text::make('Nombre', 'bidder_name')
-						->hideFromIndex(),
+						->hideFromIndex()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 					Text::make('Teléfono', 'bidder_phone')
-						->hideFromIndex(),
+						->hideFromIndex()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 					Text::make('Email', 'bidder_email')
-						->hideFromIndex(),
+						->hideFromIndex()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 					Textarea::make('Comentarios', 'bidder_comments')
 						->hideFromIndex()
-						->alwaysShow(),
+						->alwaysShow()
+						->canSee(function ($request) {
+							return $request->user()->cdr_id == $this->cdr_id;
+						}),
 				]),
 				Tab::make('Mapa', [
 					Boolean::make('Mapa', 'mapinfo')
@@ -277,9 +317,9 @@ class Business extends Resource {
 	 */
 	public function actions(Request $request) {
 		return [
-			// (new DownloadExcel)
-			// 	->withHeadings()
-			// 	->allFields(),
+			(new DownloadExcel)
+				->withHeadings()
+				->allFields(),
 
 			(new BusinessExport),
 		];

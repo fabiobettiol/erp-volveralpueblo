@@ -2,18 +2,22 @@
 
 namespace App\Nova;
 
-use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\File;
+use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Fields\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 
 class Familydoc extends Resource {
 
 	public static function label() {
 		return 'Documentos';
+	}
+
+	public static function availableForNavigation(Request $request) {
+		return !$request->user()->is_collaborator;
 	}
 
 	/**
@@ -54,11 +58,11 @@ class Familydoc extends Resource {
 			Textarea::make('Detalles', 'details')
 				->alwaysShow(),
 			File::make('Documento', 'file')
-			->disk('familias-documentos')
-			->download(function ($request, $model, $disk, $value) {
-				$file = $model->family->family_name . '-' . $model->name;
-				return Storage::disk($disk)->download($value, $file);
-			}),
+				->disk('familias-documentos')
+				->download(function ($request, $model, $disk, $value) {
+					$file = $model->family->family_name . '-' . $model->name;
+					return Storage::disk($disk)->download($value, $file);
+				}),
 		];
 	}
 

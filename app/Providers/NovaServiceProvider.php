@@ -29,11 +29,14 @@ use Laravel\Nova\Nova;
 use App\Nova\Arearange;
 use App\Nova\Community;
 use App\Nova\Demandant;
+use App\Nova\EventCall;
 use App\Nova\Familydoc;
 use App\Nova\Ownership;
+use App\Nova\EventOther;
 use App\Nova\Pricerange;
 use App\Nova\Cdragreement;
 use App\Nova\Demandantdoc;
+use App\Nova\EventMeeting;
 use App\Nova\Familymember;
 use App\Nova\Jobownership;
 use App\Nova\Municipality;
@@ -159,7 +162,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 
 	protected function footer () {
 	    Nova::footer(function () {
-
 			$year = Carbon::now()->format('Y');
 			return '<center><strong> COCEDER &copy  ' . $year . '</strong></center>';			
 		});			
@@ -168,6 +170,15 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 	protected function menu () {
 
 		Nova::mainMenu(fn($request) => [
+
+			MenuItem::link(__('Mi Calendario'), NovaCalendar::pathToCalendar('mi-calendario')),
+
+			MenuSection::make('Eventos', [
+				MenuItem::resource(EventCall::class),
+				MenuItem::resource(EventMeeting::class),
+				MenuItem::resource(EventOther::class),
+			])->icon('calendar')
+				->collapsible(),
 
 			MenuSection::make('Demandantes', [
 				MenuItem::resource(Demandant::class),

@@ -15,9 +15,8 @@ class EventCallObserver
         $user = Auth::user();
         
         $EventCall->user_id = $user->id;
-        if ($user->is_cdr) {
-            $EventCall->cdr_id = $user->cdr_id; 
-        }
+        ($user->is_cdr) ? $EventCall->cdr_id = $user->cdr_id: NULL; 
+        
 
     }
 

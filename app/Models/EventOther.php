@@ -8,8 +8,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class EventOther extends Model {
 	use SoftDeletes;
 
-	// protected $casts = [
-	// 	'start' => 'datetime',
-	// 	'end' => 'datetime',
-	// ];
+	protected $casts = [
+		'start' => 'datetime',
+		'end' => 'datetime',
+	];
+
+	public function user() {
+		return $this->belongsTo(User::class);
+	}	
+
+	public function cdr() {
+		return $this->belongsTo(Cdr::class);
+	}
 }

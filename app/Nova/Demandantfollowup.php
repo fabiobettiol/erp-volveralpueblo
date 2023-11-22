@@ -22,6 +22,10 @@ class Demandantfollowup extends Resource {
 		return 'Interaccion';
 	}
 
+	public static function availableForNavigation(Request $request) {
+		return !$request->user()->is_collaborator;
+	}
+
 	/**
 	 * The model the resource corresponds to.
 	 *
@@ -43,8 +47,6 @@ class Demandantfollowup extends Resource {
 	 */
 	public static $search = [
 		'subject',
-		'text',
-		'comments',
 	];
 
 	/**
@@ -58,6 +60,7 @@ class Demandantfollowup extends Resource {
 			ID::make(__('ID'), 'id')->sortable(),
 			BelongsTo::make('Solicitante', 'demandant', 'App\Nova\Demandant'),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
+				->withMeta(["value" => $request->user()->cdr_id])
 				->readonly(function ($request) {
 					return !$request->user()->is_admin;
 				}),

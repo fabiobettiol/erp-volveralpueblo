@@ -3,19 +3,25 @@
 namespace App\Nova;
 
 use App\Nova\Filters\ByCdr;
-use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Date;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Fields\BelongsTo;
-use Illuminate\Support\Facades\Auth;
 use App\Nova\Filters\ByUpdatedStatus;
+use Eminiarts\Tabs\Tab;
+use Eminiarts\Tabs\Tabs;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Family extends Resource {
+
+//	public static function availableForNavigation(Request $request) {
+//		return $request->user()->is_admin;
+//	}
 
 	public static $group = 'Asentad@s';
 
@@ -29,6 +35,10 @@ class Family extends Resource {
 		} else {
 			return $query->where('cdr_id', $request->user()->cdr_id);
 		}
+	}
+
+	public static function availableForNavigation(Request $request) {
+		return !$request->user()->is_collaborator;
 	}
 
 	/**
@@ -54,9 +64,6 @@ class Family extends Resource {
 		'reference',
 		'family_name',
 		'family_description',
-		'contacts.subject',
-		'contacts.text',
-		'contacts.comments',
 	];
 
 	/**
@@ -70,74 +77,88 @@ class Family extends Resource {
 
 			//ID::make(__('ID'), 'id')->sortable(),
 			//Text::make('id', 'id')->sortable()->hideWhenCreating(),
+			Tabs::make('Familia', [
 
-			Boolean::make('Actualizado', 'datos_actualizados'),
-			Text::make('Referencia', 'reference')
-				->sortable()
-				->hideWhenCreating(),
-			Text::make('Familia', 'family_name')
-				->help('Un breve nombre descriptivo para esta familia')
-				->sortable(),
-			Textarea::make('Descripción', 'family_description')
-				->help('Un descripcíón sobre la familia')
-				->alwaysShow()
-				->rows(2),
-			Belongsto::make('CDR', 'cdr', 'App\Nova\Cdr')
-				->canSee(function ($request) {
-					return $request->user()->is_admin;
-				}),
-			Date::make('Fecha de asentamiento', 'settlementdate')->required(),
-			BelongsTo::make('País de origen', 'nationality', 'App\Nova\Country'),
-			BelongsTo::make('Provincia de origen', 'sourceprovince', 'App\Nova\Province'),
-			Text::make('Loalidad de origen', 'fromcityname')->hideFromIndex(),
-			BelongsTo::make('Provincia de destino', 'destinationprovince', 'App\Nova\Province'),
-			Text::make('Localidad de destino', 'tocityname')->hideFromIndex(),
-			BelongsTo::make('Tipo de asentamiento', 'settlementtype', 'App\Nova\Settlementtype'),
-			BelongsTo::make('Estado de asentamiento', 'settlementstatus', 'App\Nova\Settlementstatus'),
-			Boolean::make('Itinerarios', 'itineraries')->hideFromIndex(),
-			Textarea::make('Detalles de itinerarios', 'itineraries_comment')
-				->help('Detalles sobre los itinerarios')
-				->alwaysShow(),
+				Tab::make('Detalles', [
+					Boolean::make('Actualizado', 'datos_actualizados'),
+					Text::make('Referencia', 'reference')
+						->sortable()
+						->hideWhenCreating(),
+					Text::make('Familia', 'family_name')
+						->help('Un breve nombre descriptivo para esta familia')
+						->rules('required', 'max:60')
+						->sortable(),
+					Textarea::make('Descripción', 'family_description')
+						->help('Un descripcíón sobre la familia')
+						->alwaysShow()
+						->rows(2),
+					Belongsto::make('CDR', 'cdr', 'App\Nova\Cdr')
+						->canSee(function ($request) {
+							return $request->user()->is_admin;
+						}),
+					Date::make('Fecha de asentamiento', 'settlementdate')->required(),
+					BelongsTo::make('País de origen', 'nationality', 'App\Nova\Country'),
+					BelongsTo::make('Provincia de origen', 'sourceprovince', 'App\Nova\Province'),
+					Text::make('Loalidad de origen', 'fromcityname')->hideFromIndex(),
+					BelongsTo::make('Provincia de destino', 'destinationprovince', 'App\Nova\Province'),
+					Text::make('Localidad de destino', 'tocityname')->hideFromIndex(),
+					BelongsTo::make('Tipo de asentamiento', 'settlementtype', 'App\Nova\Settlementtype'),
+					BelongsTo::make('Estado de asentamiento', 'settlementstatus', 'App\Nova\Settlementstatus'),
+					Boolean::make('Itinerarios', 'itineraries')->hideFromIndex(),
+					Textarea::make('Detalles de itinerarios', 'itineraries_comment')
+						->help('Detalles sobre los itinerarios')
+						->alwaysShow(),
+				]),
 
-			Boolean::make('Atienden los medios', 'publicity')->hideFromIndex(),
-			Text::make('Detalles', 'publicity_comment')->hideFromIndex()->hideFromIndex(),
-			Boolean::make('Entrevistas/videos realizados', 'publicity_available')->hideFromIndex(),
-			Textarea::make('Enlace/ruta', 'publicity_resources')
-				->help('Agregue cada enlace o ruta en una nueva linea.')
-				->alwaysShow(),
+				Tab::make('Entrevistas y medios', [
+					Boolean::make('Atienden los medios', 'publicity')->hideFromIndex(),
+					Text::make('Detalles', 'publicity_comment')->hideFromIndex()->hideFromIndex(),
+					Boolean::make('Entrevistas/videos realizados', 'publicity_available')->hideFromIndex(),
+					Textarea::make('Enlace/ruta', 'publicity_resources')
+						->help('Agregue cada enlace o ruta en una nueva linea.')
+						->alwaysShow(),
+				]),
 
-			Boolean::make('Vivienda', 'difficulty_housing')->hideFromIndex(),
-			Boolean::make('Económicas', 'difficulty_economic')->hideFromIndex(),
-			Boolean::make('Comunicativas', 'difficulty_communicative')->hideFromIndex(),
-			Boolean::make('Sociales', 'difficulty_social')->hideFromIndex(),
-			Boolean::make('Privacidad', 'difficulty_privacy')->hideFromIndex(),
-			Boolean::make('Otras', 'difficulty_others')->hideFromIndex(),
-			Textarea::make('Detalles', 'difficulty_comments')
-				->alwaysShow(),
+				Tab::make('Dificultades', [
+					Boolean::make('Vivienda', 'difficulty_housing')->hideFromIndex(),
+					Boolean::make('Económicas', 'difficulty_economic')->hideFromIndex(),
+					Boolean::make('Comunicativas', 'difficulty_communicative')->hideFromIndex(),
+					Boolean::make('Sociales', 'difficulty_social')->hideFromIndex(),
+					Boolean::make('Privacidad', 'difficulty_privacy')->hideFromIndex(),
+					Boolean::make('Otras', 'difficulty_others')->hideFromIndex(),
+					Textarea::make('Detalles', 'difficulty_comments')
+						->alwaysShow(),
+				]),
 
-			Boolean::make('Paz y tranquilidad', 'positive_peace')->hideFromIndex(),
-			Boolean::make('Calidad de vida', 'positive_lifequality')->hideFromIndex(),
-			Boolean::make('Naturalez', 'positive_nature')->hideFromIndex(),
-			Boolean::make('Social, contacto personal', 'positive_social')->hideFromIndex(),
-			Boolean::make('Otras', 'positive_others')->hideFromIndex(),
-			Textarea::make('Detalles', 'positive_comments')
-				->alwaysShow(),
+				Tab::make('Aspectos positivos', [
+					Boolean::make('Paz y tranquilidad', 'positive_peace')->hideFromIndex(),
+					Boolean::make('Calidad de vida', 'positive_lifequality')->hideFromIndex(),
+					Boolean::make('Naturalez', 'positive_nature')->hideFromIndex(),
+					Boolean::make('Social, contacto personal', 'positive_social')->hideFromIndex(),
+					Boolean::make('Otras', 'positive_others')->hideFromIndex(),
+					Textarea::make('Detalles', 'positive_comments')
+						->alwaysShow(),
+				]),
 
-			Select::make('Adaptación', 'adaptation_rating')->options([
-				'1' => 'Muy complicado',
-				'2' => 'Complicado',
-				'3' => 'Regular',
-				'4' => 'Bien',
-				'5' => 'Muy bien',
-			])->hideFromIndex(),
+				Tab::make('Adaptación y Experiencia', [
+					Select::make('Adaptación', 'adaptation_rating')->options([
+						'1' => 'Muy complicado',
+						'2' => 'Complicado',
+						'3' => 'Regular',
+						'4' => 'Bien',
+						'5' => 'Muy bien',
+					])->hideFromIndex(),
 
-			Select::make('Valorar experiencia', 'experience_rating')->options([
-				'1' => 'Muy complicado',
-				'2' => 'Complicado',
-				'3' => 'Regular',
-				'4' => 'Bien',
-				'5' => 'Muy bien',
-			])->hideFromIndex(),
+					Select::make('Valorar experiencia', 'experience_rating')->options([
+						'1' => 'Muy complicado',
+						'2' => 'Complicado',
+						'3' => 'Regular',
+						'4' => 'Bien',
+						'5' => 'Muy bien',
+					])->hideFromIndex(),
+				]),
+			])->withToolbar()
+				->defaultSearch(true),
 
 			HasMany::make('Documentos', 'documents', 'App\Nova\Familydoc'),
 
