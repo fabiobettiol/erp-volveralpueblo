@@ -127,6 +127,8 @@ class LandObserver
             $land->lat = $location->lat;
             $land->lng = $location->lng;            
             $land->mapinfo = true;
+        } else {
+            Log::channel('custom')->info(json_encode($response));
         }
 
     }    

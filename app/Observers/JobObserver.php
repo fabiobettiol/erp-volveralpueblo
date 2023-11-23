@@ -127,6 +127,8 @@ class JobObserver
             $job->lat = $location->lat;
             $job->lng = $location->lng;            
             $job->mapinfo = true;
+        } else {
+            Log::channel('custom')->info(json_encode($response));
         }
 
     }    

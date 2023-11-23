@@ -127,6 +127,8 @@ class BusinessObserver
             $business->lat = $location->lat;
             $business->lng = $location->lng;            
             $business->mapinfo = true;
+        } else {
+            Log::channel('custom')->info(json_encode($response));
         }
 
     }

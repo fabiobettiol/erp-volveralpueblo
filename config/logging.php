@@ -52,6 +52,14 @@ return [
     */
 
     'channels' => [
+        'custom' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/custom.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],

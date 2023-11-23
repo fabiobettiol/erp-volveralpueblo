@@ -122,7 +122,9 @@ class HouseObserver {
 			$house->lat = $location->lat;
 			$house->lng = $location->lng;
 			$house->mapinfo = true;
-		}
+		} else {
+            Log::channel('custom')->info(json_encode($response));
+        }
 
 	}
 }
