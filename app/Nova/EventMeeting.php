@@ -74,7 +74,10 @@ class EventMeeting extends Resource {
 				->rules('required'),
 			Textarea::make('Descripción', 'description')
 				->alwaysShow(),
-			BelongsTo::make('Usuario', 'user', 'App\Nova\User'),
+			BelongsTo::make('Usuario', 'user', 'App\Nova\User')
+				->canSee(function ($request) {
+					return $request->user()->is_admin || $request->user()->is_cdr_admin && ($request->user()->cdr_id == $this->cdr_id);
+				}),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
