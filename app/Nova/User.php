@@ -19,7 +19,9 @@ class User extends Resource {
 	public static $group = 'Colaboradores';
 
 	public static function availableForNavigation(Request $request) {
-		return $request->user()->is_admin || $request->user()->is_cdr_admin;
+		return
+			(!$request->user()->is_collaborator) &&
+			($request->user()->is_admin || $request->user()->is_cdr_admin);
 	}
 
 	public static function indexQuery(NovaRequest $request, $query) {
@@ -96,6 +98,16 @@ class User extends Resource {
 				}),
 
 			Boolean::make('Administrador de CDR', 'is_cdr_admin')
+				->canSee(function ($request) {
+					return $request->user()->is_admin;
+				}),
+
+			Boolean::make('Entidad Asociada', 'is_associated')
+				->canSee(function ($request) {
+					return $request->user()->is_admin;
+				}),
+
+			Boolean::make('Entidad Colaboradora', 'is_collaborator')
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
 				}),

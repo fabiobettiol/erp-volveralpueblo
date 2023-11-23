@@ -7,12 +7,16 @@
         "framework"
     ],
     "license": "MIT",
-    "repositories": [
-        {
+    "repositories": {
+        "nova": {
+            "type": "composer",
+            "url": "https://nova.laravel.com"
+        },
+        "0": {
             "type": "composer",
             "url": "https://nova.laravel.com"
         }
-    ],
+    },
     "require": {
         "php": "^8.1",
         "alexpechkarev/google-maps": "^10.0",
