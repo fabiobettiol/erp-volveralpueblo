@@ -71,6 +71,11 @@ class Demandant extends Resource {
 	public function fields(Request $request) {
 		return [
 			ID::make(__('ID'), 'id')->sortable(),
+			Belongsto::make('CDR', 'cdr', 'App\Nova\Cdr')
+			->filterable()
+			->canSee(function ($request) {
+				return $request->user()->is_admin;
+			}),					
 			BelongsTo::make('Sexo', 'gender', 'App\Nova\Gender'),
 			Text::make('Nombre', 'name'),
 			Text::make('Apellido', 'surname'),
@@ -137,7 +142,6 @@ class Demandant extends Resource {
 	 */
 	public function filters(Request $request) {
 		return [
-			new ByCdr,
 			new ByPotential,
 		];
 	}

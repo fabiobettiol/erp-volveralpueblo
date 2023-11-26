@@ -60,7 +60,7 @@ class Demandantfollowup extends Resource {
 			ID::make(__('ID'), 'id')->sortable(),
 			BelongsTo::make('Solicitante', 'demandant', 'App\Nova\Demandant'),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
-				->withMeta(["value" => $request->user()->cdr_id])
+				->filterable()
 				->readonly(function ($request) {
 					return !$request->user()->is_admin;
 				}),
@@ -93,7 +93,7 @@ class Demandantfollowup extends Resource {
 	 */
 	public function filters(Request $request) {
 		return [
-			new ByCdr,
+			//
 		];
 	}
 

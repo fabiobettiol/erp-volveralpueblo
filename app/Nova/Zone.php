@@ -2,9 +2,10 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\HasMany;
 
 class Zone extends Resource {
 	public static $group = 'Auxiliares';
@@ -56,7 +57,7 @@ class Zone extends Resource {
 		return [
 			ID::make(__('ID'), 'id')->sortable(),
 			Text::make('Zona', 'name'),
-			HasMany::make('CRDs'),
+			HasMany::make('CDRs'),
 		];
 	}
 

@@ -77,6 +77,11 @@ class Familymember extends Resource {
 			//ID::make(__('ID'), 'id')->sortable(),
 			//Text::make('id', 'id')->sortable(),
 			BelongsTo::make('Núcleo familiar', 'family', 'App\Nova\Family'),
+			Belongsto::make('CDR', 'cdr', 'App\Nova\Cdr')
+			->filterable()
+			->canSee(function ($request) {
+				return $request->user()->is_admin;
+			}),			
 			Boolean::make('Persona de referencia', 'is_responsible')->sortable(),
 			Boolean::make('Es menor', 'is_child')->sortable(),
 			BelongsTo::make('Género', 'gender', 'App\Nova\Gender')->sortable(),

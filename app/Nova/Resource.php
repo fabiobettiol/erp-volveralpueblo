@@ -2,12 +2,29 @@
 
 namespace App\Nova;
 
-use Laravel\Nova\Http\Requests\NovaRequest;
+use Illuminate\Http\Request;
 use Laravel\Nova\Resource as NovaResource;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 abstract class Resource extends NovaResource {
 
 	public static $tableStyle = 'tight';
+
+    public function authorizedToReplicate(Request $request) {
+        return false;
+    }	
+
+	// Redirect to index after creating any resource
+	public static function redirectAfterCreate(NovaRequest $request, $resource)
+	{
+		return '/resources/'.static::uriKey();
+	}
+
+	// Redirect to index after updating any resource
+	public static function redirectAfterUpdate(NovaRequest $request, $resource)
+	{
+		return '/resources/'.static::uriKey();
+	}
 
 	/**
 	 * Build an "index" query for the given resource.

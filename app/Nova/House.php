@@ -8,28 +8,17 @@ use App\Models\Community;
 use App\Nova\Filters\ByCdr;
 use Laravel\Nova\Fields\ID;
 use App\Models\Municipality;
-use App\Nova\Filters\ByForm;
-use App\Nova\Filters\ByLand;
 use Illuminate\Http\Request;
-use App\Nova\Filters\ByPatio;
-use App\Nova\Filters\ByPrice;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use App\Nova\Filters\BySource;
-use App\Nova\Filters\ByStatus;
 use Eminiarts\Tabs\TabsOnEdit;
-use App\Nova\Filters\ByCuadras;
 use Laravel\Nova\Fields\Number;
-use App\Nova\Filters\ByBusiness;
-use App\Nova\Filters\ByProvince;
 use Laravel\Nova\Fields\Boolean;
 use App\Nova\Actions\HouseExport;
-use App\Nova\Filters\ByCommunity;
 use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
-use App\Nova\Filters\ByAvailability;
-use App\Nova\Filters\ByMunicipality;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
@@ -116,15 +105,19 @@ class House extends Resource {
 	public function fields(Request $request) {
 		return [
 			// ID::make(__('ID'), 'id')->sortable(),
-			Boolean::make('Disp.', 'available')
+			Boolean::make('Disponible', 'available')
+				->filterable()
+				->hideFromIndex()
 				->hideWhenCreating(),
 			Text::make('Referencia', 'reference')
 				->hideWhenCreating()
 				->help('<a target="blank" href="/mapa/' . $this->reference . '">Ver en el mapa</a>')
 				->readonly(),
 			Boolean::make('Mapa', 'mapinfo')
+				->hideFromIndex()
 				->hideWhenCreating(),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
+				->filterable()
 				->sortable()
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
@@ -137,6 +130,7 @@ class House extends Resource {
 
 			// - Community: Show the full name when not on index view
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
+				->filterable()
 				->hideFromIndex(),
 			
 			// - Community: Show acronym on index view
@@ -147,17 +141,18 @@ class House extends Resource {
 				})->onlyOnIndex(),		
 
 			// - Province: Show full name when not on index view
-			BelongsTo::make('Province', 'province', 'App\Nova\Province')
+			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
 				->dependsOn(['community'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
 					$field->relatableQueryUsing(function (NovaRequest $request, Builder $query) use ($formData) {
 						$query->when($formData->community, function ($query) use ($formData) {
 							$query->where('community_id', $formData->community);
 						});
 					});
-				})->hideFromIndex(),
+				})->filterable()
+				->hideFromIndex(),
 
 			// - Province: Show abbreviated name on index view
-			BelongsTo::make('Province', 'province', 'App\Nova\Province')
+			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
 				->filterable()
 				->display(function ($province) {
 					return ( strlen($province->name) <= 10 ) ? $province->name : substr($province->name,0,10).'...';
@@ -171,7 +166,8 @@ class House extends Resource {
 							$query->where('province_id', $formData->province);
 						});
 					});
-				})->hideFromIndex(),
+				})->filterable()
+				->hideFromIndex(),
 
 			// - Municipality: Show abbreviated name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
@@ -179,7 +175,6 @@ class House extends Resource {
 				->display(function ($municipality) {
 					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
 				})->onlyOnIndex(),
-
 			Text::make('Código Postal', 'postcode')
 				->rules('max:5')
 				->hideFromIndex(),
@@ -193,7 +188,6 @@ class House extends Resource {
 			Text::make('Nombre', 'property_name')
 				->help('Nombre de la propiedad')
 				->hideFromIndex(),
-
 			Tabs::make('Detalles', [
 				Tab::make('Distribución', [
 					Textarea::make('Descripción', 'description')
@@ -214,7 +208,8 @@ class House extends Resource {
 						->hideFromIndex(),
 				]),
 				Tab::make('Estado', [
-					BelongsTo::make('Estados', 'status', 'App\Nova\Status')
+					BelongsTo::make('Estado', 'status', 'App\Nova\Status')
+						->filterable()
 						->hideFromIndex(),
 					Boolean::make('Reparaciones', 'repairs_needed')
 						->hideFromIndex(),
@@ -246,22 +241,25 @@ class House extends Resource {
 				]),
 				Tab::make('Extras', [
 					Boolean::make('Patio', 'courtyard')
+						->filterable()
 						->hideFromIndex(),
 					Text::make('Descripción', 'courtyard_detail')
 						->help('Detalles sobre Patios, Terraza, etc.')
 						->hideFromIndex(),
 					Boolean::make('Edificaciones auxiliares', 'stables')
+						->filterable()
 						->hideFromIndex(),
 					Text::make('Descripción', 'stables_detail')
 						->help('Detalles sobre las edificaciones auxiliares')
 						->hideFromIndex(),
-
 					Boolean::make('Tierras', 'lands')
+						->filterable()
 						->hideFromIndex(),
 					Text::make('Descripción', 'lands_detail')
 						->help('Detalles sobre terrenos, etc.')
 						->hideFromIndex(),
 					Boolean::make('Adaptable para negocios', 'tobusiness')
+						->filterable()
 						->hideFromIndex(),
 					Text::make('Descripción', 'tobusiness_detail')
 						->help('Detalles sobre la adaptabilidad')
@@ -285,8 +283,10 @@ class House extends Resource {
 				Tab::make('Precios', [
 					BelongsTo::make('Titularidad', 'ownership', 'App\Nova\Ownership')
 						->help('Titularidad de la propiedad'),
-					BelongsTo::make('Régimen', 'form', 'App\Nova\Form'),
-					BelongsTo::make('Precio', 'pricerange', 'App\Nova\Pricerange'),
+					BelongsTo::make('Régimen', 'form', 'App\Nova\Form')
+						->filterable(),
+					BelongsTo::make('Rango de precios', 'pricerange', 'App\Nova\Pricerange')
+						->filterable(),
 					Text::make('Precio Venta', 'price_sale')
 						->hideFromIndex(),
 					Text::make('Precio Alq.', 'price_rent')
@@ -362,22 +362,7 @@ class House extends Resource {
 
 		$retorno = [
 			new BySource,
-			new ByAvailability,
-			new ByPatio,
-			new ByCuadras,
-			new ByCommunity,
-			new ByProvince,
-			new ByMunicipality,
-			new ByForm,
-			new ByPrice,
-			new ByStatus,
-			new ByLand,
-			new ByBusiness,
 		];
-
-		if ($user->is_admin) {
-			array_unshift($retorno, new ByCdr);
-		}
 
 		return $retorno;
 	}

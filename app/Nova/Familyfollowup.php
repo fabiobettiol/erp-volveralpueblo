@@ -67,6 +67,7 @@ class Familyfollowup extends Resource {
 			// ID::make(__('ID'), 'id')->sortable(),
 			BelongsTo::make('Familia', 'family', 'App\Nova\Family'),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
+				->filterable()
 				->exceptOnForms(),
 			BelongsTo::make('Usuario', 'user', 'App\Nova\User')
 				->exceptOnForms(),

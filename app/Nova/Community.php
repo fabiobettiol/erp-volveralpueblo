@@ -73,7 +73,7 @@ class Community extends Resource
     {
         return [
             // ID::make(__('ID'), 'id')->sortable(),
-            Text::make('Nombre', 'name'),
+            Text::make('Nombre', 'name')->showWhenPeeking(),
             Text::make('Siglas', 'acronym'),
             Image::make('Bandera', 'flag'),
             Image::make('Escudo', 'shield'),

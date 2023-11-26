@@ -78,7 +78,6 @@ class Family extends Resource {
 			//ID::make(__('ID'), 'id')->sortable(),
 			//Text::make('id', 'id')->sortable()->hideWhenCreating(),
 			Tabs::make('Familia', [
-
 				Tab::make('Detalles', [
 					Boolean::make('Actualizado', 'datos_actualizados'),
 					Text::make('Referencia', 'reference')
@@ -93,6 +92,7 @@ class Family extends Resource {
 						->alwaysShow()
 						->rows(2),
 					Belongsto::make('CDR', 'cdr', 'App\Nova\Cdr')
+						->filterable()
 						->canSee(function ($request) {
 							return $request->user()->is_admin;
 						}),
@@ -192,11 +192,6 @@ class Family extends Resource {
 		$retorno = [
 			new ByUpdatedStatus,
 		];
-
-		if ($user->is_admin) {
-			array_unshift($retorno, new ByCdr);
-		}
-
 		return $retorno;
 	}
 

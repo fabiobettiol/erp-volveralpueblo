@@ -68,6 +68,7 @@ class Familycontact extends Resource {
 			// ID::make(__('ID'), 'id')->sortable(),
 			BelongsTo::make('Familia', 'family', 'App\Nova\Family'),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
+				->filterable()
 				->exceptOnForms(),
 			BelongsTo::make('Usuario', 'user', 'App\Nova\User')
 				->exceptOnForms(),
@@ -103,10 +104,6 @@ class Familycontact extends Resource {
 		$retorno = [
 			new ByContactCompleted,
 		];
-
-		if ($user->is_admin) {
-			array_unshift($retorno, new ByCdr);
-		}
 
 		return $retorno;
 	}

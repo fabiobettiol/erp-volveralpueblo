@@ -8,23 +8,17 @@ use App\Models\Community;
 use App\Nova\Filters\ByCdr;
 use Laravel\Nova\Fields\ID;
 use App\Models\Municipality;
-use App\Nova\Filters\ByForm;
 use Illuminate\Http\Request;
-use App\Nova\Filters\ByPrice;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use App\Nova\Filters\BySector;
 use App\Nova\Filters\BySource;
 use Eminiarts\Tabs\TabsOnEdit;
-use App\Nova\Filters\ByProvince;
 use Laravel\Nova\Fields\Boolean;
-use App\Nova\Filters\ByCommunity;
 use App\Nova\Filters\ByOwnership;
 use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
-use App\Nova\Filters\ByAvailability;
-use App\Nova\Filters\ByMunicipality;
 use Illuminate\Support\Facades\Auth;
 use App\Nova\Actions\BusinessExport;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -109,15 +103,19 @@ class Business extends Resource {
 	public function fields(Request $request) {
 		return [
 			// ID::make(__('ID'), 'id')->sortable(),
-			Boolean::make('Disp.', 'available')
+			Boolean::make('Disponible', 'available')
+				->filterable()
+				->hideFromIndex()	
 				->hideWhenCreating(),
 			Text::make('Referencia', 'reference')
 				->hideWhenCreating()
 				->help('<a target="blank" href="/mapa/' . $this->reference . '">Ver en el mapa</a>')
 				->readonly(),
 			Boolean::make('Mapa', 'mapinfo')
+				->hideFromIndex()
 				->hideWhenCreating(),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
+				->filterable()
 				->sortable()
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
@@ -130,6 +128,7 @@ class Business extends Resource {
 
 			// - Community: Show the full name when not on index view
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
+				->filterable()
 				->hideFromIndex(),
 			
 			// - Community: Show acronym on index view
@@ -140,21 +139,23 @@ class Business extends Resource {
 				})->onlyOnIndex(),		
 
 			// - Province: Show full name when not on index view
-			BelongsTo::make('Province', 'province', 'App\Nova\Province')
+			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
 				->dependsOn(['community'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
 					$field->relatableQueryUsing(function (NovaRequest $request, Builder $query) use ($formData) {
 						$query->when($formData->community, function ($query) use ($formData) {
 							$query->where('community_id', $formData->community);
 						});
 					});
-				})->hideFromIndex(),
+				})->filterable()
+				->hideFromIndex(),
 
 			// - Province: Show abbreviated name on index view
-			BelongsTo::make('Province', 'province', 'App\Nova\Province')
+			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
 				->filterable()
 				->display(function ($province) {
 					return ( strlen($province->name) <= 10 ) ? $province->name : substr($province->name,0,10).'...';
-				})->onlyOnIndex(),
+				})->filterable()
+				->onlyOnIndex(),
 
 			// - Municipality: Show full name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
@@ -164,7 +165,8 @@ class Business extends Resource {
 							$query->where('province_id', $formData->province);
 						});
 					});
-				})->hideFromIndex(),
+				})->filterable()
+				->hideFromIndex(),
 
 			// - Municipality: Show abbreviated name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
@@ -199,8 +201,10 @@ class Business extends Resource {
 				->help('Tiempo estimado para presentar solicitudes'),
 			Tabs::make('Detalles', [
 				Tab::make('Precios', [
-					BelongsTo::make('Régimen', 'form', 'App\Nova\Form'),
+					BelongsTo::make('Régimen', 'form', 'App\Nova\Form')
+						->filterable(),
 					BelongsTo::make('Rango de precios', 'pricerange', 'App\Nova\Pricerange')
+						->filterable()
 						->hideFromIndex(),
 					Text::make('Precio Venta', 'price_sale')
 						->hideFromIndex(),
@@ -281,21 +285,10 @@ class Business extends Resource {
 		$user = Auth::user();
 
 		$retorno = [
-			new ByAvailability,
 			new BySource,
-			new ByCommunity,
-			new ByProvince,
-			new ByMunicipality,
 			new BySector,
 			new ByOwnership,
-			new ByPrice,
-			new ByForm,
 		];
-
-		if ($user->is_admin) {
-			array_unshift($retorno, new ByCdr);
-		}
-
 		return $retorno;
 	}
 

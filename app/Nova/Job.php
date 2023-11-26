@@ -14,14 +14,10 @@ use Laravel\Nova\Fields\Text;
 use App\Nova\Filters\BySector;
 use Eminiarts\Tabs\TabsOnEdit;
 use App\Nova\Actions\JobExport;
-use App\Nova\Filters\ByProvince;
 use Laravel\Nova\Fields\Boolean;
-use App\Nova\Filters\ByCommunity;
 use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
-use App\Nova\Filters\ByAvailability;
-use App\Nova\Filters\ByMunicipality;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -105,7 +101,9 @@ class Job extends Resource {
 	public function fields(Request $request) {
 		return [
 			// ID::make(__('ID'), 'id')->sortable(),
-			Boolean::make('Disp.', 'available')
+			Boolean::make('Disponible', 'available')
+				->filterable()
+				->hideFromIndex()			
 				->hideWhenCreating(),
 			Text::make('Referencia', 'reference')
 				->hideWhenCreating()
@@ -115,6 +113,7 @@ class Job extends Resource {
 				->hideWhenCreating()
 				->hideFromIndex(),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
+				->filterable()
 				->sortable()
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
@@ -133,17 +132,18 @@ class Job extends Resource {
 				})->onlyOnIndex(),		
 
 			// - Province: Show full name when not on index view
-			BelongsTo::make('Province', 'province', 'App\Nova\Province')
+			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
 				->dependsOn(['community'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
 					$field->relatableQueryUsing(function (NovaRequest $request, Builder $query) use ($formData) {
 						$query->when($formData->community, function ($query) use ($formData) {
 							$query->where('community_id', $formData->community);
 						});
 					});
-				})->hideFromIndex(),
+				})->filterable()
+				->hideFromIndex(),
 
 			// - Province: Show abbreviated name on index view
-			BelongsTo::make('Province', 'province', 'App\Nova\Province')
+			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
 				->filterable()
 				->display(function ($province) {
 					return ( strlen($province->name) <= 10 ) ? $province->name : substr($province->name,0,10).'...';
@@ -157,7 +157,8 @@ class Job extends Resource {
 							$query->where('province_id', $formData->province);
 						});
 					});
-				})->hideFromIndex(),
+				})->filterable()
+				->hideFromIndex(),
 
 			// - Municipality: Show abbreviated name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
@@ -268,16 +269,8 @@ class Job extends Resource {
 		$user = Auth::user();
 
 		$retorno = [
-			new ByAvailability,
-			new ByCommunity,
-			new ByProvince,
-			new ByMunicipality,
 			new BySector,
 		];
-
-		if ($user->is_admin) {
-			array_unshift($retorno, new ByCdr);
-		}
 
 		return $retorno;
 	}

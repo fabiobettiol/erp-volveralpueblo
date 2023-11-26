@@ -19,6 +19,10 @@ class Familymember extends Model {
 		return $this->belongsTo(Family::class);
 	}
 
+	public function cdr() {
+		return $this->belongsTo(Cdr::class);
+	}
+
 	public function gender() {
 		return $this->belongsTo(Gender::class);
 	}
