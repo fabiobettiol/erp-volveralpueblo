@@ -64,9 +64,12 @@ class Demandantfollowup extends Resource {
 				}),
 			BelongsTo::make('Usuario', 'user', 'App\Nova\User')
 				->exceptOnForms(),
-			Date::make('Fecha', 'date'),
-			Text::make('Asunto', 'subject'),
+			Date::make('Fecha', 'date')
+				->rules('required', 'date'),
+			Text::make('Asunto', 'subject')
+				->rules('required', 'max:100'),
 			Textarea::make('Entrevista', 'text')
+				->rules('required')
 				->alwaysShow(),
 			Textarea::make('Comentarios', 'comments')
 				->alwaysShow(),

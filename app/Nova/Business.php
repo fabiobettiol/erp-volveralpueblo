@@ -108,9 +108,6 @@ class Business extends Resource {
 				->hideWhenCreating()
 				->help('<a target="blank" href="/mapa/' . $this->reference . '">Ver en el mapa</a>')
 				->readonly(),
-			Boolean::make('Mapa', 'mapinfo')
-				->hideFromIndex()
-				->hideWhenCreating(),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->filterable()
 				->sortable()
@@ -172,20 +169,25 @@ class Business extends Resource {
 					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
 				})->onlyOnIndex(),
 
-			Text::make('Localidad', 'town'),
+			Text::make('Localidad', 'town')
+				->rules('required', 'max:100'),
 			Text::make('Código Postal', 'postcode')
-				->rules('max:5')
+				->rules('required', 'min:5','max:5')
 				->hideFromIndex(),
 			Text::make('Habitantes', 'population')
 				->hideFromIndex(),
-			Text::make('Tipo de Negocio', 'property_type')
-				->help('Subsector'),
 			BelongsTo::make('Sector', 'sector', 'App\Nova\Sector')
+				->rules('required', 'max:5')
 				->filterable(),
+			Textarea::make('Tipo de Negocio', 'property_type')
+				->rows(2)
+				->rules('required', 'max:255')
+				->help('Subsector'),				
 			BelongsTo::make('Titularidad', 'ownership', 'App\Nova\Ownership')
 				->filterable()
 				->hideFromIndex(),
 			Textarea::make('Dirección del Negocio', 'address')
+				->rules('required')
 				->help('Dirección del negocio')
 				->hideFromIndex()
 				->alwaysShow(),
@@ -197,6 +199,7 @@ class Business extends Resource {
 				->hideFromIndex()
 				->alwaysShow(),
 			Text::make('Plazos', 'deadlines')
+				->rules('max:100')
 				->help('Tiempo estimado para presentar solicitudes'),
 			Tabs::make('Detalles', [
 				Tab::make('Precios', [
@@ -209,7 +212,8 @@ class Business extends Resource {
 						->hideFromIndex(),
 					Text::make('Precio Alq.', 'price_rent')
 						->hideFromIndex(),
-					Text::make('Descripción', 'form_detail')
+					Textarea::make('Descripción', 'form_detail')
+						->rows(2)
 						->help('Detalles')
 						->hideFromIndex(),
 				]),
@@ -239,19 +243,13 @@ class Business extends Resource {
 				Tab::make('Mapa', [
 					Boolean::make('Mapa', 'mapinfo')
 						->hideFromIndex()
-						->canSee(function ($request) {
-							return $request->user()->is_admin;
-						})->hideWhenCreating(),
+						->hideWhenCreating(),
 					Text::make('Latitud', 'lat')
 						->hideFromIndex()
-						->canSee(function ($request) {
-							return $request->user()->is_admin;
-						})->hideWhenCreating(),
+						->hideWhenCreating(),
 					Text::make('Longitud', 'lng')
 						->hideFromIndex()
-						->canSee(function ($request) {
-							return $request->user()->is_admin;
-						})->hideWhenCreating(),
+						->hideWhenCreating(),
 				]),
 				Tab::make('Comentarios', [
 					Textarea::make('Comentarios', 'comments')

@@ -107,9 +107,6 @@ class Land extends Resource {
 				->hideWhenCreating()
 				->help('<a target="blank" href="/mapa/' . $this->reference . '">Ver en el mapa</a>')
 				->readonly(),
-			Boolean::make('Mapa', 'mapinfo')
-				->hideWhenCreating()
-				->hideFromIndex(),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->filterable()
 				->sortable()
@@ -171,11 +168,13 @@ class Land extends Resource {
 					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
 				})->onlyOnIndex(),
 				
-			Text::make('Localidad', 'town'),
+			Text::make('Localidad', 'town')
+				->rules('required', 'max:100'),
 			Text::make('Código Postal', 'postcode')
-				->rules('max:5')
+				->rules('required', 'min:5', 'max:5')
 				->hideFromIndex(),
-			Text::make('Nombre del Paraje', 'property_name'),
+			Text::make('Nombre del Paraje', 'property_name')
+				->rules('max:255'),
 			Text::make('Habitantes', 'population')
 				->help('Número de habitantes')
 				->hideFromIndex(),
@@ -250,19 +249,13 @@ class Land extends Resource {
 				Tab::make('Mapa', [
 					Boolean::make('Mapa', 'mapinfo')
 						->hideFromIndex()
-						->canSee(function ($request) {
-							return $request->user()->is_admin;
-						})->hideWhenCreating(),
+						->hideWhenCreating(),
 					Text::make('Latitud', 'lat')
 						->hideFromIndex()
-						->canSee(function ($request) {
-							return $request->user()->is_admin;
-						})->hideWhenCreating(),
+						->hideWhenCreating(),
 					Text::make('Longitud', 'lng')
 						->hideFromIndex()
-						->canSee(function ($request) {
-							return $request->user()->is_admin;
-						})->hideWhenCreating(),
+						->hideWhenCreating(),
 				]),
 				Tab::make('Comentarios', [
 					Textarea::make('Comentarios', 'comments')

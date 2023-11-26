@@ -111,10 +111,7 @@ class House extends Resource {
 			Text::make('Referencia', 'reference')
 				->hideWhenCreating()
 				->help('<a target="blank" href="/mapa/' . $this->reference . '">Ver en el mapa</a>')
-				->readonly(),
-			Boolean::make('Mapa', 'mapinfo')
-				->hideFromIndex()
-				->hideWhenCreating(),
+				->readonly(),	
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->filterable()
 				->sortable()
@@ -175,16 +172,19 @@ class House extends Resource {
 					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
 				})->onlyOnIndex(),
 			Text::make('Código Postal', 'postcode')
-				->rules('max:5')
+				->rules('required', 'min:5', 'max:5')
 				->hideFromIndex(),
 			Text::make('Localidad', 'town')
+				->rules('required', 'max:100')
 				->help('Nombre de la localidad o pueblo'),
 			Text::make('Habitantes', 'population')
 				->help('Número de habitantes del poblado')
 				->hideFromIndex(),
 			Textarea::make('Dirección', 'address')
+				->rules('required')
 				->alwaysShow(),
 			Text::make('Nombre', 'property_name')
+				->rules('max:100')
 				->help('Nombre de la propiedad')
 				->hideFromIndex(),
 			Tabs::make('Detalles', [
@@ -212,29 +212,39 @@ class House extends Resource {
 						->hideFromIndex(),
 					Boolean::make('Reparaciones', 'repairs_needed')
 						->hideFromIndex(),
-					Text::make('Descripción', 'repairs_detail')
+					Textarea::make('Descripción', 'repairs_detail')
+						->rules('max:255')
+						->rows(2)
 						->help('Describir las reparaciones necesarias')
 						->hideFromIndex(),
 					Boolean::make('Habitable', 'habitable')
 						->hideFromIndex(),
-					Text::make('Descripción', 'habitable_detail')
+					Textarea::make('Descripción', 'habitable_detail')
+						->rules('max:255')
+						->rows(2)					
 						->help('Describir el estado de habitabilidad')
 						->hideFromIndex(),
 				]),
 				Tab::make('Servicios', [
 					BelongsTo::make('Agua', 'waters', 'App\Nova\Water')
 						->hideFromIndex(),
-					Text::make('Descripción', 'water_detail')
+					Textarea::make('Descripción', 'water_detail')
+						->rules('max:255')
+						->rows(2)						
 						->help('Detalles sobre el servicio de agua')
 						->hideFromIndex(),
 					BelongsTo::make('Calefacción', 'heating', 'App\Nova\Heating')
 						->hideFromIndex(),
-					Text::make('Descripción', 'heating_detail')
+					Textarea::make('Descripción', 'heating_detail')
+						->rules('max:255')
+						->rows(2)						
 						->help('Detalles sobre el servicio de calefacción')
 						->hideFromIndex(),
 					BelongsTo::make('Cocina', 'stove', 'App\Nova\Stove')
 						->hideFromIndex(),
-					Text::make('Descripción', 'stove_detail')
+					Textarea::make('Descripción', 'stove_detail')
+						->rules('max:255')
+						->rows(2)						
 						->help('Detalles sobre la cocina')
 						->hideFromIndex(),
 				]),
@@ -269,14 +279,18 @@ class House extends Resource {
 					BelongsTo::make('Superficie', 'area', 'App\Nova\Arearange')
 						->help('Rango de áreas')
 						->hideFromIndex(),
-					Text::make('Descripción', 'house_area_detail')
+					Textarea::make('Descripción', 'house_area_detail')
+						->rules('max:255')
+						->rows(2)						
 						->help('Detalles sobre la superficie')
 						->hideFromIndex(),
 					Text::make('Área Parcela', 'plot_area')
 						->help('Superficie total de la parcela (M2)')
 						->hideFromIndex(),
-					Text::make('Descripción', 'plot_area_detail')
-						->help('Detalles sobre el área de la parcels')
+					Textarea::make('Descripción', 'plot_area_detail')
+						->rules('max:255')
+						->rows(2)						
+						->help('Detalles sobre el área de la parcela')
 						->hideFromIndex(),
 				]),
 				Tab::make('Precios', [
@@ -290,26 +304,22 @@ class House extends Resource {
 						->hideFromIndex(),
 					Text::make('Precio Alq.', 'price_rent')
 						->hideFromIndex(),
-					Text::make('Descripción', 'form_detail')
+					Textarea::make('Descripción', 'form_detail')
+						->rules('max:255')
+						->rows(2)						
 						->help('Detalles')
 						->hideFromIndex(),
 				]),
 				Tab::make('Mapa', [
 					Boolean::make('Mapa', 'mapinfo')
 						->hideFromIndex()
-						->canSee(function ($request) {
-							return $request->user()->is_admin;
-						})->hideWhenCreating(),
+						->hideWhenCreating(),
 					Text::make('Latitud', 'lat')
 						->hideFromIndex()
-						->canSee(function ($request) {
-							return $request->user()->is_admin;
-						})->hideWhenCreating(),
+						->hideWhenCreating(),
 					Text::make('Longitud', 'lng')
 						->hideFromIndex()
-						->canSee(function ($request) {
-							return $request->user()->is_admin;
-						})->hideWhenCreating(),
+						->hideWhenCreating(),
 				]),
 
 				Tab::make('Contacto', [

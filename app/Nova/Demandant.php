@@ -74,21 +74,31 @@ class Demandant extends Resource {
 					return $request->user()->is_admin;
 				}),					
 			BelongsTo::make('Sexo', 'gender', 'App\Nova\Gender'),
-			Text::make('Nombre', 'name'),
-			Text::make('Apellido', 'surname'),
-			Text::make('Email', 'email'),
-			Text::make('Teléfono', 'phone'),
+			Text::make('Nombre', 'name')
+				->rules('required', 'max:45'),
+			Text::make('Apellido', 'surname')
+				->rules('required', 'max:60'),
+			Text::make('Email', 'email')
+				->rules('required', 'max:75'),
+			Text::make('Teléfono', 'phone')
+				->rules('regex:/^([0-9\s\-\+\(\)]*)$/','min:9'),
 			BelongsTo::make('Tipo documento', 'documenttype', 'App\Nova\Documenttype')
 				->hideFromIndex(),
-			Text::make('Identificación', 'identification'),
-			Text::make('Ciudad', 'city')->hideFromIndex(),
+			Text::make('Identificación', 'identification')
+				->rules('required', 'max:20'),
+			Text::make('Ciudad', 'city')
+				->rules('required', 'max:60')
+				->hideFromIndex(),
 			BelongsTo::make('Nacionalidad', 'country', 'App\Nova\Country')->hideFromIndex(),
 			Date::make('Fecha Nacimiento', 'birthdate')
 				->help('Selecciona en el calendario o escribe en formato AAAA-MM-DD')
 				->hideFromIndex(),
-			Text::make('Adultos', 'adults')->hideFromIndex(),
-			Number::make('Niños', 'children')->hideFromIndex(),
-
+			Number::make('Adultos', 'adults')
+				->rules('required', 'gt:0')
+				->hideFromIndex(),
+			Number::make('Niños', 'children')
+				->rules('required', 'gte:0')
+				->hideFromIndex(),
 			Boolean::make('Potencial poblador', 'potential')
 				->filterable()
 				->help('Indique si este solicitante podría ser un potencial poblador'),
@@ -105,8 +115,10 @@ class Demandant extends Resource {
 				'5' => 'Otros',
 			]),
 
-			BelongsTo::make('Provincia de origen', 'provincefrom', 'App\Nova\Province')->nullable(),
-			BelongsTo::make('Provincia de destino', 'provinceto', 'App\Nova\Province')->nullable(),
+			BelongsTo::make('Provincia de origen', 'provincefrom', 'App\Nova\Province')
+				->nullable(),
+			BelongsTo::make('Provincia de destino', 'provinceto', 'App\Nova\Province')
+				->nullable(),
 
 			Textarea::make('Proyecto de emprendimiento', 'subject')
 				->alwaysShow(),

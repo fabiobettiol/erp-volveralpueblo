@@ -85,11 +85,18 @@ class Familymember extends Resource {
 			Boolean::make('Persona de referencia', 'is_responsible')->sortable(),
 			Boolean::make('Es menor', 'is_child')->sortable(),
 			BelongsTo::make('Género', 'gender', 'App\Nova\Gender')->sortable(),
-			Text::make('Nombre', 'name')->sortable(),
-			Text::make('Apellido', 'surname')->sortable(),
-			Text::make('Teléfono', 'phone')->hideFromIndex(),
-			Text::make('Email')->hideFromIndex(),
-			Date::make('Fecha de nacimiento', 'dateofbirth'),
+			Text::make('Nombre', 'name')
+				->rules('required', 'max:60')
+				->sortable(),
+			Text::make('Apellido', 'surname')
+				->rules('required', 'max:60')
+				->sortable(),
+			Text::make('Teléfono', 'phone')
+				->hideFromIndex(),
+			Text::make('Email')
+				->hideFromIndex(),
+			Date::make('Fecha de nacimiento', 'dateofbirth')
+				->rules('required', 'date'),
 			BelongsTo::make('País de origen', 'nationality', '\App\Nova\Country')
 				->hideFromIndex()
 				->help('País de origen, nacimiento'),
@@ -100,7 +107,9 @@ class Familymember extends Resource {
 				'4' => 'Estudiando',
 				'5' => 'Otros',
 			])->displayUsingLabels()->required(),
-			Text::make('Comentarios', 'employment_comment')
+			Textarea::make('Comentarios', 'employment_comment')
+				->rules('max:255')
+				->rows(2)
 				->hideFromIndex()
 				->help('Comentarios sobre la situación de empleo'),
 			BelongsTo::make('Sector', 'sector', 'App\Nova\Sector')

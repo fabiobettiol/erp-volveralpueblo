@@ -54,7 +54,8 @@ class Familydoc extends Resource {
 		return [
 			ID::make(__('ID'), 'id')->sortable(),
 			BelongsTo::make('Familia', 'family', 'App\Nova\Family'),
-			Text::make('Nombre', 'name'),
+			Text::make('Nombre', 'name')
+				->rules('required', 'max:50'),
 			Textarea::make('Detalles', 'details')
 				->alwaysShow(),
 			File::make('Documento', 'file')
@@ -62,7 +63,8 @@ class Familydoc extends Resource {
 				->download(function ($request, $model, $disk, $value) {
 					$file = $model->family->family_name . '-' . $model->name;
 					return Storage::disk($disk)->download($value, $file);
-				}),
+				})
+				->rules('required')
 		];
 	}
 

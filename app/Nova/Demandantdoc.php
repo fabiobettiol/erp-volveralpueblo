@@ -53,6 +53,7 @@ class Demandantdoc extends Resource {
 			ID::make(__('ID'), 'id')->sortable(),
 			BelongsTo::make('Solicitante', 'demandant', 'App\Nova\Demandant'),
 			Text::make('Nombre del Documento', 'name')
+				->rules('max:50')
 				->help('CV, Constacia, Certificado de Empadronamiento...'),
 			Textarea::make('Detalles', 'details')
 				->alwaysShow(),

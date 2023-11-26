@@ -47,6 +47,7 @@ class Documenttype extends Resource {
 		return [
 			ID::make(__('ID'), 'id')->sortable(),
 			Text::make('Nombre', 'name')
+				->rules('required', 'max:45')
 		];
 	}
 

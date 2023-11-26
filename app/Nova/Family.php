@@ -95,12 +95,17 @@ class Family extends Resource {
 						->canSee(function ($request) {
 							return $request->user()->is_admin;
 						}),
-					Date::make('Fecha de asentamiento', 'settlementdate')->required(),
+					Date::make('Fecha de asentamiento', 'settlementdate')
+						->rules('required', 'date'),
 					BelongsTo::make('País de origen', 'nationality', 'App\Nova\Country'),
 					BelongsTo::make('Provincia de origen', 'sourceprovince', 'App\Nova\Province'),
-					Text::make('Loalidad de origen', 'fromcityname')->hideFromIndex(),
+					Text::make('Loalidad de origen', 'fromcityname')
+						->rules('required', 'max:60')
+						->hideFromIndex(),
 					BelongsTo::make('Provincia de destino', 'destinationprovince', 'App\Nova\Province'),
-					Text::make('Localidad de destino', 'tocityname')->hideFromIndex(),
+					Text::make('Localidad de destino', 'tocityname')
+						->rules('required', 'max:60')
+						->hideFromIndex(),
 					BelongsTo::make('Tipo de asentamiento', 'settlementtype', 'App\Nova\Settlementtype'),
 					BelongsTo::make('Estado de asentamiento', 'settlementstatus', 'App\Nova\Settlementstatus'),
 					Boolean::make('Itinerarios', 'itineraries')->hideFromIndex(),

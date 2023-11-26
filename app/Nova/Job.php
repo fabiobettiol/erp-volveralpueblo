@@ -109,9 +109,6 @@ class Job extends Resource {
 				->hideWhenCreating()
 				->help('<a target="blank" href="/mapa/' . $this->reference . '">Ver en el mapa</a>')
 				->readonly(),
-			Boolean::make('Mapa', 'mapinfo')
-				->hideWhenCreating()
-				->hideFromIndex(),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->filterable()
 				->sortable()
@@ -119,6 +116,7 @@ class Job extends Resource {
 					return $request->user()->is_admin;
 				}),
 			Date::make('Fecha', 'created_at')
+				->rules('required', 'date')
 				->sortable()
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
@@ -168,9 +166,10 @@ class Job extends Resource {
 				})->onlyOnIndex(),
 				
 			Text::make('Localidad', 'town')
+				->rules('required', 'max:100')
 				->hideFromIndex(),
 			Text::make('Código Postal', 'postcode')
-				->rules('max:5')
+				->rules('required','min:5', 'max:5')
 				->hideFromIndex(),
 			Text::make('Habitantes', 'population')
 				->hideFromIndex(),
@@ -179,7 +178,8 @@ class Job extends Resource {
 				Tab::make('Oferta', [
 					BelongsTo::make('Titularidad', 'jobownership', 'App\Nova\Jobownership')
 						->hideFromIndex(),
-					BelongsTo::make('Sector', 'sector', 'App\Nova\Sector'),
+					BelongsTo::make('Sector', 'sector', 'App\Nova\Sector')
+						->filterable(),
 					Textarea::make('Descripción', 'description')
 						->hideFromIndex()
 						->alwaysShow(),
@@ -224,19 +224,13 @@ class Job extends Resource {
 				Tab::make('Mapa', [
 					Boolean::make('Mapa', 'mapinfo')
 						->hideFromIndex()
-						->canSee(function ($request) {
-							return $request->user()->is_admin;
-						})->hideWhenCreating(),
+						->hideWhenCreating(),
 					Text::make('Latitud', 'lat')
 						->hideFromIndex()
-						->canSee(function ($request) {
-							return $request->user()->is_admin;
-						})->hideWhenCreating(),
+						->hideWhenCreating(),
 					Text::make('Longitud', 'lng')
 						->hideFromIndex()
-						->canSee(function ($request) {
-							return $request->user()->is_admin;
-						})->hideWhenCreating(),
+						->hideWhenCreating(),
 				]),
 
 				Tab::make('Comentarios', [
@@ -266,13 +260,7 @@ class Job extends Resource {
 	 * @return array
 	 */
 	public function filters(Request $request) {
-		$user = Auth::user();
-
-		$retorno = [
-			new BySector,
-		];
-
-		return $retorno;
+		return [];
 	}
 
 	/**
