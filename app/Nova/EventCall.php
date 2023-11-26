@@ -71,12 +71,13 @@ class EventCall extends Resource {
 		return [
 			ID::make()->sortable(),
 			Text::make('Título', 'title')
-				->rules('required'),
+				->rules('required', 'max:50'),
 			Textarea::make('Descripción', 'description')
+				->rows(2)
 				->alwaysShow(),
 			BelongsTo::make('Usuario', 'user', 'App\Nova\User')
 				->canSee(function ($request) {
-					return $request->user()->is_admin || $request->user()->is_cdr_admin && ($request->user()->cdr_id == $this->cdr_id);
+					return $request->user()->is_admin || ($request->user()->is_cdr_admin && ($request->user()->cdr_id == $this->cdr_id))	;
 				}),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->canSee(function ($request) {

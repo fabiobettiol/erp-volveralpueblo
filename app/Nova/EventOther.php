@@ -71,8 +71,9 @@ class EventOther extends Resource {
 		return [
 			ID::make()->sortable(),
 			Text::make('Título', 'title')
-				->rules('required'),
+				->rules('required', 'max:50'),
 			Textarea::make('Descripción', 'description')
+				->rows(2)
 				->alwaysShow(),
 			BelongsTo::make('Usuario', 'user', 'App\Nova\User')
 				->canSee(function ($request) {
