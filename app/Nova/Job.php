@@ -89,7 +89,9 @@ class Job extends Resource {
 		'reference',
 		'town',
 		'property_name',
+		'description',	
 		'position',
+		'bidder_name'
 	];
 
 	/**
@@ -197,28 +199,28 @@ class Job extends Resource {
 					Text::make('Nombre', 'bidder_name')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
 						}),
 					Text::make('Teléfono', 'bidder_phone')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
 						}),
 					Text::make('Email', 'bidder_email')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
 						}),
 					Text::make('Email para CV', 'cv_email')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
 						}),
 					Textarea::make('Comentarios', 'bidder_comments')
 						->hideFromIndex()
 						->alwaysShow()
 						->canSee(function ($request) {
-							return $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
 						}),
 				]),
 				Tab::make('Mapa', [

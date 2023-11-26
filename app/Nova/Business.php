@@ -89,6 +89,8 @@ class Business extends Resource {
 		'town',
 		'property_type',
 		'description',
+		'bidder_name',
+		'comments'
 	];
 
 	/**
@@ -221,23 +223,23 @@ class Business extends Resource {
 					Text::make('Nombre', 'bidder_name')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
 						}),
 					Text::make('Teléfono', 'bidder_phone')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
 						}),
 					Text::make('Email', 'bidder_email')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
 						}),
 					Textarea::make('Comentarios', 'bidder_comments')
 						->hideFromIndex()
 						->alwaysShow()
 						->canSee(function ($request) {
-							return $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
 						}),
 				]),
 				Tab::make('Mapa', [

@@ -93,6 +93,7 @@ class House extends Resource {
 		'town',
 		'property_name',
 		'contact',
+		'comments'
 	];
 
 	/**
@@ -326,17 +327,17 @@ class House extends Resource {
 					Text::make('Contacto', 'contact')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
 						}),
 					Text::make('Teléfono', 'phone')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
 						}),
 					Text::make('Email')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
 						}),
 				]),
 				Tab::make('Comentarios', [
