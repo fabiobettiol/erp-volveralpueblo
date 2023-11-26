@@ -2,8 +2,6 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\ByCdr;
-use App\Nova\Filters\ByContactcompleted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\BelongsTo;
@@ -73,7 +71,9 @@ class Familycontact extends Resource {
 			BelongsTo::make('Usuario', 'user', 'App\Nova\User')
 				->exceptOnForms(),
 			Date::make('Fecha', 'date')->sortable(),
-			Boolean::make('Concluído', 'completed')->sortable(),
+			Boolean::make('Concluída', 'completed')
+				->filterable()	
+				->sortable(),
 			Text::make('Asunto', 'subject'),
 			Textarea::make('Descripción', 'text')
 				->alwaysShow(),
@@ -99,13 +99,7 @@ class Familycontact extends Resource {
 	 * @return array
 	 */
 	public function filters(Request $request) {
-		$user = Auth::user();
-
-		$retorno = [
-			new ByContactCompleted,
-		];
-
-		return $retorno;
+		return [];
 	}
 
 	/**

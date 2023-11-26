@@ -2,8 +2,6 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\ByCdr;
-use App\Nova\Filters\ByUpdatedStatus;
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
 use Illuminate\Http\Request;
@@ -79,7 +77,8 @@ class Family extends Resource {
 			//Text::make('id', 'id')->sortable()->hideWhenCreating(),
 			Tabs::make('Familia', [
 				Tab::make('Detalles', [
-					Boolean::make('Actualizado', 'datos_actualizados'),
+					Boolean::make('Actualizado', 'datos_actualizados')
+						->filterable(),
 					Text::make('Referencia', 'reference')
 						->sortable()
 						->hideWhenCreating(),
@@ -187,12 +186,7 @@ class Family extends Resource {
 	 * @return array
 	 */
 	public function filters(Request $request) {
-		$user = Auth::user();
-
-		$retorno = [
-			new ByUpdatedStatus,
-		];
-		return $retorno;
+		return [];
 	}
 
 	/**

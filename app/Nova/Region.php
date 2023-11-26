@@ -2,15 +2,11 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\ByCdr;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
-use App\Nova\Filters\ByProvince;
 use Laravel\Nova\Fields\Boolean;
-use App\Nova\Filters\ByCommunity;
 use Laravel\Nova\Fields\Textarea;
-use App\Nova\Filters\ByVisibility;
 use Laravel\Nova\Fields\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -63,10 +59,14 @@ class Region extends Resource
             //ID::make(__('ID'), 'id')->sortable(),
             Text::make('Nombre', 'name')->sortable(),
             Text::make('Código', 'comarca'),
-            BelongsTo::make('Communidad', 'community', 'App\Nova\Community'),
-            BelongsTo::make('Provincia', 'province', 'App\Nova\Province'),
-            BelongsTo::make('CDR', 'cdr'),
-            Boolean::make('Visible', 'visible'),
+            BelongsTo::make('Communidad', 'community', 'App\Nova\Community')
+                ->filterable(),
+            BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
+                ->filterable(),
+            BelongsTo::make('CDR', 'cdr')
+                ->filterable(),
+            Boolean::make('Visible', 'visible')
+                ->filterable(),
             Textarea::make('Polígono', 'polygon'),
         ];
     }
@@ -90,21 +90,7 @@ class Region extends Resource
      */
     public function filters(Request $request)
     {
-        $user = Auth::user();
-
-        $retorno = [
-
-            new ByVisibility,
-            new ByCommunity,
-            new ByProvince,
-
-        ];
-
-        if ($user->is_admin) {
-            array_unshift($retorno, new ByCdr);
-        }
-
-        return $retorno;
+        return[];
     }
 
     /**

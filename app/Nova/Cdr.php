@@ -2,10 +2,6 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\ByCdrType;
-use App\Nova\Filters\ByCommunity;
-use App\Nova\Filters\ByMunicipality;
-use App\Nova\Filters\ByProvince;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
@@ -106,9 +102,12 @@ class Cdr extends Resource {
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
 				}),
-			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community'),
-			BelongsTo::make('Provincia', 'province', 'App\Nova\Province'),
-			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality'),
+			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
+				->filterable(),
+			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
+				->filterable(),
+			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
+				->filterable(),
 			BelongsTo::make('Tipo', 'cdrtype', 'App\Nova\Cdrtype'),
 			Textarea::make('Dirección', 'address'),
 			Text::make('Ciudad', 'city')
@@ -213,12 +212,7 @@ class Cdr extends Resource {
 	 * @return array
 	 */
 	public function filters(Request $request) {
-		return [
-			new ByCdrType,
-			new ByCommunity,
-			new ByProvince,
-			new ByMunicipality,
-		];
+		return [];
 	}
 
 	/**

@@ -1,9 +1,6 @@
 <?php
 
 namespace App\Nova;
-
-use App\Nova\Filters\ByCdr;
-use App\Nova\Filters\ByPotential;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
@@ -72,10 +69,10 @@ class Demandant extends Resource {
 		return [
 			ID::make(__('ID'), 'id')->sortable(),
 			Belongsto::make('CDR', 'cdr', 'App\Nova\Cdr')
-			->filterable()
-			->canSee(function ($request) {
-				return $request->user()->is_admin;
-			}),					
+				->filterable()
+				->canSee(function ($request) {
+					return $request->user()->is_admin;
+				}),					
 			BelongsTo::make('Sexo', 'gender', 'App\Nova\Gender'),
 			Text::make('Nombre', 'name'),
 			Text::make('Apellido', 'surname'),
@@ -93,6 +90,7 @@ class Demandant extends Resource {
 			Number::make('Niños', 'children')->hideFromIndex(),
 
 			Boolean::make('Potencial poblador', 'potential')
+				->filterable()
 				->help('Indique si este solicitante podría ser un potencial poblador'),
 			Textarea::make('Detalles del potencial poblador', 'potential_details')
 				->help('Explique brevemente por qué lo considera un potencial poblador')
@@ -141,9 +139,7 @@ class Demandant extends Resource {
 	 * @return array
 	 */
 	public function filters(Request $request) {
-		return [
-			new ByPotential,
-		];
+		return [];
 	}
 
 	/**

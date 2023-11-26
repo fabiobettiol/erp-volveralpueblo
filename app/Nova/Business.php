@@ -5,17 +5,14 @@ namespace App\Nova;
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
 use App\Models\Community;
-use App\Nova\Filters\ByCdr;
 use Laravel\Nova\Fields\ID;
 use App\Models\Municipality;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
-use App\Nova\Filters\BySector;
 use App\Nova\Filters\BySource;
 use Eminiarts\Tabs\TabsOnEdit;
 use Laravel\Nova\Fields\Boolean;
-use App\Nova\Filters\ByOwnership;
 use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
@@ -183,8 +180,10 @@ class Business extends Resource {
 				->hideFromIndex(),
 			Text::make('Tipo de Negocio', 'property_type')
 				->help('Subsector'),
-			BelongsTo::make('Sector', 'sector', 'App\Nova\Sector'),
+			BelongsTo::make('Sector', 'sector', 'App\Nova\Sector')
+				->filterable(),
 			BelongsTo::make('Titularidad', 'ownership', 'App\Nova\Ownership')
+				->filterable()
 				->hideFromIndex(),
 			Textarea::make('Dirección del Negocio', 'address')
 				->help('Dirección del negocio')
@@ -286,8 +285,6 @@ class Business extends Resource {
 
 		$retorno = [
 			new BySource,
-			new BySector,
-			new ByOwnership,
 		];
 		return $retorno;
 	}

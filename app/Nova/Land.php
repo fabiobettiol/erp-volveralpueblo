@@ -5,19 +5,14 @@ namespace App\Nova;
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
 use App\Models\Community;
-use App\Nova\Filters\ByCdr;
-use App\Nova\Filters\ByUse;
 use Laravel\Nova\Fields\ID;
 use App\Models\Municipality;
-use App\Nova\Filters\ByArea;
-use App\Nova\Filters\ByType;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Eminiarts\Tabs\TabsOnEdit;
 use App\Nova\Actions\LandExport;
 use Laravel\Nova\Fields\Boolean;
-use App\Nova\Filters\ByOwnership;
 use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
@@ -185,6 +180,8 @@ class Land extends Resource {
 				->help('Número de habitantes')
 				->hideFromIndex(),
 			BelongsTo::make('Titularidad', 'ownership', 'App\Nova\Ownership')
+				->filterable()
+				->hideFromIndex()
 				->help('Titularidad de la propiedad'),
 			Textarea::make('Descripción', 'description')
 				->help('Descripción general')
@@ -198,16 +195,19 @@ class Land extends Resource {
 			Text::make('Parcela', 'plot')
 				->hideFromIndex(),
 			Text::make('Área', 'area'),
-			BelongsTo::make('Rangos de Área', 'arearange', 'App\Nova\Arearange'),
+			BelongsTo::make('Rangos de Área', 'arearange', 'App\Nova\Arearange')
+				->filterable(),
 			Text::make('Uso de la tierra', 'land')
 				->help('Ejemplos: pastos, huerta, monte, etc')
+				->filterable()
 				->hideFromIndex(),
 			BelongsTo::make('Uso de la tierra (Categorías)', 'landuse', 'App\Nova\Landuse'),
 
 			Text::make('Tipo de Tierra', 'soil')
 				->help('Ejemplos: regadío, secano, urbanizable, etc')
 				->hideFromIndex(),
-			BelongsTo::make('Tipo de tierra (Categorías)', 'landtype', 'App\Nova\Landtype'),
+			BelongsTo::make('Tipo de tierra (Categorías)', 'landtype', 'App\Nova\Landtype')
+				->filterable(),
 			Tabs::make('Detalles', [
 				Tab::make('Precios', [
 					BelongsTo::make('Régimen', 'form', 'App\Nova\Form')
@@ -293,15 +293,9 @@ class Land extends Resource {
 	 * @return array
 	 */
 	public function filters(Request $request) {
-		$user = Auth::user();
-
-		$retorno = [
-			new ByUse,
-			new ByType,
-			new ByOwnership,
-			new ByArea,
-		];
-		return $retorno;
+		
+		return [];
+		
 	}
 
 	/**

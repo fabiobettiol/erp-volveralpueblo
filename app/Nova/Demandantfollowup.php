@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Nova;
-
-use App\Nova\Filters\ByCdr;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Date;

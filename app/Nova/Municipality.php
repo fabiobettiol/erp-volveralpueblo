@@ -2,7 +2,6 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\ByProvince;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
@@ -77,7 +76,8 @@ class Municipality extends Resource
         return [
             // ID::make(__('ID'), 'id')->sortable(),
             Text::make('Nombre', 'name'),
-            BelongsTo::make('Provincia', 'province', 'App\Nova\Province'),
+            BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
+                ->filterable(),
             HasMany::make('CDRs', 'cdrs', 'App\Nova\Cdr'),
         ];
     }
@@ -101,9 +101,7 @@ class Municipality extends Resource
      */
     public function filters(Request $request)
     {
-        return [
-            new ByProvince,
-        ];
+        return [];
     }
 
     /**

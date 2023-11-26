@@ -2,7 +2,6 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\ByCommunity;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
@@ -77,7 +76,8 @@ class Province extends Resource
         return [
             // ID::make(__('ID'), 'id')->sortable(),
             Text::make('Nombre', 'name'),
-            BelongsTo::make('Comunidad', 'community', 'App\Nova\Community'),
+            BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
+                ->filterable(),
             HasMany::make('Municipios', 'municipalities', 'App\Nova\Municipality')
         ];
     }
@@ -101,9 +101,7 @@ class Province extends Resource
      */
     public function filters(Request $request)
     {
-        return [
-            new ByCommunity,
-        ];
+        return [];
     }
 
     /**

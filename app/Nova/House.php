@@ -5,7 +5,6 @@ namespace App\Nova;
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
 use App\Models\Community;
-use App\Nova\Filters\ByCdr;
 use Laravel\Nova\Fields\ID;
 use App\Models\Municipality;
 use Illuminate\Http\Request;
