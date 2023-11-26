@@ -49,13 +49,16 @@ use App\Nova\Settlementstatus;
 use App\Nova\Demandantfollowup;
 use App\Nova\Metrics\LandCount;
 use Laravel\Nova\Menu\MenuItem;
+use App\Nova\EventFamilycontact;
 use App\Nova\Metrics\HouseCount;
 use Laravel\Nova\Menu\MenuGroup;
+use App\Nova\EventFamilyfollowup;
 use App\Nova\Metrics\JobPerMonth;
 use App\Nova\Metrics\LandPerMonth;
 use Laravel\Nova\Menu\MenuSection;
 use App\Nova\Metrics\BusinessCount;
 use App\Nova\Metrics\HousePerMonth;
+use App\Nova\EventDemandantfollowup;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Blade;
 use App\Nova\Metrics\BusinessPerMonth;
@@ -176,7 +179,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 			MenuSection::make('Eventos', [
 				MenuItem::resource(EventCall::class),
 				MenuItem::resource(EventMeeting::class),
-				MenuItem::resource(EventOther::class),
+				MenuItem::resource(EventDemandantfollowup::class),
+				MenuItem::resource(EventFamilycontact::class),
+				MenuItem::resource(EventFamilyfollowup::class),				
+				MenuItem::resource(EventOther::class),				
 			])->icon('calendar')
 				->collapsible(),
 

@@ -5,9 +5,13 @@ namespace App\Providers;
 use App\Nova\EventCall;
 use App\Nova\EventOther;
 use App\Nova\EventMeeting;
+use App\Nova\EventFamilycontact;
+use App\Nova\EventFamilyfollowup;
 use Wdelfuego\NovaCalendar\Event;
+use App\Nova\EventDemandantfollowup;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Resource as NovaResource;
+use Wdelfuego\NovaCalendar\EventFilter\NovaResourceFilter;
 use Wdelfuego\NovaCalendar\DataProvider\AbstractCalendarDataProvider;
 
 class CalendarDataProvider extends AbstractCalendarDataProvider {
@@ -44,6 +48,9 @@ class CalendarDataProvider extends AbstractCalendarDataProvider {
 			EventCall::class => ['start', 'end'],
 			EventMeeting::class => ['start', 'end'],
 			EventOther::class => ['start', 'end'],
+			EventDemandantfollowup::class => ['start', 'end'],
+			EventFamilycontact::class => ['start', 'end'],
+			EventFamilyfollowup::class => ['start', 'end']
 
 			// Events with an ending timestamp can be multi-day events:
 			// SomeResource::class => ['starts_at', 'ends_at'],
@@ -122,6 +129,18 @@ class CalendarDataProvider extends AbstractCalendarDataProvider {
 		} else {
 			return ( Auth::user()->cdr_id != $resource->cdr_id );
 		}
+	}	
+
+	public function filters() : array
+	{
+		return [
+			new NovaResourceFilter(__('Llamadas'), EventCall::class),
+			new NovaResourceFilter(__('Reuniones'), EventMeeting::class),
+			new NovaResourceFilter(__('Otros eventos'), EventOther::class),
+			new NovaResourceFilter(__('Interacciones demandantes'), EventDemandantfollowup::class),
+			new NovaResourceFilter(__('Intervenciones familias'), EventFamilycontact::class),
+			new NovaResourceFilter(__('Seguimiento familias'), EventFamilyfollowup::class),
+		];
 	}	
 }
 
