@@ -51,6 +51,8 @@ class Familycontact extends Resource {
 	 */
 	public static $search = [
 		'subject',
+		'text',
+		'comments'
 	];
 
 	public static $globallySearchable = false;
@@ -64,13 +66,18 @@ class Familycontact extends Resource {
 	public function fields(Request $request) {
 		return [
 			// ID::make(__('ID'), 'id')->sortable(),
+			Date::make('Fecha', 'date')
+				->filterable()
+				->onlyOnIndex(),
+			Date::make('Fecha', 'date')
+			->hideFromIndex(),				
 			BelongsTo::make('Familia', 'family', 'App\Nova\Family'),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->filterable()
 				->exceptOnForms(),
 			BelongsTo::make('Usuario', 'user', 'App\Nova\User')
 				->exceptOnForms(),
-			Date::make('Fecha', 'date')->sortable(),
+
 			Boolean::make('Concluída', 'completed')
 				->filterable()	
 				->sortable(),

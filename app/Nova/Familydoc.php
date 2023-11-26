@@ -52,7 +52,7 @@ class Familydoc extends Resource {
 	 */
 	public function fields(Request $request) {
 		return [
-			ID::make(__('ID'), 'id')->sortable(),
+			// ID::make(__('ID'), 'id')->sortable(),
 			BelongsTo::make('Familia', 'family', 'App\Nova\Family'),
 			Text::make('Nombre', 'name')
 				->rules('required', 'max:50'),

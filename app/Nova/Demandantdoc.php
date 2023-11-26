@@ -39,7 +39,8 @@ class Demandantdoc extends Resource {
 	 * @var array
 	 */
 	public static $search = [
-		'name', 'details',
+		'name', 
+		'details',
 	];
 
 	/**
@@ -50,7 +51,7 @@ class Demandantdoc extends Resource {
 	 */
 	public function fields(Request $request) {
 		return [
-			ID::make(__('ID'), 'id')->sortable(),
+			// ID::make(__('ID'), 'id'),
 			BelongsTo::make('Solicitante', 'demandant', 'App\Nova\Demandant'),
 			Text::make('Nombre del Documento', 'name')
 				->rules('max:50')

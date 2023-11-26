@@ -45,6 +45,8 @@ class Demandantfollowup extends Resource {
 	 */
 	public static $search = [
 		'subject',
+		'text',
+		'comments'
 	];
 
 	/**
@@ -55,7 +57,10 @@ class Demandantfollowup extends Resource {
 	 */
 	public function fields(Request $request) {
 		return [
-			ID::make(__('ID'), 'id')->sortable(),
+			// ID::make(__('ID'), 'id'),
+			Date::make('Fecha', 'date')
+				->rules('required', 'date')
+				->filterable(),
 			BelongsTo::make('Solicitante', 'demandant', 'App\Nova\Demandant'),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->filterable()
@@ -64,8 +69,6 @@ class Demandantfollowup extends Resource {
 				}),
 			BelongsTo::make('Usuario', 'user', 'App\Nova\User')
 				->exceptOnForms(),
-			Date::make('Fecha', 'date')
-				->rules('required', 'date'),
 			Text::make('Asunto', 'subject')
 				->rules('required', 'max:100'),
 			Textarea::make('Entrevista', 'text')

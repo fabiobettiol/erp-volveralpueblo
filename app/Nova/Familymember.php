@@ -61,9 +61,11 @@ class Familymember extends Resource {
 	 * @var array
 	 */
 	public static $search = [
-		'id',
 		'name',
 		'surname',
+		'employment_comment',
+		'itineraries_comments',
+		'program_comments'
 	];
 
 	/**
@@ -75,7 +77,6 @@ class Familymember extends Resource {
 	public function fields(Request $request) {
 		return [
 			//ID::make(__('ID'), 'id')->sortable(),
-			//Text::make('id', 'id')->sortable(),
 			BelongsTo::make('Núcleo familiar', 'family', 'App\Nova\Family'),
 			Belongsto::make('CDR', 'cdr', 'App\Nova\Cdr')
 			->filterable()

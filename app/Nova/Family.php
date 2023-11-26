@@ -74,9 +74,11 @@ class Family extends Resource {
 		return [
 
 			//ID::make(__('ID'), 'id')->sortable(),
-			//Text::make('id', 'id')->sortable()->hideWhenCreating(),
 			Tabs::make('Familia', [
 				Tab::make('Detalles', [
+					Date::make('Fecha', 'settlementdate')
+						->filterable()
+						->onlyOnIndex(),
 					Boolean::make('Actualizado', 'datos_actualizados')
 						->filterable(),
 					Text::make('Referencia', 'reference')

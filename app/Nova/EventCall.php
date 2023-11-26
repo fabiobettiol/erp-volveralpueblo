@@ -69,7 +69,7 @@ class EventCall extends Resource {
 	 */
 	public function fields(NovaRequest $request) {
 		return [
-			ID::make()->sortable(),
+			// ID::make()->sortable(),
 			Text::make('Título', 'title')
 				->rules('required', 'max:50'),
 			Textarea::make('Descripción', 'description')
@@ -84,8 +84,10 @@ class EventCall extends Resource {
 					return $request->user()->is_admin;
 				}),
 			DateTime::make('Inicia', 'start')
+				->filterable()
 				->rules(['required']),
 			DateTime::make('Termina', 'end')
+				->filterable()
 				->help('Si no indica una fecha y hora de fin, el evento de considerará de todo el día'),
 		];
 	}

@@ -57,6 +57,9 @@ class Demandant extends Resource {
 		'phone',
 		'identification',
 		'subject',
+		'experience',
+		'tellus',
+		'necessity'
 	];
 
 	/**
@@ -67,7 +70,12 @@ class Demandant extends Resource {
 	 */
 	public function fields(Request $request) {
 		return [
-			ID::make(__('ID'), 'id')->sortable(),
+			// ID::make(__('ID'), 'id'),
+			Date::make('Fecha', 'created_at')
+				->filterable()
+				->onlyOnIndex(),
+			Date::make('Fecha de Registro', 'created_at')
+				->onlyOnDetail(),				
 			Belongsto::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->filterable()
 				->canSee(function ($request) {
@@ -113,7 +121,7 @@ class Demandant extends Resource {
 				'3' => 'Prensa',
 				'4' => 'Redes sociales',
 				'5' => 'Otros',
-			]),
+			])->hideFromIndex()	,
 
 			BelongsTo::make('Provincia de origen', 'provincefrom', 'App\Nova\Province')
 				->nullable(),
@@ -126,7 +134,7 @@ class Demandant extends Resource {
 				->alwaysShow(),
 			Textarea::make('Podemos ayudarte', 'tellus')
 				->alwaysShow(),
-			Textarea::make('Comentarios', 'necessity')
+			Textarea::make('Necesidades', 'necessity')
 				->alwaysShow(),
 
 			HasMany::make('Documentos', 'documents', 'App\Nova\Demandantdoc'),

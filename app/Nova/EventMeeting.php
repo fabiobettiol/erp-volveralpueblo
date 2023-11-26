@@ -69,7 +69,7 @@ class EventMeeting extends Resource {
 	 */
 	public function fields(NovaRequest $request) {
 		return [
-			ID::make()->sortable(),
+			// ID::make()->sortable(),
 			Text::make('Título', 'title')
 				->rules('required', 'max:50'),
 			Textarea::make('Descripción', 'description')
@@ -83,8 +83,11 @@ class EventMeeting extends Resource {
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
 				}),				
-			DateTime::make('Inicia', 'start'),
+			DateTime::make('Inicia', 'start')
+				->filterable()
+				->rules(['required']),
 			DateTime::make('Termina', 'end')
+				->filterable()
 		];
 	}
 
