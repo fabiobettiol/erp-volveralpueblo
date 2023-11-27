@@ -17,7 +17,7 @@ class Main extends Dashboard
     {
         return [
             // new Help,
-            (new Demandants)->width('1/4'),
+            // (new Demandants)->width('1/4'),
         ];
     }
 }
