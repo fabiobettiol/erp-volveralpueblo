@@ -4,6 +4,7 @@ namespace App\Nova\Dashboards;
 
 use Laravel\Nova\Cards\Help;
 use App\Nova\Metrics\Demandants;
+use App\Nova\Metrics\DemandantsFollowups;
 use Laravel\Nova\Dashboards\Main as Dashboard;
 
 class Main extends Dashboard
@@ -17,7 +18,8 @@ class Main extends Dashboard
     {
         return [
             // new Help,
-            // (new Demandants)->width('1/4'),
+            (new Demandants)->width('1/4'),
+            (new DemandantsFollowups)->width('1/4'),
         ];
     }
 }
