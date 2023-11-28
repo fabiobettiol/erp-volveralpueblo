@@ -77,10 +77,7 @@ class Demandant extends Resource {
 			Date::make('Fecha de Registro', 'created_at')
 				->onlyOnDetail(),				
 			Belongsto::make('CDR', 'cdr', 'App\Nova\Cdr')
-				->filterable()
-				->canSee(function ($request) {
-					return $request->user()->is_admin;
-				}),					
+				->filterable(),
 			BelongsTo::make('Sexo', 'gender', 'App\Nova\Gender'),
 			Text::make('Nombre', 'name')
 				->rules('required', 'max:45'),
