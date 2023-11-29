@@ -12,11 +12,8 @@ class EventMeetingObserver
      */
     public function creating(EventMeeting $eventMeeting): void
     {
-        $user = Auth::user();
-        
-        $eventMeeting->user_id = $user->id;
-        ($user->is_cdr) ? $EventCall->cdr_id = $user->cdr_id: NULL; 
-
+        $eventMeeting->user_id = Auth::user()->id;
+        (Auth::user()->is_cdr) ? $eventMeeting->cdr_id = Auth::user()->cdr_id: NULL; 
     }
 
     /**

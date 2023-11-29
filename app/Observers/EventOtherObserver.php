@@ -12,10 +12,8 @@ class EventOtherObserver
      */
     public function creating(EventOther $eventOther): void
     {
-        $user = Auth::user();
-        
-        $eventOther->user_id = $user->id;
-        ($user->is_cdr) ? $EventCall->cdr_id = $user->cdr_id: NULL; 
+        $eventOther->user_id = Auth::user()->id;
+        (Auth::user()->is_cdr) ? $eventOther->cdr_id = Auth::user()->cdr_id: NULL; 
     }
     
     /**
