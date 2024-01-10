@@ -59,6 +59,13 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'CYL' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/CYL.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],
