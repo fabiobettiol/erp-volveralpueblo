@@ -77,7 +77,10 @@ class Demandant extends Resource {
 			Date::make('Fecha de Registro', 'created_at')
 				->onlyOnDetail(),				
 			Belongsto::make('CDR', 'cdr', 'App\Nova\Cdr')
-				->filterable(),
+				->filterable()
+				->canSee(function ($request) {
+					return $request->user()->is_admin;
+				}),
 			BelongsTo::make('Sexo', 'gender', 'App\Nova\Gender'),
 			Text::make('Nombre', 'name')
 				->rules('required', 'max:45'),
@@ -85,8 +88,7 @@ class Demandant extends Resource {
 				->rules('required', 'max:60'),
 			Text::make('Email', 'email')
 				->rules('required', 'max:75'),
-			Text::make('Teléfono', 'phone')
-				->rules('regex:/^([0-9\s\-\+\(\)]*)$/','min:9'),
+			Text::make('Teléfono', 'phone'),
 			BelongsTo::make('Tipo documento', 'documenttype', 'App\Nova\Documenttype')
 				->hideFromIndex(),
 			Text::make('Identificación', 'identification')
@@ -121,8 +123,10 @@ class Demandant extends Resource {
 			])->hideFromIndex()	,
 
 			BelongsTo::make('Provincia de origen', 'provincefrom', 'App\Nova\Province')
+				->filterable()
 				->nullable(),
 			BelongsTo::make('Provincia de destino', 'provinceto', 'App\Nova\Province')
+				->filterable()
 				->nullable(),
 
 			Textarea::make('Proyecto de emprendimiento', 'subject')

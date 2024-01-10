@@ -2,12 +2,18 @@
 
 namespace App\Nova\Metrics;
 
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Metrics\Value;
 use Laravel\Nova\Nova;
+use Laravel\Nova\Metrics\Value;
+use App\Models\Demandantfollowup;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class DemandantsFollowups extends Value
 {
+    public function name()
+    {
+        return 'Interacciones';
+    }
+
     /**
      * Calculate the value of the metric.
      *
@@ -16,7 +22,10 @@ class DemandantsFollowups extends Value
      */
     public function calculate(NovaRequest $request)
     {
-        return $this->count($request, Model::class);
+        return $this->count(
+            $request, Demandantfollowup::where('cdr_id', $request->user()->cdr_id), 
+            'date'
+        );
     }
 
     /**
@@ -27,13 +36,10 @@ class DemandantsFollowups extends Value
     public function ranges()
     {
         return [
-            30 => Nova::__('30 Days'),
-            60 => Nova::__('60 Days'),
-            365 => Nova::__('365 Days'),
-            'TODAY' => Nova::__('Today'),
-            'MTD' => Nova::__('Month To Date'),
-            'QTD' => Nova::__('Quarter To Date'),
-            'YTD' => Nova::__('Year To Date'),
+            'YTD' => Nova::__('Este año'),
+            'QTD' => Nova::__('Este trimestre'),
+            'MTD' => Nova::__('Este mes'),
+            'ALL' => Nova::__('Totales'),     
         ];
     }
 

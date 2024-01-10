@@ -2,15 +2,23 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class Demandantdoc extends Resource {
+
+    /* FABIO:
+     * This resource is SET TO BE HIDDEN fo the sidebar
+     * as it shows demandant-related documents for ALL demandants
+     * without filtering if the demandant has Followups in the current usr's CDR
+    */
+
 	public static function label() {
 		return 'Documentos';
 	}
@@ -41,6 +49,8 @@ class Demandantdoc extends Resource {
 	public static $search = [
 		'name', 
 		'details',
+		'demandant.name',
+		'demandant.surname',
 	];
 
 	/**
@@ -52,10 +62,12 @@ class Demandantdoc extends Resource {
 	public function fields(Request $request) {
 		return [
 			// ID::make(__('ID'), 'id'),
+			Date::make('Fecha', 'created_at')
+				->onlyOnIndex(),
 			BelongsTo::make('Solicitante', 'demandant', 'App\Nova\Demandant'),
 			Text::make('Nombre del Documento', 'name')
 				->rules('max:50')
-				->help('CV, Constacia, Certificado de Empadronamiento...'),
+				->help('CV, Constancia, Certificado de Empadronamiento...'),
 			Textarea::make('Detalles', 'details')
 				->alwaysShow(),
 			File::make('Documento', 'file')
