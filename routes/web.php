@@ -40,6 +40,11 @@ Route::get('/', function () {
 	]);
 });
 
+Route::get('/cyl/{email}', function ($email) {
+	Log::channel('CYL')->info(json_encode($email));
+	return redirect('https://volveralpueblo.coceder.org/index.php?option=com_gantry5&view=custom&Itemid=263');
+});
+
 Route::get('/informacion', function () {
 	return view('informacion');
 })->middleware(['auth', 'verified'])
