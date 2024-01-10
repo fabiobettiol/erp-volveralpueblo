@@ -2,13 +2,14 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\BelongsTo;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Familydoc extends Resource {
 
@@ -18,6 +19,16 @@ class Familydoc extends Resource {
 
 	public static function availableForNavigation(Request $request) {
 		return !$request->user()->is_collaborator;
+	}
+
+	public static function redirectAfterCreate(NovaRequest $request, $resource)
+	{	
+		return '/resources/families/'.$resource->family_id;
+	}
+
+	public static function redirectAfterUpdate(NovaRequest $request, $resource)
+	{	
+		return '/resources/families/'.$resource->family_id;
 	}
 
 	/**

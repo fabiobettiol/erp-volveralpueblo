@@ -1,0 +1,65 @@
+/* -- Family member --*/
+/* -- Hide crete button un index view of the reource --*/
+div[dusk="familymembers-index-component"] a[dusk='create-button'] {
+    display: none !important;
+}
+
+/* -- Show create button in relationship --*/
+div[dusk="families-detail-component"] a[dusk='create-button'] {
+    display: inline-flex !important;
+}
+
+/* -- Familyfollowup member --*/
+/* -- Hide crete button un index view of the reource --*/
+div[dusk="familyfollowups-index-component"] a[dusk='create-button'] {
+    display: none !important;
+}
+
+/* -- Show create button in relationship --*/
+div[dusk="families-detail-component"] a[dusk='create-button'] {
+    display: inline-flex !important;
+}
+
+/* -- Family contact --*/
+/* -- Hide crete button un index view of the reource --*/
+div[dusk="familycontacts-index-component"] a[dusk='create-button'] {
+    display: none !important;
+}
+
+/* -- Show create button in relationship --*/
+div[dusk="families-detail-component"] a[dusk='create-button'] {
+    display: inline-flex !important;
+}
+
+/* -- Family document --*/
+/* -- Hide crete button un index view of the reource --*/
+div[dusk="familydocs-index-component"] a[dusk='create-button'] {
+    display: none !important;
+}
+
+/* -- Demandant followup --*/
+/* -- Hide crete button un index view of the reource --*/
+div[dusk="demandantfollowups-index-component"] a[dusk='create-button'] {
+    display: none !important;
+}
+
+/* -- Show create button in relationship --*/
+div[dusk="demandants-detail-component"] a[dusk='create-button'] {
+    display: inline-flex !important;
+}
+
+/* -- Show create button in relationship --*/
+div[dusk="families-detail-component"] a[dusk='create-button'] {
+    display: inline-flex !important;
+}
+
+/* -- Demandant document --*/
+/* -- Hide crete button un index view of the reource --*/
+div[dusk="demandantdocs-index-component"] a[dusk='create-button'] {
+    display: none !important;
+}
+
+/* -- Show create button in relationship --*/
+div[dusk="demandants-detail-component"] a[dusk='create-button'] {
+    display: inline-flex !important;
+}

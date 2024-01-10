@@ -44,4 +44,7 @@ class Cdr extends Model {
 		return $this->hasMany(Cdragreement::class);
 	}
 
+	public function demandantfollowups() {
+		return $this->hasMany(Demandantfollowup::class);
+	}
 }

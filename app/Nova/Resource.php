@@ -14,18 +14,6 @@ abstract class Resource extends NovaResource {
         return false;
     }	
 
-	// Redirect to index after creating any resource
-	public static function redirectAfterCreate(NovaRequest $request, $resource)
-	{
-		return '/resources/'.static::uriKey();
-	}
-
-	// Redirect to index after updating any resource
-	public static function redirectAfterUpdate(NovaRequest $request, $resource)
-	{
-		return '/resources/'.static::uriKey();
-	}
-
 	/**
 	 * Build an "index" query for the given resource.
 	 *

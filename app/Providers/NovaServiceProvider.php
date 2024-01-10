@@ -75,6 +75,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 
 		parent::boot();
 
+		// - FABIO: Custom APP styles 
+		Nova::style('admin', public_path('assets/css/admin.css'));
+
 		Nova::withBreadcrumbs();
 
 		Self::menu();

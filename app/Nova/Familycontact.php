@@ -13,6 +13,10 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Familycontact extends Resource {
 	public static function label() {
+		return 'Intervenciones';
+	}
+
+	public static function singularLabel() {
 		return 'Intervención';
 	}
 
@@ -28,6 +32,16 @@ class Familycontact extends Resource {
 
 	public static function availableForNavigation(Request $request) {
 		return !$request->user()->is_collaborator;
+	}
+
+	public static function redirectAfterCreate(NovaRequest $request, $resource)
+	{	
+		return '/resources/families/'.$resource->family_id;
+	}
+
+	public static function redirectAfterUpdate(NovaRequest $request, $resource)
+	{	
+		return '/resources/families/'.$resource->family_id;
 	}
 
 	/**

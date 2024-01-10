@@ -137,9 +137,8 @@ class Demandant extends Resource {
 				->alwaysShow(),
 			Textarea::make('Necesidades', 'necessity')
 				->alwaysShow(),
-
-			HasMany::make('Documentos', 'documents', 'App\Nova\Demandantdoc'),
 			HasMany::make('Interacciones', 'followups', 'App\Nova\Demandantfollowup'),
+			HasMany::make('Documentos', 'documents', 'App\Nova\Demandantdoc'),
 		];
 	}
 

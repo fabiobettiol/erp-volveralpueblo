@@ -23,10 +23,20 @@ class Familyfollowup extends Resource {
 		return !$request->user()->is_collaborator;
 	}
 
+	public static function redirectAfterCreate(NovaRequest $request, $resource)
+	{	
+		return '/resources/families/'.$resource->family_id;
+	}
+
+	public static function redirectAfterUpdate(NovaRequest $request, $resource)
+	{	
+		return '/resources/families/'.$resource->family_id;
+	}
+
 	public static $group = 'Asentad@s';
 
 	public static function label() {
-		return 'Seguimiento';
+		return 'Seguimientos';
 	}
 
 	public static function singularLabel() {

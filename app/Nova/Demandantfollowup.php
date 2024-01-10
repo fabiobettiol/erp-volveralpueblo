@@ -19,11 +19,21 @@ class Demandantfollowup extends Resource {
 	}
 
 	public static function singularLabel() {
-		return 'Interaccion';
+		return 'Interacción';
 	}
 
 	public static function availableForNavigation(Request $request) {
 		return !$request->user()->is_collaborator;
+	}
+
+	public static function redirectAfterCreate(NovaRequest $request, $resource)
+	{	
+		return '/resources/demandants/'.$resource->demandant_id;
+	}
+
+	public static function redirectAfterUpdate(NovaRequest $request, $resource)
+	{	
+		return '/resources/demandants/'.$resource->demandant_id;
 	}
 
 	/**

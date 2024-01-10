@@ -10,6 +10,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Demandantdoc extends Resource {
 
@@ -27,6 +28,16 @@ class Demandantdoc extends Resource {
 		return !$request->user()->is_collaborator;
 	}
 
+	public static function redirectAfterCreate(NovaRequest $request, $resource)
+	{	
+		return '/resources/demandants/'.$resource->demandant_id;
+	}
+
+	public static function redirectAfterUpdate(NovaRequest $request, $resource)
+	{	
+		return '/resources/demandants/'.$resource->demandant_id;
+	}
+
 	/**
 	 * The model the resource corresponds to.
 	 *
@@ -34,6 +45,7 @@ class Demandantdoc extends Resource {
 	 */
 	public static $model = \App\Models\Demandantdoc::class;
 
+	
 	/**
 	 * The single value that should be used to represent the resource when being displayed.
 	 *

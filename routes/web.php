@@ -1,15 +1,18 @@
 <?php
 
-use App\Http\Controllers\MapController;
-use App\Models\Business;
+use Carbon\Carbon;
 use App\Models\Cdr;
-use App\Models\Cdrtype;
-use App\Models\House;
 use App\Models\Job;
 use App\Models\Land;
+use App\Models\House;
+use App\Models\Family;
 use App\Models\Region;
+use App\Models\Cdrtype;
+use App\Models\Business;
 use Elibyy\TCPDF\Facades\TCPDF;
+use App\Models\Demandantfollowup;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +30,13 @@ require __DIR__ . '/auth.php';
 Route::get('/test', function () {
 	return view('reportes.pdf-houses');
 });
+
+// RUTA PARA CAMAPAÑA DE CASTILLA Y LEON
+
+Route::get('/cyl/{email}', function ($email) {
+	Log::channel('CYL')->info(json_encode($email));
+});
+
 
 Route::get('/', function () {
 
@@ -180,6 +190,37 @@ Route::get('/reporte/{recurso}/{mes}/{ano}', function ($recurso, $mes, $ano) {
 
 });
 
+Route::get('/david', function() {
+
+	$personas = [];
+
+	$familias = Family::with('destinationprovince', 'members')->get();
+
+	foreach ($familias as $familia) {
+
+		if (isset($familia->destinationprovince)) {
+
+			$p = $familia->destinationprovince->name;
+			foreach ($familia->members as $member) {
+				if (!isset($personas[$p]['genero'][$member->gender_id])) {
+					$personas[$p]['genero'][$member->gender_id] = 1;
+				} else {
+					$personas[$p]['genero'][$member->gender_id]++;
+				}
+
+				if (!isset($personas[$p]['edad'][$member->is_child])) {
+					$personas[$p]['edad'][$member->is_child] = 1;
+				} else {
+					$personas[$p]['edad'][$member->is_child]++;
+				}
+			}
+		}
+	}
+
+	dd($personas);
+
+});
+
 // Route::get('/registro', function () {
 
 // 	return view('userform');
@@ -245,6 +286,8 @@ function getLands($mes, $ano) {
 
 	return $lands;
 }
+
+
 
 // - Ruta para importar las comarcas desde un KML
 /*Route::get('/comarcas-mapa', function() {

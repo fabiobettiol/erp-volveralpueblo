@@ -37,6 +37,16 @@ class Familymember extends Resource {
 		return !$request->user()->is_collaborator;
 	}
 
+	public static function redirectAfterCreate(NovaRequest $request, $resource)
+	{	
+		return '/resources/families/'.$resource->family_id;
+	}
+
+	public static function redirectAfterUpdate(NovaRequest $request, $resource)
+	{	
+		return '/resources/families/'.$resource->family_id;
+	}	
+
 	/**
 	 * The model the resource corresponds to.
 	 *

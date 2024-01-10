@@ -168,13 +168,13 @@ class Family extends Resource {
 			])->withToolbar()
 				->defaultSearch(true),
 
-			HasMany::make('Documentos', 'documents', 'App\Nova\Familydoc'),
-
 			HasMany::make('Miembros', 'members', 'App\Nova\Familymember'),
+
+			HasMany::make('Intervenciones', 'contacts', 'App\Nova\Familycontact'),
 
 			HasMany::make('Seguimiento', 'followups', 'App\Nova\Familyfollowup'),
 
-			HasMany::make('Intervenciones', 'contacts', 'App\Nova\Familycontact'),
+			HasMany::make('Documentos', 'documents', 'App\Nova\Familydoc'),			
 		];
 	}
 
