@@ -100,11 +100,13 @@ class Family extends Resource {
 					Date::make('Fecha de asentamiento', 'settlementdate')
 						->rules('required', 'date'),
 					BelongsTo::make('País de origen', 'nationality', 'App\Nova\Country'),
-					BelongsTo::make('Provincia de origen', 'sourceprovince', 'App\Nova\Province'),
+					BelongsTo::make('Provincia de origen', 'sourceprovince', 'App\Nova\Province')
+						->filterable(),
 					Text::make('Loalidad de origen', 'fromcityname')
 						->rules('required', 'max:60')
 						->hideFromIndex(),
-					BelongsTo::make('Provincia de destino', 'destinationprovince', 'App\Nova\Province'),
+					BelongsTo::make('Provincia de destino', 'destinationprovince', 'App\Nova\Province')
+						->filterable(),
 					Text::make('Localidad de destino', 'tocityname')
 						->rules('required', 'max:60')
 						->hideFromIndex(),

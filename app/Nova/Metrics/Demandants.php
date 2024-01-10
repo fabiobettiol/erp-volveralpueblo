@@ -18,7 +18,10 @@ class Demandants extends Value
      */
     public function calculate(NovaRequest $request)
     {
-        return $this->count($request, Demandantfollowup::where('cdr_id', $request->user()->cdr_id));
+        return $this->count(
+            $request, Demandantfollowup::where('cdr_id', $request->user()->cdr_id),
+            'date'
+        );
     }
 
     /**

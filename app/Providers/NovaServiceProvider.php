@@ -189,7 +189,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 			MenuSection::make('Demandantes', [
 				MenuItem::resource(Demandant::class),
 				MenuItem::resource(Demandantfollowup::class),
-				MenuItem::resource(Demandantdoc::class),
+				/*
+					FABIO: Hidden. See the resource definition for info
+					MenuItem::resource(Demandantdoc::class),
+				 */
 			])->icon('user')
 				->collapsible(),
 

@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Nova;
-use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
+use App\Nova\Filters\ByCurrentCdr;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Demandantfollowup extends Resource {
 
@@ -46,7 +48,9 @@ class Demandantfollowup extends Resource {
 	public static $search = [
 		'subject',
 		'text',
-		'comments'
+		'comments',
+		'demandant.name',
+		'demandant.surname',
 	];
 
 	/**
@@ -60,10 +64,10 @@ class Demandantfollowup extends Resource {
 			// ID::make(__('ID'), 'id'),
 			Date::make('Fecha', 'date')
 				->rules('required', 'date')
+				->sortable()
 				->filterable(),
-			BelongsTo::make('Solicitante', 'demandant', 'App\Nova\Demandant'),
+			BelongsTo::make('Solicitante', 'demandant', 'App\Nova\Demandant'),		
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
-				->filterable()
 				->readonly(function ($request) {
 					return !$request->user()->is_admin;
 				}),
@@ -71,7 +75,7 @@ class Demandantfollowup extends Resource {
 				->exceptOnForms(),
 			Text::make('Asunto', 'subject')
 				->rules('required', 'max:100'),
-			Textarea::make('Entrevista', 'text')
+			Textarea::make('Interacción', 'text')
 				->rules('required')
 				->alwaysShow(),
 			Textarea::make('Comentarios', 'comments')
@@ -97,7 +101,7 @@ class Demandantfollowup extends Resource {
 	 */
 	public function filters(Request $request) {
 		return [
-			//
+			new ByCurrentCdr
 		];
 	}
 
