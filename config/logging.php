@@ -66,6 +66,7 @@ return [
             'replace_placeholders' => true,
         ],
 
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],
