@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
-use App\Nova\Filters\ByCurrentCdr;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -111,7 +110,7 @@ class Demandantfollowup extends Resource {
 	 */
 	public function filters(Request $request) {
 		return [
-			new ByCurrentCdr
+			//
 		];
 	}
 
