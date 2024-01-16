@@ -124,6 +124,11 @@ class Job extends Resource {
 					return $request->user()->is_admin;
 				}),
 
+			// - Community: Show the full name when not on index view
+			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
+				->filterable()
+				->hideFromIndex(),
+
 			// - Community: Show acronym on index view
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
 				->filterable()

@@ -70,6 +70,7 @@ class User extends Resource {
 				->rules('required', 'max:255'),
 
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
+				->filterable()
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
 				}),

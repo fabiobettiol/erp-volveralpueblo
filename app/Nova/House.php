@@ -347,6 +347,11 @@ class House extends Resource {
 			])->withToolbar()
 				->defaultSearch(true),
 
+
+			Date::make('Creado', 'created_at')
+				->onlyOnIndex()
+				->filterable(),
+
 			Images::make('Fotos')->hideFromIndex(),
 		];
 	}

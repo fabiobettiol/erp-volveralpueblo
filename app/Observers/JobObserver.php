@@ -2,9 +2,10 @@
 
 namespace App\Observers;
 
-use App\Models\Community;
-use App\Models\Job;
 use Carbon\Carbon;
+use App\Models\Job;
+use App\Models\Community;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class JobObserver
