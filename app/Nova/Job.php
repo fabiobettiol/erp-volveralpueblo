@@ -118,11 +118,9 @@ class Job extends Resource {
 					return $request->user()->is_admin;
 				}),
 			Date::make('Fecha', 'created_at')
-				->rules('required', 'date')
-				->sortable()
-				->canSee(function ($request) {
-					return $request->user()->is_admin;
-				}),
+				->onlyOnIndex()
+				->filterable()
+				->sortable(),
 
 			// - Community: Show the full name when not on index view
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')

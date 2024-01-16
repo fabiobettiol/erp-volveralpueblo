@@ -120,10 +120,9 @@ class House extends Resource {
 					return $request->user()->is_admin;
 				}),
 			Date::make('Fecha', 'created_at')
-				->sortable()
-				->canSee(function ($request) {
-					return $request->user()->is_admin;
-				}),
+				->onlyOnIndex()
+				->filterable()
+				->sortable(),
 
 			// - Community: Show the full name when not on index view
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
@@ -346,11 +345,6 @@ class House extends Resource {
 				]),
 			])->withToolbar()
 				->defaultSearch(true),
-
-
-			Date::make('Creado', 'created_at')
-				->onlyOnIndex()
-				->filterable(),
 
 			Images::make('Fotos')->hideFromIndex(),
 		];
