@@ -77,6 +77,7 @@ class Demandantfollowup extends Resource {
 				->filterable(),
 			BelongsTo::make('Solicitante', 'demandant', 'App\Nova\Demandant'),		
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
+				->filterable()
 				->readonly(function ($request) {
 					return !$request->user()->is_admin;
 				}),
