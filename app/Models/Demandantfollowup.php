@@ -20,4 +20,9 @@ class Demandantfollowup extends Model {
 	public function user() {
 		return $this->belongsTo(User::class);
 	}
+
+	// - Fabio, custom method
+	public function uniqueDemandant(){
+	  return $this->hasOne(Demandant::class, 'demandant_id');
+	}
 }

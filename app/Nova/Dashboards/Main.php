@@ -17,9 +17,9 @@ class Main extends Dashboard
     public function cards()
     {
         return [
-            // new Help,
-            (new Demandants)->width('1/4'),
-            (new DemandantsFollowups)->width('1/4'),
+            // // new Help,
+            // (new Demandants)->width('1/4'),
+            // (new DemandantsFollowups)->width('1/4'),
         ];
     }
 }

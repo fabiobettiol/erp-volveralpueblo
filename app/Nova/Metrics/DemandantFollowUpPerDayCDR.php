@@ -3,13 +3,17 @@
 namespace App\Nova\Metrics;
 
 use Laravel\Nova\Nova;
-use App\Models\Demandant;
-use Laravel\Nova\Metrics\Value;
+use Laravel\Nova\Metrics\Trend;
 use App\Models\Demandantfollowup;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Demandants extends Value
+class DemandantFollowUpPerDayCDR extends Trend
 {
+    public function name()
+    {
+        return 'Interacciones por día';
+    }
+
     /**
      * Calculate the value of the metric.
      *
@@ -18,10 +22,7 @@ class Demandants extends Value
      */
     public function calculate(NovaRequest $request)
     {
-        return $this->count(
-            $request, Demandantfollowup::where('cdr_id', $request->user()->cdr_id),
-            'date'
-        );
+        return $this->countByDays($request, Demandantfollowup::where('cdr_id', $request->user()->cdr_id), 'date');
     }
 
     /**
@@ -32,10 +33,11 @@ class Demandants extends Value
     public function ranges()
     {
         return [
-            'YTD' => Nova::__('Este año'),
-            'QTD' => Nova::__('Este trimestre'),
-            'MTD' => Nova::__('Este mes'),
-            'ALL' => Nova::__('Totales'),
+            30 => Nova::__('30 Dias'),
+            60 => Nova::__('60 Dias'),
+            90 => Nova::__('90 Dias'),
+            180 => Nova::__('180 Dias'),
+            365 => Nova::__('365 Dias'),
         ];
     }
 
@@ -49,9 +51,13 @@ class Demandants extends Value
         // return now()->addMinutes(5);
     }
 
-    public function name()
+    /**
+     * Get the URI key for the metric.
+     *
+     * @return string
+     */
+    public function uriKey()
     {
-        return 'Solicitantes';
-    }    
-    
+        return 'demandant-follow-up-per-day-c-d-r';
+    }
 }

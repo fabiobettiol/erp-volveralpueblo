@@ -7,7 +7,10 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Metrics\DemandantsFollowups;
+use App\Nova\Metrics\DemandantFollowUpCDR;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use App\Nova\Metrics\DemandantFollowUpPerDayCDR;
 
 class Demandantfollowup extends Resource {
 
@@ -75,7 +78,8 @@ class Demandantfollowup extends Resource {
 				->rules('required', 'date')
 				->sortable()
 				->filterable(),
-			BelongsTo::make('Solicitante', 'demandant', 'App\Nova\Demandant'),		
+			BelongsTo::make('Solicitante', 'demandant', 'App\Nova\Demandant')
+				->sortable(),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->filterable()
 				->readonly(function ($request) {
@@ -100,7 +104,10 @@ class Demandantfollowup extends Resource {
 	 * @return array
 	 */
 	public function cards(Request $request) {
-		return [];
+		return [
+			(new DemandantFollowUpCDR)->width('1/3'),
+			(new DemandantFollowUpPerDayCDR)->width('2/3')
+		];
 	}
 
 	/**
@@ -110,9 +117,7 @@ class Demandantfollowup extends Resource {
 	 * @return array
 	 */
 	public function filters(Request $request) {
-		return [
-			//
-		];
+		return [];
 	}
 
 	/**

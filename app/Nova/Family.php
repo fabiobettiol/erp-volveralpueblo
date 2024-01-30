@@ -7,12 +7,14 @@ use Eminiarts\Tabs\Tabs;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
+use App\Nova\Metrics\FamilyCDR;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
 use Illuminate\Support\Facades\Auth;
+use App\Nova\Metrics\FamilyPerDayCDR;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
@@ -186,7 +188,10 @@ class Family extends Resource {
 	 * @return array
 	 */
 	public function cards(Request $request) {
-		return [];
+		return [
+			(new FamilyCDR)->width('1/3'),
+			(new FamilyPerDayCDR)->width('2/3')
+		];
 	}
 
 	/**

@@ -9,10 +9,14 @@ use App\Models\Family;
 use App\Models\Region;
 use App\Models\Cdrtype;
 use App\Models\Business;
+use App\Models\Demandant;
+use Illuminate\Auth\Auth;
+use App\Models\Familymember;
 use Elibyy\TCPDF\Facades\TCPDF;
 use App\Models\Demandantfollowup;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MapController;
+use Illuminate\Support\Collection;
 
 /*
 |--------------------------------------------------------------------------
@@ -391,3 +395,36 @@ dd($result);
 echo 'Exception when calling ContactsApi->getContactInfo: ', $e->getMessage(), PHP_EOL;
 }
 });*/
+
+
+Route::get('/fabio', function() {
+
+        $members = Familymember::where('cdr_id', 22)->get();
+
+        $tabla = collect();
+        $persona = [
+        	'adulto' => 1
+        ];
+
+        foreach ($members as $miembro) {
+
+        	if (empty($miembro->dateofbirth)) {
+        		$persona = [
+        			'tipo' => 0
+        		];
+        	} else {
+	        	if (Carbon::parse($miembro->dateofbirth)->age >= 18) {
+	        		$persona = [
+	        			'tipo' => 1
+	        		];
+	        	} else {
+	        		$persona = [
+	        			'tipo' => 2
+	        		];
+	        	}
+        	}
+        	$tabla->push($persona);
+        }
+
+        dd($tabla);
+});

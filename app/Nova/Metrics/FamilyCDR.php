@@ -2,16 +2,17 @@
 
 namespace App\Nova\Metrics;
 
+use App\Models\Family;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Metrics\Value;
-use App\Models\Demandantfollowup;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class DemandantsFollowups extends Value
+class FamilyCDR extends Value
 {
     public function name()
     {
-        return 'Interacciones';
+        return 'Familias';
     }
 
     /**
@@ -22,10 +23,7 @@ class DemandantsFollowups extends Value
      */
     public function calculate(NovaRequest $request)
     {
-        return $this->count(
-            $request, Demandantfollowup::where('cdr_id', $request->user()->cdr_id), 
-            'date'
-        );
+        return $this->count($request, Family::where('cdr_id', Auth::user()->cdr_id), 'settlementdate');
     }
 
     /**
@@ -36,10 +34,15 @@ class DemandantsFollowups extends Value
     public function ranges()
     {
         return [
-            'YTD' => Nova::__('Este año'),
-            'QTD' => Nova::__('Este trimestre'),
+            'TODAY' => Nova::__('Hoy'),
             'MTD' => Nova::__('Este mes'),
-            'ALL' => Nova::__('Totales'),     
+            'QTD' => Nova::__('Este trimestre'),
+            'YTD' => Nova::__('Este año'),
+            30 => Nova::__('Últimos 30 dias'),
+            60 => Nova::__('Últimos 60 dias'),
+            90 => Nova::__('Últimos 90 dias'),
+            180 => Nova::__('Últimos 180 dias'),
+            'ALL' => 'Todas'
         ];
     }
 

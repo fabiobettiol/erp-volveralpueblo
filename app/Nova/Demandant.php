@@ -1,16 +1,18 @@
 <?php
 
 namespace App\Nova;
-use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Date;
-use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Textarea;
+use App\Nova\Metrics\DemandantCDR;
+use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Metrics\DemandantPerDayCDR;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Demandant extends Resource {
@@ -149,7 +151,10 @@ class Demandant extends Resource {
 	 * @return array
 	 */
 	public function cards(Request $request) {
-		return [];
+		return [
+			(new DemandantCDR)->width('1/3'),
+			(new DemandantPerDayCDR)->width('2/3')
+		];
 	}
 
 	/**

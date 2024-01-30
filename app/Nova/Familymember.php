@@ -3,12 +3,15 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Date;
-use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Metrics\FamilyMemberCDR;
+use App\Nova\Metrics\FamilyMemberAgeCDR;
+use App\Nova\Metrics\FamilyMemberGenderCDR;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Familymember extends Resource {
@@ -144,7 +147,11 @@ class Familymember extends Resource {
 	 * @return array
 	 */
 	public function cards(Request $request) {
-		return [];
+		return [
+			(new FamilyMemberCDR)->width('1/3'),
+			(new FamilyMemberGenderCDR)->width('1/3'),
+			(new FamilyMemberAgeCDR)->width('1/3')
+		];
 	}
 
 	/**
