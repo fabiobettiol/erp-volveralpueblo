@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
@@ -11,10 +12,12 @@ use App\Nova\Metrics\FamilyCDR;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 use App\Nova\Metrics\FamilyPerDayCDR;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
@@ -169,7 +172,26 @@ class Family extends Resource {
 					])->hideFromIndex(),
 				]),
 			])->withToolbar()
-				->defaultSearch(true),
+			->defaultSearch(true),
+
+			BelongsToMany::make('Impactos', 'impacts', 'App\Nova\FamilyImpact')
+			    ->fields(function ($request, $relatedModel) {
+			        return [
+			            Text::make('Descripción', 'description')
+			            	->displayUsing(function($text) {
+                                return Str::limit($text, 30);
+                            }),
+			            Date::make('Fecha', 'date'),
+			        ];
+			    })->onlyOnIndex(),
+
+			BelongsToMany::make('Impactos', 'impacts', 'App\Nova\FamilyImpact')
+			    ->fields(function ($request, $relatedModel) {
+			        return [
+			            Textarea::make('Descripción', 'description'),
+			            // Date::make('Fecha', 'date'),
+			        ];
+			    })->hideFromIndex(),
 
 			HasMany::make('Miembros', 'members', 'App\Nova\Familymember'),
 
@@ -177,7 +199,7 @@ class Family extends Resource {
 
 			HasMany::make('Seguimiento', 'followups', 'App\Nova\Familyfollowup'),
 
-			HasMany::make('Documentos', 'documents', 'App\Nova\Familydoc'),			
+			HasMany::make('Documentos', 'documents', 'App\Nova\Familydoc'),
 		];
 	}
 

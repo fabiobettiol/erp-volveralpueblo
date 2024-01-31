@@ -10,7 +10,7 @@ class Family extends Model {
 	use SoftDeletes;
 
 	protected $casts = [
-		'settlementdate' => 'date',
+		'settlementdate' => 'date'
 	];
 
 	public function members() {
@@ -53,5 +53,10 @@ class Family extends Model {
 		return $this->belongsTo(Province::class, 'toprovince_id' );
 	}
 
+	public function impacts() {
+		return $this->belongsToMany(FamilyImpact::class, 'family_impact', 'family_id', 'familyimpact_id')
+			->using(FamilyImpactPivot::class)
+			->withPivot('date', 'description');
+	}
 
 }

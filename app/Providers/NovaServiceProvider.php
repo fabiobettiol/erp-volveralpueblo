@@ -37,6 +37,7 @@ use App\Nova\Pricerange;
 use App\Nova\Cdragreement;
 use App\Nova\Demandantdoc;
 use App\Nova\EventMeeting;
+use App\Nova\FamilyImpact;
 use App\Nova\Familymember;
 use App\Nova\Jobownership;
 use App\Nova\Municipality;
@@ -205,6 +206,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 				MenuItem::resource(Familycontact::class),
 				MenuItem::resource(Familyfollowup::class),
 				MenuItem::resource(Familydoc::class),
+				//MenuItem::resource(FamilyImpact::class),
 			])->icon('user-group')
 				->collapsible(),
 

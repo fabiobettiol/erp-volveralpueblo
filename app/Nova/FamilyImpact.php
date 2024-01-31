@@ -2,12 +2,22 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class FamilyImpact extends Resource
 {
+    public static function label() {
+        return 'Impacto';
+    }
+
     /**
      * The model the resource corresponds to.
      *
@@ -20,7 +30,7 @@ class FamilyImpact extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -41,6 +51,37 @@ class FamilyImpact extends Resource
     {
         return [
             ID::make()->sortable(),
+            Text::make('Impacto', 'name')
+                ->displayUsing(function($text) {
+                    return Str::limit($text, 30);
+                })->onlyOnIndex(),
+
+            Text::make('Impacto', 'name')->hideFromIndex(),
+
+            BelongsTo::make('Tipo', 'type', 'App\Nova\FamilyImpactType'),
+
+            BelongsToMany::make('Ámbito', 'scopes', 'App\Nova\FamilyImpactScope'),
+
+            BelongsToMany::make('Familias', 'families', 'App\Nova\Family')
+                ->fields(function ($request, $relatedModel) {
+                    return [
+                        Text::make('Descripción', 'description')
+                            ->displayUsing(function($text) {;
+                                return Str::limit($text, 30);
+                            }),
+                        Date::make('Fecha', 'date'),
+                    ];
+                })->onlyOnIndex(),
+
+            BelongsToMany::make('Familias', 'families', 'App\Nova\Family')
+                ->fields(function ($request, $relatedModel) {
+                    return [
+                        Textarea::make('Descripción', 'description'),
+                        //Date::make('Fecha', 'date'),
+                    ];
+                })->hideFromIndex(),
+
+
         ];
     }
 

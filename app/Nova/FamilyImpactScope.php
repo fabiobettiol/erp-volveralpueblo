@@ -2,8 +2,10 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class FamilyImpactScope extends Resource
@@ -20,7 +22,7 @@ class FamilyImpactScope extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -41,6 +43,8 @@ class FamilyImpactScope extends Resource
     {
         return [
             ID::make()->sortable(),
+            Text::make('Ámbito', 'name'),
+            BelongsToMany::make('Impactos', 'impact', 'App\Nova\FamilyImpact'),
         ];
     }
 
