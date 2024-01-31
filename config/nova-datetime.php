@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'globalFormat' => 'Y-M-d H:i:s',
+    'globalFormat' => 'd/m/Y H:i:s',
 ];

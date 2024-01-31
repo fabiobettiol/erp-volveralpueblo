@@ -9,8 +9,8 @@ class EventCall extends Model {
 	use SoftDeletes;
 
 	protected $casts = [
-		'start' => 'datetime',
-		'end' => 'datetime',
+		'start' => 'datetime:d/m/Y',
+		'end' => 'datetime:d/m/Y',
 	];
 
 	public function user() {
