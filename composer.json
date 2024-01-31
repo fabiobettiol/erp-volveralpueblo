@@ -32,6 +32,7 @@
         "maatwebsite/laravel-nova-excel": "^1.3",
         "saintsystems/nova-actions-left": "^4.0",
         "sendinblue/api-v3-sdk": "^8.4",
+        "stepanenko3/nova-cards": "^1.9",
         "wdelfuego/nova-calendar": "^2.1",
         "wdelfuego/nova-datetime": "^1.1"
     },
