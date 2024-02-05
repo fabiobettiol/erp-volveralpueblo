@@ -83,12 +83,12 @@ class Family extends Resource {
 			Tabs::make('Familia', [
 				Tab::make('Detalles', [
 					Date::make('Fecha', 'settlementdate')
+						->sortable()
 						->filterable()
 						->onlyOnIndex(),
 					Boolean::make('Actualizado', 'datos_actualizados')
 						->filterable(),
 					Text::make('Referencia', 'reference')
-						->sortable()
 						->hideWhenCreating(),
 					Text::make('Familia', 'family_name')
 						->help('Un breve nombre descriptivo para esta familia')

@@ -14,9 +14,10 @@ use Illuminate\Auth\Auth;
 use App\Models\Familymember;
 use Elibyy\TCPDF\Facades\TCPDF;
 use App\Models\Demandantfollowup;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MapController;
-use Illuminate\Support\Collection;
+use App\Http\Controllers\CdrStatsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -106,6 +107,8 @@ Route::get('/cdr/{comarca}', function ($comarca = null) {
 | INACTVE (TEST) Routes
 |--------------------------------------------------------------------------
  */
+
+Route::get('/stats/solicitantes/{cdr}/{desde}/{hasta}', [CdrStatsController::class, 'init']);
 
 Route::get('/mapa-comarcas', function () {
 

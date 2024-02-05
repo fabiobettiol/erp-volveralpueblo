@@ -11,6 +11,7 @@ use App\Nova\Metrics\DemandantsFollowups;
 use App\Nova\Metrics\DemandantFollowUpCDR;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Nova\Metrics\DemandantFollowUpPerDayCDR;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Demandantfollowup extends Resource {
 
@@ -137,6 +138,10 @@ class Demandantfollowup extends Resource {
 	 * @return array
 	 */
 	public function actions(Request $request) {
-		return [];
+		return [
+			(new DownloadExcel)
+				->withHeadings()
+				->allFields(),
+		];
 	}
 }

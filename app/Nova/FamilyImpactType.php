@@ -9,6 +9,9 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class FamilyImpactType extends Resource
 {
+    public static function label() {
+        return 'Typo de impacto';
+    }
     /**
      * The model the resource corresponds to.
      *

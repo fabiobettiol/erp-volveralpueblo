@@ -10,6 +10,10 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class FamilyImpactScope extends Resource
 {
+    public static function label() {
+        return 'Ámbitos de impacto';
+    }
+
     /**
      * The model the resource corresponds to.
      *

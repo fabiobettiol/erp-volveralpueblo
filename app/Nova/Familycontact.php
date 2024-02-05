@@ -3,13 +3,14 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Familycontact extends Resource {
 	public static function label() {
@@ -81,12 +82,14 @@ class Familycontact extends Resource {
 		return [
 			// ID::make(__('ID'), 'id')->sortable(),
 			Date::make('Fecha', 'date')
+				->sortable()
 				->filterable()
 				->onlyOnIndex(),
 			Date::make('Fecha', 'date')
-			->hideFromIndex(),				
+				->hideFromIndex(),
 			BelongsTo::make('Familia', 'family', 'App\Nova\Family'),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
+				->sortable()
 				->filterable()
 				->exceptOnForms(),
 			BelongsTo::make('Usuario', 'user', 'App\Nova\User')
@@ -140,6 +143,10 @@ class Familycontact extends Resource {
 	 * @return array
 	 */
 	public function actions(Request $request) {
-		return [];
+		return [
+			(new DownloadExcel)
+				->withHeadings()
+				->allFields(),
+		];
 	}
 }

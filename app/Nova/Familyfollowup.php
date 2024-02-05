@@ -3,11 +3,12 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Familyfollowup extends Resource {
 
@@ -79,14 +80,15 @@ class Familyfollowup extends Resource {
 			// ID::make(__('ID'), 'id')->sortable(),
 			Date::make('Fecha', 'date')->rules('required')
 				->rules('required', 'date')
+				->sortable()
 				->filterable(),
 			BelongsTo::make('Familia', 'family', 'App\Nova\Family'),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
+				->sortable()
 				->filterable()
 				->exceptOnForms(),
 			BelongsTo::make('Usuario', 'user', 'App\Nova\User')
 				->exceptOnForms(),
-			
 			Text::make('Asunto', 'subject')
 				->rules('required', 'max:100'),
 			Textarea::make('Entrevista', 'text')
@@ -133,6 +135,10 @@ class Familyfollowup extends Resource {
 	 * @return array
 	 */
 	public function actions(Request $request) {
-		return [];
+		return [
+			(new DownloadExcel)
+				->withHeadings()
+				->allFields(),
+		];
 	}
 }

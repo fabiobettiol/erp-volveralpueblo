@@ -44,10 +44,12 @@ use App\Nova\Municipality;
 use App\Nova\Familycontact;
 use App\Nova\Familyfollowup;
 use App\Nova\Settlementtype;
+use App\Nova\FamilyImpactType;
 use App\Nova\Metrics\CdrCount;
 use App\Nova\Metrics\JobCount;
 use App\Nova\Settlementstatus;
 use App\Nova\Demandantfollowup;
+use App\Nova\FamilyImpactScope;
 use App\Nova\Metrics\LandCount;
 use Laravel\Nova\Menu\MenuItem;
 use App\Nova\EventFamilycontact;
@@ -258,7 +260,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 					MenuItem::resource(Landuse::class),
 					MenuItem::resource(Ownership::class),
 					MenuItem::resource(Jobownership::class),
-				])				
+				]),
+				MenuGroup::make('Familias asentadas', [
+					MenuItem::resource(FamilyImpactScope::class),
+					MenuItem::resource(FamilyImpactType::class),
+					MenuItem::resource(FamilyImpact::class),
+				]),
 
 			])->icon('adjustments')
 				->collapsible(),
