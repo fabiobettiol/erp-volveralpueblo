@@ -12,14 +12,18 @@ use Illuminate\Http\Request;
 use App\Models\Familycontact;
 use App\Models\Familyfollowup;
 use App\Models\Demandantfollowup;
+use App\Models\Demandant;
 
 class CdrStatsController extends Controller
 {
     public $cdr;
     public $desde;
     public $hasta;
+    public $solicitantes;
     public $numSolicitantes;
+    public $interacciones;
     public $numInteracciones;
+    public $Familias;
     public $numFamilias;
     public $numMiembros;
     public $numIntervenciones;
@@ -34,12 +38,15 @@ class CdrStatsController extends Controller
         $this->desde = $desde;
         $this->hasta = $hasta;
 
-        // - Solicitantes (demndantes)
+        // - Solicitantes (demandantes)
         $this->numInteracciones = $this->numInteracciones();
         $this->numSolicitantes = $this->numSolicitantes();
+        $this->solicitantes = $this->solicitantes();
+        $this->interacciones = $this->interacciones();
 
         // - Asentados (familias)
         $this->numFamilias = $this->numFamilias();
+        $this->familias = $this->familias();
         $this->numMiembros = $this->numMiembros();
         $this->numIntervenciones = $this->numIntervenciones();
         $this->numSeguimientos = $this->numSeguimientos();
@@ -50,8 +57,23 @@ class CdrStatsController extends Controller
         $this->numTierras = $this->numTierras();
         $this->numTrabajos = $this->numTrabajos();
 
+        return view('stats.cdr-stats', [
+            'solicitantes' => $this->solicitantes,
+            'numSolicitantes' => $this->numSolicitantes,
+            'interacciones' => $this->interacciones,
+            'numInteracciones' => $this->numInteracciones,
 
-    ddd($this->numInteracciones,$this->numSolicitantes,$this->numFamilias,$this->numMiembros,$this->numIntervenciones,$this->numSeguimientos,$this->numViviendas,$this->numNegocios,$this->numTierras,$this->numTrabajos);
+            'familias' => $this->familias,
+            'numFamilias' => $this->numFamilias,
+            'numMiembros' => $this->numMiembros,
+            'numIntervenciones' => $this->numIntervenciones,
+            'numSeguimientos' => $this->numSeguimientos,
+
+            'numViviendas' => $this->numViviendas,
+            'numNegocios' => $this->numNegocios,
+            'numTierras' => $this->numTierras,
+            'numTrabajos' => $this->numTrabajos
+        ]);
 
     }
 
@@ -69,6 +91,18 @@ class CdrStatsController extends Controller
             ->whereDate('date', '<=', $this->hasta)
             ->count();
     }
+
+    protected function familias() {
+        return Family::with(
+                'settlementstatus:id,name',
+                'destinationprovince:id,acronym',
+                'nationality:id,alfa3'
+            )->where('cdr_id', $this->cdr)
+            ->whereDate('settlementdate', '>=', $this->desde)
+            ->whereDate('settlementdate', '<=', $this->hasta)
+            ->get();
+    }
+
 
     protected function numFamilias() {
         return Family::where('cdr_id', $this->cdr)
@@ -128,4 +162,20 @@ class CdrStatsController extends Controller
             ->count();
     }
 
+    protected function solicitantes() {
+        return Demandant::whereHas('followups', function($query) {
+                $query->where('cdr_id', $this->cdr);
+                $query->whereDate('created_at', '>=', $this->desde);
+                $query->whereDate('created_at', '<=', $this->hasta);
+            })->with('country:id,alfa3','provinceto:id,acronym')
+            ->get();
+    }
+
+    protected function interacciones() {
+        return Demandantfollowup::with('demandant:id,name,surname')
+            ->where('cdr_id', $this->cdr)
+            ->whereDate('date', '>=', $this->desde)
+            ->whereDate('date', '<=', $this->hasta)
+            ->get();
+    }
 }
