@@ -23,15 +23,20 @@ class CdrStatsController extends Controller
     public $numSolicitantes;
     public $interacciones;
     public $numInteracciones;
-    public $Familias;
+    public $familias;
     public $numFamilias;
+    public $miembros;
     public $numMiembros;
+    public $intervenciones;
     public $numIntervenciones;
+    public $seguimientos;
     public $numSeguimientos;
     public $numViviendas;
     public $numNegocios;
     public $numTierras;
     public $numTrabajos;
+
+
 
     public function init($cdr, $desde, $hasta) {
         $this->cdr = $cdr;
@@ -47,8 +52,11 @@ class CdrStatsController extends Controller
         // - Asentados (familias)
         $this->numFamilias = $this->numFamilias();
         $this->familias = $this->familias();
+        $this->miembros = $this->miembros();
         $this->numMiembros = $this->numMiembros();
+        $this->intervenciones = $this->intervenciones();
         $this->numIntervenciones = $this->numIntervenciones();
+        $this->seguimientos = $this->seguimientos();
         $this->numSeguimientos = $this->numSeguimientos();
 
         // - Recuros
@@ -65,8 +73,11 @@ class CdrStatsController extends Controller
 
             'familias' => $this->familias,
             'numFamilias' => $this->numFamilias,
+            'miembros' => $this->miembros,
             'numMiembros' => $this->numMiembros,
+            'intervenciones' => $this->intervenciones,
             'numIntervenciones' => $this->numIntervenciones,
+            'seguimientos' => $this->seguimientos,
             'numSeguimientos' => $this->numSeguimientos,
 
             'numViviendas' => $this->numViviendas,
@@ -77,11 +88,15 @@ class CdrStatsController extends Controller
 
     }
 
-    protected function numInteracciones() {
-        return Demandantfollowup::where('cdr_id', $this->cdr)
-            ->whereDate('date', '>=', $this->desde)
-            ->whereDate('date', '<=', $this->hasta)
-            ->count();
+    protected function solicitantes() {
+        return Demandant::whereHas('followups', function($query) {
+                $query->where('cdr_id', $this->cdr);
+                $query->whereDate('created_at', '>=', $this->desde);
+                $query->whereDate('created_at', '<=', $this->hasta);
+            })
+            ->withCount('followups')
+            ->with('country:id,alfa3','provinceto:id,acronym')
+            ->get();
     }
 
     protected function numSolicitantes() {
@@ -92,12 +107,28 @@ class CdrStatsController extends Controller
             ->count();
     }
 
+    protected function interacciones() {
+        return Demandantfollowup::with('demandant:id,name,surname')
+            ->where('cdr_id', $this->cdr)
+            ->whereDate('date', '>=', $this->desde)
+            ->whereDate('date', '<=', $this->hasta)
+            ->get();
+    }
+
+    protected function numInteracciones() {
+        return Demandantfollowup::where('cdr_id', $this->cdr)
+            ->whereDate('date', '>=', $this->desde)
+            ->whereDate('date', '<=', $this->hasta)
+            ->count();
+    }
     protected function familias() {
         return Family::with(
                 'settlementstatus:id,name',
                 'destinationprovince:id,acronym',
                 'nationality:id,alfa3'
-            )->where('cdr_id', $this->cdr)
+            )->withCount('members')
+            ->withCount('contacts')
+            ->where('cdr_id', $this->cdr)
             ->whereDate('settlementdate', '>=', $this->desde)
             ->whereDate('settlementdate', '<=', $this->hasta)
             ->get();
@@ -111,6 +142,15 @@ class CdrStatsController extends Controller
             ->count();
     }
 
+    protected function miembros() {
+        return Familymember::with('family:id,reference')
+            ->whereHas('family', function($query) {
+                $query->where('settlementdate', '>=', $this->desde);
+                $query->where('settlementdate', '<=', $this->hasta);
+            })->where('cdr_id', $this->cdr)
+        ->get();
+    }
+
     protected function numMiembros() {
         return Familymember::where('cdr_id', $this->cdr)
             ->whereHas('family', function($query) {
@@ -120,11 +160,27 @@ class CdrStatsController extends Controller
         ->count();
     }
 
+    protected function intervenciones() {
+        return Familycontact::with('family:id,reference')
+            ->where('cdr_id', $this->cdr)
+            ->whereDate('date', '>=', $this->desde)
+            ->whereDate('date', '<=', $this->hasta)
+            ->get();
+    }
+
     protected function numIntervenciones() {
         return Familycontact::where('cdr_id', $this->cdr)
             ->whereDate('date', '>=', $this->desde)
             ->whereDate('date', '<=', $this->hasta)
             ->count();
+    }
+
+    protected function seguimientos() {
+        return Familyfollowup::with('family:id,reference')
+            ->where('cdr_id', $this->cdr)
+            ->whereDate('date', '>=', $this->desde)
+            ->whereDate('date', '<=', $this->hasta)
+            ->get();
     }
 
     protected function numSeguimientos() {
@@ -160,22 +216,5 @@ class CdrStatsController extends Controller
             ->whereDate('created_at', '>=', $this->desde)
             ->whereDate('created_at', '<=', $this->hasta)
             ->count();
-    }
-
-    protected function solicitantes() {
-        return Demandant::whereHas('followups', function($query) {
-                $query->where('cdr_id', $this->cdr);
-                $query->whereDate('created_at', '>=', $this->desde);
-                $query->whereDate('created_at', '<=', $this->hasta);
-            })->with('country:id,alfa3','provinceto:id,acronym')
-            ->get();
-    }
-
-    protected function interacciones() {
-        return Demandantfollowup::with('demandant:id,name,surname')
-            ->where('cdr_id', $this->cdr)
-            ->whereDate('date', '>=', $this->desde)
-            ->whereDate('date', '<=', $this->hasta)
-            ->get();
     }
 }

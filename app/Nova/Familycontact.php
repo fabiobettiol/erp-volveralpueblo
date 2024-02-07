@@ -86,6 +86,7 @@ class Familycontact extends Resource {
 				->filterable()
 				->onlyOnIndex(),
 			Date::make('Fecha', 'date')
+				->rules('required')
 				->hideFromIndex(),
 			BelongsTo::make('Familia', 'family', 'App\Nova\Family'),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
@@ -98,7 +99,8 @@ class Familycontact extends Resource {
 			Boolean::make('Concluída', 'completed')
 				->filterable()	
 				->sortable(),
-			Text::make('Asunto', 'subject'),
+			Text::make('Asunto', 'subject')
+				->rules('required'),
 			Textarea::make('Descripción', 'text')
 				->alwaysShow(),
 			Textarea::make('Comentarios', 'comments')

@@ -1,19 +1,19 @@
 @props([
-    'interacciones'
+    'intervenciones'
 ])
-<h2>Interacciones</h2>
+<h2>Intevenciones</h2>
 <div class="row">
     <div class="col">
         <table class="table table-sm table-striped">
             <tr>
+                <th>Familia</th>
                 <th>Fecha</th>
-                <th>Nombre</th>
                 <th>Asunto</th>
             </tr>
-            @foreach ($interacciones as $s)
+            @foreach ($intervenciones as $s)
                 <tr>
+                    <td>{{ $s->family->reference }}</td>
                     <td>{{ \Carbon\Carbon::parse($s->date)->format('d/m/Y') }}</td>
-                    <td>{{ ucwords(strtolower(($s->demandant->name ?? '') . ' ' . substr_replace(($s->demandant->surname ?? ''), str_repeat('*', strlen(($s->demandant->surname ?? ''))),1))) }}</td>
                     <td>{{ ucwords(strtolower($s->subject)) }}</td>
                 </tr>
             @endforeach

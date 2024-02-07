@@ -45,6 +45,24 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col">
+            <x-stats.tbl-miembros :miembros="$miembros" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <x-stats.tbl-intervenciones :intervenciones="$intervenciones" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <x-stats.tbl-seguimientos :seguimientos="$seguimientos" />
+        </div>
+    </div>
+
 @endsection
 
 @section('recursos')
