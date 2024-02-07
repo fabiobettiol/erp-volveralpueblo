@@ -35,6 +35,10 @@ class CdrStatsController extends Controller
     public $numNegocios;
     public $numTierras;
     public $numTrabajos;
+    public $viviendas;
+    public $negocios;
+    public $tierras;
+    public $trabajos;
 
 
 
@@ -60,10 +64,15 @@ class CdrStatsController extends Controller
         $this->numSeguimientos = $this->numSeguimientos();
 
         // - Recuros
+        $this->viviendas = $this->viviendas();
+        $this->negocios = $this->negocios();
+        $this->tierras = $this->tierras();
+        $this->trabajos = $this->trabajos();
         $this->numViviendas = $this->numViviendas();
         $this->numNegocios = $this->numNegocios();
         $this->numTierras = $this->numTierras();
         $this->numTrabajos = $this->numTrabajos();
+
 
         return view('stats.cdr-stats', [
             'solicitantes' => $this->solicitantes,
@@ -80,6 +89,10 @@ class CdrStatsController extends Controller
             'seguimientos' => $this->seguimientos,
             'numSeguimientos' => $this->numSeguimientos,
 
+            'viviendas' => $this->viviendas,
+            'negocios' => $this->negocios,
+            'tierras' => $this->tierras,
+            'trabajos' => $this->trabajos,
             'numViviendas' => $this->numViviendas,
             'numNegocios' => $this->numNegocios,
             'numTierras' => $this->numTierras,
@@ -190,11 +203,31 @@ class CdrStatsController extends Controller
             ->count();
     }
 
+    protected function viviendas() {
+        return House::with(
+                'municipality:id,name',
+                'province:id,acronym'
+            )->where('cdr_id', $this->cdr)
+            ->whereDate('created_at', '>=', $this->desde)
+            ->whereDate('created_at', '<=', $this->hasta)
+            ->get();
+    }
+
     protected function numViviendas() {
         return House::where('cdr_id', $this->cdr)
             ->whereDate('created_at', '>=', $this->desde)
             ->whereDate('created_at', '<=', $this->hasta)
             ->count();
+    }
+
+    protected function negocios() {
+        return Business::with(
+                'municipality:id,name',
+                'province:id,acronym'
+            )->where('cdr_id', $this->cdr)
+            ->whereDate('created_at', '>=', $this->desde)
+            ->whereDate('created_at', '<=', $this->hasta)
+            ->get();
     }
 
     protected function numNegocios() {
@@ -204,11 +237,31 @@ class CdrStatsController extends Controller
             ->count();
     }
 
+    protected function tierras() {
+        return Land::with(
+                'municipality:id,name',
+                'province:id,acronym'
+            )->where('cdr_id', $this->cdr)
+            ->whereDate('created_at', '>=', $this->desde)
+            ->whereDate('created_at', '<=', $this->hasta)
+            ->get();
+    }
+
     protected function numTierras() {
         return Land::where('cdr_id', $this->cdr)
             ->whereDate('created_at', '>=', $this->desde)
             ->whereDate('created_at', '<=', $this->hasta)
             ->count();
+    }
+
+    protected function trabajos() {
+        return Job::with(
+                'municipality:id,name',
+                'province:id,acronym'
+            )->where('cdr_id', $this->cdr)
+            ->whereDate('created_at', '>=', $this->desde)
+            ->whereDate('created_at', '<=', $this->hasta)
+            ->get();
     }
 
     protected function numTrabajos() {
