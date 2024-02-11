@@ -12,12 +12,17 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use App\Nova\Filters\BySector;
+use App\Nova\Filters\BySource;
 use Eminiarts\Tabs\TabsOnEdit;
 use App\Nova\Actions\JobExport;
+use App\Nova\Filters\ByProvince;
 use Laravel\Nova\Fields\Boolean;
+use App\Nova\Filters\ByCommunity;
 use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\ByAvailability;
+use App\Nova\Filters\ByMunicipality;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -104,7 +109,6 @@ class Job extends Resource {
 		return [
 			// ID::make(__('ID'), 'id')->sortable(),
 			Boolean::make('Disponible', 'available')
-				->filterable()
 				->hideFromIndex()			
 				->hideWhenCreating(),
 			Text::make('Referencia', 'reference')
@@ -112,7 +116,6 @@ class Job extends Resource {
 				->help('<a target="blank" href="/mapa/' . $this->reference . '">Ver en el mapa</a>')
 				->readonly(),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
-				->filterable()
 				->sortable()
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
@@ -124,12 +127,10 @@ class Job extends Resource {
 
 			// - Community: Show the full name when not on index view
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
-				->filterable()
 				->hideFromIndex(),
 
 			// - Community: Show acronym on index view
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
-				->filterable()
 				->display(function ($community) {
 					return $community->acronym;
 				})->onlyOnIndex(),		
@@ -142,12 +143,10 @@ class Job extends Resource {
 							$query->where('community_id', $formData->community);
 						});
 					});
-				})->filterable()
-				->hideFromIndex(),
+				})->hideFromIndex(),
 
 			// - Province: Show abbreviated name on index view
 			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
-				->filterable()
 				->display(function ($province) {
 					return ( strlen($province->name) <= 10 ) ? $province->name : substr($province->name,0,10).'...';
 				})->onlyOnIndex(),
@@ -160,12 +159,10 @@ class Job extends Resource {
 							$query->where('province_id', $formData->province);
 						});
 					});
-				})->filterable()
-				->hideFromIndex(),
+				})->hideFromIndex(),
 
 			// - Municipality: Show abbreviated name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
-				->filterable()
 				->display(function ($municipality) {
 					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
 				})->onlyOnIndex(),
@@ -265,7 +262,14 @@ class Job extends Resource {
 	 * @return array
 	 */
 	public function filters(Request $request) {
-		return [];
+		return [
+			new BySource,
+			new ByAvailability,
+			new ByCdr,
+			new ByCommunity,
+			new ByProvince,
+			new ByMunicipality
+		];
 	}
 
 	/**
