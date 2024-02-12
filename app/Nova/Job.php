@@ -25,8 +25,7 @@ use App\Nova\Filters\ByAvailability;
 use App\Nova\Filters\ByMunicipality;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Illuminate\Contracts\Database\Eloquent\Builder;
-use Orlyapps\NovaBelongsToDepend\NovaBelongsToDepend;
+
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Job extends Resource {
