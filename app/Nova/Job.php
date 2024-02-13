@@ -15,6 +15,7 @@ use App\Nova\Filters\BySector;
 use App\Nova\Filters\BySource;
 use Eminiarts\Tabs\TabsOnEdit;
 use App\Nova\Actions\JobExport;
+use Laravel\Nova\Query\Builder;
 use App\Nova\Filters\ByProvince;
 use Laravel\Nova\Fields\Boolean;
 use App\Nova\Filters\ByCommunity;
@@ -25,7 +26,6 @@ use App\Nova\Filters\ByAvailability;
 use App\Nova\Filters\ByMunicipality;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
-
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Job extends Resource {
