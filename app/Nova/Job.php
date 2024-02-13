@@ -15,7 +15,7 @@ use App\Nova\Filters\BySector;
 use App\Nova\Filters\BySource;
 use Eminiarts\Tabs\TabsOnEdit;
 use App\Nova\Actions\JobExport;
-use Laravel\Nova\Query\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use App\Nova\Filters\ByProvince;
 use Laravel\Nova\Fields\Boolean;
 use App\Nova\Filters\ByCommunity;
