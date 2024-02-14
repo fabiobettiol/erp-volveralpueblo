@@ -132,7 +132,8 @@ class Job extends Resource {
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
 				->display(function ($community) {
 					return $community->acronym;
-				})->onlyOnIndex(),		
+				})->sortable()
+				->onlyOnIndex(),
 
 			// - Province: Show full name when not on index view
 			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
@@ -148,7 +149,8 @@ class Job extends Resource {
 			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
 				->display(function ($province) {
 					return ( strlen($province->name) <= 10 ) ? $province->name : substr($province->name,0,10).'...';
-				})->onlyOnIndex(),
+				})->sortable()
+				->onlyOnIndex(),
 
 			// - Municipality: Show full name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
@@ -162,9 +164,8 @@ class Job extends Resource {
 
 			// - Municipality: Show abbreviated name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
-				->display(function ($municipality) {
-					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
-				})->onlyOnIndex(),
+				->sortable()
+				->onlyOnIndex(),
 				
 			Text::make('Localidad', 'town')
 				->rules('required', 'max:100')
@@ -180,18 +181,21 @@ class Job extends Resource {
 					BelongsTo::make('Titularidad', 'jobownership', 'App\Nova\Jobownership')
 						->hideFromIndex(),
 					BelongsTo::make('Sector', 'sector', 'App\Nova\Sector')
+						->sortable()
 						->filterable(),
 					Textarea::make('Descripción', 'description')
 						->hideFromIndex()
 						->alwaysShow(),
-					BelongsTo::make('Régimen laboral', 'jobform', 'App\Nova\Jobform'),
+					BelongsTo::make('Régimen laboral', 'jobform', 'App\Nova\Jobform')
+						->sortable(),
 					Text::make('Puesto de trabajo', 'position'),
 					Textarea::make('Requerimientos', 'requirements')
 						->hideFromIndex()
 						->alwaysShow(),
 					Date::make('Desde', 'date_from')
 						->hideFromIndex(),
-					Date::make('Hasta', 'date_to'),
+					Date::make('Hasta', 'date_to')
+						->sortable(),
 				]),
 
 				Tab::make('Ofertante', [

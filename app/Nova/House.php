@@ -33,7 +33,6 @@ class House extends Resource {
 	// use TabsOnEdit;
 
 	public static $tableStyle = 'tight';
-	public static $showColumnBorders = true;
 
 	public static function label() {
 		return 'Viviendas';
@@ -133,6 +132,7 @@ class House extends Resource {
 			
 			// - Community: Show acronym on index view
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
+				->sortable()
 				->display(function ($community) {
 					return $community->acronym;
 				})->onlyOnIndex(),		
@@ -151,7 +151,8 @@ class House extends Resource {
 			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
 				->display(function ($province) {
 					return ( strlen($province->name) <= 10 ) ? $province->name : substr($province->name,0,10).'...';
-				})->onlyOnIndex(),
+				})->sortable()
+				->onlyOnIndex(),
 
 			// - Municipality: Show full name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
@@ -167,11 +168,13 @@ class House extends Resource {
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
 				->display(function ($municipality) {
 					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
-				})->onlyOnIndex(),
+				})->sortable()
+				->onlyOnIndex(),
 			Text::make('Código Postal', 'postcode')
 				->rules('required', 'min:5', 'max:5')
 				->hideFromIndex(),
 			Text::make('Localidad', 'town')
+				->sortable()
 				->rules('required', 'max:100')
 				->help('Nombre de la localidad o pueblo'),
 			Text::make('Habitantes', 'population')
@@ -189,7 +192,8 @@ class House extends Resource {
 					Textarea::make('Descripción', 'description')
 						->hideFromIndex()
 						->alwaysShow(),
-					Number::make('Plantas', 'stories'),
+					Number::make('Plantas', 'stories')
+						->sortable(),
 					Text::make('Descripción (Plantas)', 'stories_detail')
 						->help('Información adicional sobre Plantas')
 						->hideFromIndex(),
@@ -198,7 +202,8 @@ class House extends Resource {
 					Text::make('Descripción', 'bedrooms_detail')
 						->help('Información adicional sobre Dormitorios')
 						->hideFromIndex(),
-					Number::make('Baños', 'bathrooms'),
+					Number::make('Baños', 'bathrooms')
+						->sortable(),
 					Number::make('Estancias', 'total_rooms')
 						->help('Número de estacias o habitaciones totales')
 						->hideFromIndex(),
@@ -292,10 +297,13 @@ class House extends Resource {
 				]),
 				Tab::make('Precios', [
 					BelongsTo::make('Titularidad', 'ownership', 'App\Nova\Ownership')
+						->sortable()
 						->help('Titularidad de la propiedad'),
 					BelongsTo::make('Régimen', 'form', 'App\Nova\Form')
+						->sortable()
 						->filterable(),
 					BelongsTo::make('Rango de precios', 'pricerange', 'App\Nova\Pricerange')
+						->sortable()
 						->filterable(),
 					Text::make('Precio Venta', 'price_sale')
 						->hideFromIndex(),

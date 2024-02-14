@@ -131,7 +131,8 @@ class Land extends Resource {
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
 				->display(function ($community) {
 					return $community->acronym;
-				})->onlyOnIndex(),		
+				})->sortable()
+				->onlyOnIndex(),
 
 			// - Province: Show full name when not on index view
 			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
@@ -147,7 +148,8 @@ class Land extends Resource {
 			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
 				->display(function ($province) {
 					return ( strlen($province->name) <= 10 ) ? $province->name : substr($province->name,0,10).'...';
-				})->onlyOnIndex(),
+				})->sortable()
+				->onlyOnIndex(),
 
 			// - Municipality: Show full name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
@@ -161,16 +163,17 @@ class Land extends Resource {
 
 			// - Municipality: Show abbreviated name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
-				->display(function ($municipality) {
-					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
-				})->onlyOnIndex(),
+				->sortable()
+				->onlyOnIndex(),
 				
 			Text::make('Localidad', 'town')
+				->sortable()
 				->rules('required', 'max:100'),
 			Text::make('Código Postal', 'postcode')
 				->rules('required', 'min:5', 'max:5')
 				->hideFromIndex(),
 			Text::make('Nombre del Paraje', 'property_name')
+				->sortable()
 				->rules('max:255'),
 			Text::make('Habitantes', 'population')
 				->help('Número de habitantes')
@@ -190,23 +193,27 @@ class Land extends Resource {
 				->hideFromIndex(),
 			Text::make('Parcela', 'plot')
 				->hideFromIndex(),
-			Text::make('Área', 'area'),
+			Text::make('Área', 'area')
+				->sortable(),
 			BelongsTo::make('Rangos de Área', 'arearange', 'App\Nova\Arearange')
+				->sortable()
 				->filterable(),
 			Text::make('Uso de la tierra', 'land')
 				->help('Ejemplos: pastos, huerta, monte, etc')
 				->filterable()
 				->hideFromIndex(),
-			BelongsTo::make('Uso de la tierra (Categorías)', 'landuse', 'App\Nova\Landuse'),
-
+			BelongsTo::make('Uso de la tierra (Categorías)', 'landuse', 'App\Nova\Landuse')
+				->sortable(),
 			Text::make('Tipo de Tierra', 'soil')
 				->help('Ejemplos: regadío, secano, urbanizable, etc')
 				->hideFromIndex(),
 			BelongsTo::make('Tipo de tierra (Categorías)', 'landtype', 'App\Nova\Landtype')
+				->sortable()
 				->filterable(),
 			Tabs::make('Detalles', [
 				Tab::make('Precios', [
 					BelongsTo::make('Régimen', 'form', 'App\Nova\Form')
+						->sortable()
 						->filterable(),
 					BelongsTo::make('Rango de precios', 'pricerange', 'App\Nova\Pricerange')
 						->filterable()

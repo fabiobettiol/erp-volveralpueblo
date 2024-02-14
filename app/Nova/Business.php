@@ -132,7 +132,8 @@ class Business extends Resource {
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
 				->display(function ($community) {
 					return $community->acronym;
-				})->onlyOnIndex(),		
+				})->sortable()
+				->onlyOnIndex(),
 
 			// - Province: Show full name when not on index view
 			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
@@ -148,7 +149,8 @@ class Business extends Resource {
 			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
 				->display(function ($province) {
 					return ( strlen($province->name) <= 10 ) ? $province->name : substr($province->name,0,10).'...';
-				})->onlyOnIndex(),
+				})->sortable()
+				->onlyOnIndex(),
 
 			// - Municipality: Show full name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
@@ -164,9 +166,11 @@ class Business extends Resource {
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
 				->display(function ($municipality) {
 					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
-				})->onlyOnIndex(),
+				})->sortable()
+				->onlyOnIndex(),
 
 			Text::make('Localidad', 'town')
+				->sortable()
 				->rules('required', 'max:100'),
 			Text::make('Código Postal', 'postcode')
 				->rules('required', 'min:5','max:5')
@@ -174,6 +178,7 @@ class Business extends Resource {
 			Text::make('Habitantes', 'population')
 				->hideFromIndex(),
 			BelongsTo::make('Sector', 'sector', 'App\Nova\Sector')
+				->sortable()
 				->rules('required', 'max:5')
 				->filterable(),
 			Textarea::make('Tipo de Negocio', 'property_type')
@@ -196,11 +201,13 @@ class Business extends Resource {
 				->hideFromIndex()
 				->alwaysShow(),
 			Text::make('Plazos', 'deadlines')
+				->sortable()
 				->rules('max:100')
 				->help('Tiempo estimado para presentar solicitudes'),
 			Tabs::make('Detalles', [
 				Tab::make('Precios', [
 					BelongsTo::make('Régimen', 'form', 'App\Nova\Form')
+						->sortable()
 						->filterable(),
 					BelongsTo::make('Rango de precios', 'pricerange', 'App\Nova\Pricerange')
 						->filterable()

@@ -94,8 +94,8 @@ class Familycontact extends Resource {
 				->filterable()
 				->exceptOnForms(),
 			BelongsTo::make('Usuario', 'user', 'App\Nova\User')
+				->sortable()
 				->exceptOnForms(),
-
 			Boolean::make('Concluída', 'completed')
 				->filterable()	
 				->sortable(),

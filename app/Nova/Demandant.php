@@ -74,6 +74,7 @@ class Demandant extends Resource {
 		return [
 			// ID::make(__('ID'), 'id'),
 			Date::make('Fecha', 'created_at')
+				->sortable()
 				->filterable()
 				->onlyOnIndex(),
 			Date::make('Fecha de Registro', 'created_at')
@@ -83,17 +84,23 @@ class Demandant extends Resource {
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
 				}),
-			BelongsTo::make('Sexo', 'gender', 'App\Nova\Gender'),
+			BelongsTo::make('Sexo', 'gender', 'App\Nova\Gender')
+				->sortable(),
 			Text::make('Nombre', 'name')
+				->sortable()
 				->rules('required', 'max:45'),
 			Text::make('Apellido', 'surname')
+				->sortable()
 				->rules('required', 'max:60'),
 			Text::make('Email', 'email')
+				->sortable()
 				->rules('required', 'max:75'),
-			Text::make('Teléfono', 'phone'),
+			Text::make('Teléfono', 'phone')
+				->sortable(),
 			BelongsTo::make('Tipo documento', 'documenttype', 'App\Nova\Documenttype')
 				->hideFromIndex(),
 			Text::make('Identificación', 'identification')
+				->sortable()
 				->rules('required', 'max:20'),
 			Text::make('Ciudad', 'city')
 				->rules('required', 'max:60')
@@ -109,6 +116,7 @@ class Demandant extends Resource {
 				->rules('required', 'gte:0')
 				->hideFromIndex(),
 			Boolean::make('Potencial poblador', 'potential')
+				->sortable()
 				->filterable()
 				->help('Indique si este solicitante podría ser un potencial poblador'),
 			Textarea::make('Detalles del potencial poblador', 'potential_details')
@@ -125,9 +133,11 @@ class Demandant extends Resource {
 			])->hideFromIndex()	,
 
 			BelongsTo::make('Provincia de origen', 'provincefrom', 'App\Nova\Province')
+				->sortable()
 				->filterable()
 				->nullable(),
 			BelongsTo::make('Provincia de destino', 'provinceto', 'App\Nova\Province')
+				->sortable()
 				->filterable()
 				->nullable(),
 
