@@ -1,0 +1,61 @@
+.azul {
+    background-color: #B1E2F39E !important;
+}
+
+.morado {
+    background-color: #BCB3E175;
+}
+
+.verde {
+    background-color: #8DD39C8C;
+}
+
+
+.icono-morado {
+    background-color: #BCB3E175;
+    padding: 0.5rem 0.5rem;
+    border-radius: 5px;
+    margin: 0.3rem;
+}
+
+table {
+    background-color: white;
+}
+
+.card-header i {
+    background: transparent !important;
+}
+
+.card-body i {
+    padding: 0.5rem 0.5rem;
+    border-radius: 5px;
+    margin: 0.3rem;
+}
+
+.info-solicitantes .card-header,
+.info-solicitantes .tbl-solicitantes .card-body,
+.info-solicitantes .tbl-interacciones .card-body,
+.info-solicitantes th,
+.info-solicitantes td {
+    background-color: #B1E2F39E !important;
+}
+
+.info-familias .card-header,
+.info-familias .tbl-familias .card-body,
+.info-familias .tbl-miembros .card-body,
+.info-familias .tbl-intervenciones .card-body,
+.info-familias .tbl-seguimientos .card-body,
+.info-familias th ,
+.info-familias td {
+    background-color: #BCB3E175 !important;
+}
+
+.info-recursos .card-header,
+.info-recursos .tbl-viviendas .card-body,
+.info-recursos .tbl-negocios .card-body,
+.info-recursos .tbl-tierras .card-body,
+.info-recursos .tbl-trabajos .card-body,
+.info-recursos th ,
+.info-recursos td {
+    background-color: #8DD39C8C !important;
+}
