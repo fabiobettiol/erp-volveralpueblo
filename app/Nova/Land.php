@@ -5,17 +5,23 @@ namespace App\Nova;
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
 use App\Models\Community;
+use App\Nova\Filters\ByCdr;
 use Laravel\Nova\Fields\ID;
 use App\Models\Municipality;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
+use App\Nova\Filters\BySource;
 use Eminiarts\Tabs\TabsOnEdit;
 use App\Nova\Actions\LandExport;
+use App\Nova\Filters\ByProvince;
 use Laravel\Nova\Fields\Boolean;
+use App\Nova\Filters\ByCommunity;
 use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\ByAvailability;
+use App\Nova\Filters\ByMunicipality;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
@@ -101,7 +107,6 @@ class Land extends Resource {
 		return [
 			// ID::make(__('ID'), 'id')->sortable(),
 			Boolean::make('Disponible', 'available')
-				->filterable()
 				->hideFromIndex()
 				->hideWhenCreating(),
 			Text::make('Referencia', 'reference')
@@ -109,7 +114,6 @@ class Land extends Resource {
 				->help('<a target="blank" href="/mapa/' . $this->reference . '">Ver en el mapa</a>')
 				->readonly(),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
-				->filterable()
 				->sortable()
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
@@ -121,15 +125,14 @@ class Land extends Resource {
 
 			// - Community: Show the full name when not on index view
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
-					->filterable()
 					->hideFromIndex(),
 			
 			// - Community: Show acronym on index view
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
-				->filterable()
 				->display(function ($community) {
 					return $community->acronym;
-				})->onlyOnIndex(),		
+				})->sortable()
+				->onlyOnIndex(),
 
 			// - Province: Show full name when not on index view
 			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
@@ -139,15 +142,13 @@ class Land extends Resource {
 							$query->where('community_id', $formData->community);
 						});
 					});
-				})->filterable()
-				->hideFromIndex(),
+				})->hideFromIndex(),
 
 			// - Province: Show abbreviated name on index view
 			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
-				->filterable()
 				->display(function ($province) {
 					return ( strlen($province->name) <= 10 ) ? $province->name : substr($province->name,0,10).'...';
-				})->filterable()
+				})->sortable()
 				->onlyOnIndex(),
 
 			// - Municipality: Show full name when not on index view
@@ -158,22 +159,21 @@ class Land extends Resource {
 							$query->where('province_id', $formData->province);
 						});
 					});
-				})->filterable()
-				->hideFromIndex(),
+				})->hideFromIndex(),
 
 			// - Municipality: Show abbreviated name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
-				->filterable()
-				->display(function ($municipality) {
-					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
-				})->onlyOnIndex(),
+				->sortable()
+				->onlyOnIndex(),
 				
 			Text::make('Localidad', 'town')
+				->sortable()
 				->rules('required', 'max:100'),
 			Text::make('Código Postal', 'postcode')
 				->rules('required', 'min:5', 'max:5')
 				->hideFromIndex(),
 			Text::make('Nombre del Paraje', 'property_name')
+				->sortable()
 				->rules('max:255'),
 			Text::make('Habitantes', 'population')
 				->help('Número de habitantes')
@@ -193,23 +193,27 @@ class Land extends Resource {
 				->hideFromIndex(),
 			Text::make('Parcela', 'plot')
 				->hideFromIndex(),
-			Text::make('Área', 'area'),
+			Text::make('Área', 'area')
+				->sortable(),
 			BelongsTo::make('Rangos de Área', 'arearange', 'App\Nova\Arearange')
+				->sortable()
 				->filterable(),
 			Text::make('Uso de la tierra', 'land')
 				->help('Ejemplos: pastos, huerta, monte, etc')
 				->filterable()
 				->hideFromIndex(),
-			BelongsTo::make('Uso de la tierra (Categorías)', 'landuse', 'App\Nova\Landuse'),
-
+			BelongsTo::make('Uso de la tierra (Categorías)', 'landuse', 'App\Nova\Landuse')
+				->sortable(),
 			Text::make('Tipo de Tierra', 'soil')
 				->help('Ejemplos: regadío, secano, urbanizable, etc')
 				->hideFromIndex(),
 			BelongsTo::make('Tipo de tierra (Categorías)', 'landtype', 'App\Nova\Landtype')
+				->sortable()
 				->filterable(),
 			Tabs::make('Detalles', [
 				Tab::make('Precios', [
 					BelongsTo::make('Régimen', 'form', 'App\Nova\Form')
+						->sortable()
 						->filterable(),
 					BelongsTo::make('Rango de precios', 'pricerange', 'App\Nova\Pricerange')
 						->filterable()
@@ -287,7 +291,14 @@ class Land extends Resource {
 	 */
 	public function filters(Request $request) {
 		
-		return [];
+		return [
+			new BySource,
+			new ByAvailability,
+			new ByCdr,
+			new ByCommunity,
+			new ByProvince,
+			new ByMunicipality
+		];
 		
 	}
 

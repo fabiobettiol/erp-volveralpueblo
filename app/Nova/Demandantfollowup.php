@@ -87,6 +87,7 @@ class Demandantfollowup extends Resource {
 					return !$request->user()->is_admin;
 				}),
 			BelongsTo::make('Usuario', 'user', 'App\Nova\User')
+				->sortable()
 				->exceptOnForms(),
 			Text::make('Asunto', 'subject')
 				->rules('required', 'max:100'),

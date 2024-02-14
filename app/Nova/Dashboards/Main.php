@@ -21,22 +21,8 @@ class Main extends Dashboard
      */
     public function cards()
     {
-
-        $thisCdr = Auth::user()->cdr_id;
-        $thisYear = now()->year;
-
-        $numFamilies = Family::where('cdr_id', 22)
-            ->whereYear('settlementdate', 2024)
-            ->count();
-
         return [
-            (new HtmlCard)
-                ->width('1/3')
-                ->markdown('# Hello World!'), // Required
-
-            (new HtmlCard)
-                ->width('1/3')
-                ->view('cards.families', ['count' => $numFamilies]),
+            //
         ];
     }
 }

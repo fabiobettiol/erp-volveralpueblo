@@ -104,20 +104,26 @@ class Family extends Resource {
 							return $request->user()->is_admin;
 						}),
 					Date::make('Fecha de asentamiento', 'settlementdate')
+						->sortable()
 						->rules('required', 'date'),
-					BelongsTo::make('País de origen', 'nationality', 'App\Nova\Country'),
+					BelongsTo::make('País de origen', 'nationality', 'App\Nova\Country')
+						->sortable(),
 					BelongsTo::make('Provincia de origen', 'sourceprovince', 'App\Nova\Province')
+						->sortable()
 						->filterable(),
 					Text::make('Loalidad de origen', 'fromcityname')
 						->rules('required', 'max:60')
 						->hideFromIndex(),
 					BelongsTo::make('Provincia de destino', 'destinationprovince', 'App\Nova\Province')
+						->sortable()
 						->filterable(),
 					Text::make('Localidad de destino', 'tocityname')
 						->rules('required', 'max:60')
 						->hideFromIndex(),
-					BelongsTo::make('Tipo de asentamiento', 'settlementtype', 'App\Nova\Settlementtype'),
-					BelongsTo::make('Estado de asentamiento', 'settlementstatus', 'App\Nova\Settlementstatus'),
+					BelongsTo::make('Tipo de asentamiento', 'settlementtype', 'App\Nova\Settlementtype')
+						->sortable(),
+					BelongsTo::make('Estado de asentamiento', 'settlementstatus', 'App\Nova\Settlementstatus')
+						->sortable(),
 					Boolean::make('Itinerarios', 'itineraries')->hideFromIndex(),
 					Textarea::make('Detalles de itinerarios', 'itineraries_comment')
 						->help('Detalles sobre los itinerarios')

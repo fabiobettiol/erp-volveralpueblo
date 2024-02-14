@@ -5,6 +5,7 @@ namespace App\Nova;
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
 use App\Models\Community;
+use App\Nova\Filters\ByCdr;
 use Laravel\Nova\Fields\ID;
 use App\Models\Municipality;
 use Illuminate\Http\Request;
@@ -13,11 +14,15 @@ use Laravel\Nova\Fields\Text;
 use App\Nova\Filters\BySource;
 use Eminiarts\Tabs\TabsOnEdit;
 use Laravel\Nova\Fields\Number;
+use App\Nova\Filters\ByProvince;
 use Laravel\Nova\Fields\Boolean;
 use App\Nova\Actions\HouseExport;
+use App\Nova\Filters\ByCommunity;
 use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Filters\ByAvailability;
+use App\Nova\Filters\ByMunicipality;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
@@ -28,7 +33,6 @@ class House extends Resource {
 	// use TabsOnEdit;
 
 	public static $tableStyle = 'tight';
-	public static $showColumnBorders = true;
 
 	public static function label() {
 		return 'Viviendas';
@@ -106,7 +110,6 @@ class House extends Resource {
 		return [
 			// ID::make(__('ID'), 'id')->sortable(),
 			Boolean::make('Disponible', 'available')
-				->filterable()
 				->hideFromIndex()
 				->hideWhenCreating(),
 			Text::make('Referencia', 'reference')
@@ -114,7 +117,6 @@ class House extends Resource {
 				->help('<a target="blank" href="/mapa/' . $this->reference . '">Ver en el mapa</a>')
 				->readonly(),	
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
-				->filterable()
 				->sortable()
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
@@ -126,12 +128,11 @@ class House extends Resource {
 
 			// - Community: Show the full name when not on index view
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
-				->filterable()
 				->hideFromIndex(),
 			
 			// - Community: Show acronym on index view
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
-				->filterable()
+				->sortable()
 				->display(function ($community) {
 					return $community->acronym;
 				})->onlyOnIndex(),		
@@ -144,15 +145,14 @@ class House extends Resource {
 							$query->where('community_id', $formData->community);
 						});
 					});
-				})->filterable()
-				->hideFromIndex(),
+				})->hideFromIndex(),
 
 			// - Province: Show abbreviated name on index view
 			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
-				->filterable()
 				->display(function ($province) {
 					return ( strlen($province->name) <= 10 ) ? $province->name : substr($province->name,0,10).'...';
-				})->onlyOnIndex(),
+				})->sortable()
+				->onlyOnIndex(),
 
 			// - Municipality: Show full name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
@@ -162,19 +162,19 @@ class House extends Resource {
 							$query->where('province_id', $formData->province);
 						});
 					});
-				})->filterable()
-				->hideFromIndex(),
+				})->hideFromIndex(),
 
 			// - Municipality: Show abbreviated name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
-				->filterable()
 				->display(function ($municipality) {
 					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
-				})->onlyOnIndex(),
+				})->sortable()
+				->onlyOnIndex(),
 			Text::make('Código Postal', 'postcode')
 				->rules('required', 'min:5', 'max:5')
 				->hideFromIndex(),
 			Text::make('Localidad', 'town')
+				->sortable()
 				->rules('required', 'max:100')
 				->help('Nombre de la localidad o pueblo'),
 			Text::make('Habitantes', 'population')
@@ -192,7 +192,8 @@ class House extends Resource {
 					Textarea::make('Descripción', 'description')
 						->hideFromIndex()
 						->alwaysShow(),
-					Number::make('Plantas', 'stories'),
+					Number::make('Plantas', 'stories')
+						->sortable(),
 					Text::make('Descripción (Plantas)', 'stories_detail')
 						->help('Información adicional sobre Plantas')
 						->hideFromIndex(),
@@ -201,7 +202,8 @@ class House extends Resource {
 					Text::make('Descripción', 'bedrooms_detail')
 						->help('Información adicional sobre Dormitorios')
 						->hideFromIndex(),
-					Number::make('Baños', 'bathrooms'),
+					Number::make('Baños', 'bathrooms')
+						->sortable(),
 					Number::make('Estancias', 'total_rooms')
 						->help('Número de estacias o habitaciones totales')
 						->hideFromIndex(),
@@ -295,10 +297,13 @@ class House extends Resource {
 				]),
 				Tab::make('Precios', [
 					BelongsTo::make('Titularidad', 'ownership', 'App\Nova\Ownership')
+						->sortable()
 						->help('Titularidad de la propiedad'),
 					BelongsTo::make('Régimen', 'form', 'App\Nova\Form')
+						->sortable()
 						->filterable(),
 					BelongsTo::make('Rango de precios', 'pricerange', 'App\Nova\Pricerange')
+						->sortable()
 						->filterable(),
 					Text::make('Precio Venta', 'price_sale')
 						->hideFromIndex(),
@@ -371,6 +376,11 @@ class House extends Resource {
 
 		$retorno = [
 			new BySource,
+			new ByAvailability,
+			new ByCdr,
+			new ByCommunity,
+			new ByProvince,
+			new ByMunicipality
 		];
 
 		return $retorno;

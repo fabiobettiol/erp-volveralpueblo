@@ -112,6 +112,7 @@ class Familymember extends Resource {
 			Text::make('Email')
 				->hideFromIndex(),
 			Date::make('Fecha de nacimiento', 'dateofbirth')
+				->sortable()
 				->rules('required', 'date'),
 			BelongsTo::make('País de origen', 'nationality', '\App\Nova\Country')
 				->hideFromIndex()
@@ -122,7 +123,9 @@ class Familymember extends Resource {
 				'3' => 'Desempleado',
 				'4' => 'Estudiando',
 				'5' => 'Otros',
-			])->displayUsingLabels()->required(),
+			])->displayUsingLabels()
+			->sortable()
+			->required(),
 			Textarea::make('Comentarios', 'employment_comment')
 				->rules('max:255')
 				->rows(2)
@@ -131,11 +134,13 @@ class Familymember extends Resource {
 			BelongsTo::make('Sector', 'sector', 'App\Nova\Sector')
 				->hideFromIndex()
 				->help('Sector económico donde está empleado'),
-			Boolean::make('Itinerarios', 'itineraries'),
+			Boolean::make('Itinerarios', 'itineraries')
+				->sortable(),
 			Textarea::make('Comentarios', 'itineraries_comments')
 				->help('Comentarios sobre itinerarios')
 				->alwaysShow(),
-			Boolean::make('Otros programas', 'other_programs'),
+			Boolean::make('Otros programas', 'other_programs')
+				->sortable(),
 			Textarea::make('Comentarios', 'program_comments')
 				->help('Comentarios sobre otros programas')
 				->alwaysShow(),
