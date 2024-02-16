@@ -3,12 +3,14 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\Image;
-use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Fields\BelongsTo;
+use Illuminate\Support\Facades\Http;
+use Metrixinfo\Nova\Fields\Iframe\Iframe;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Cdr extends Resource {
@@ -190,7 +192,6 @@ class Cdr extends Resource {
 				->canSee(function ($request) {
 					return $request->user()->is_admin || $request->user()->is_cdr;
 				}),
-
 			//HasMany::make('Noticias', 'news', 'App\Nova\Cdrnew'),
 		];
 	}

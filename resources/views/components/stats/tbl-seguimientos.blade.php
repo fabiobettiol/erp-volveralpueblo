@@ -22,7 +22,7 @@
                         <tr>
                             <td>{{ $s->family->reference }}</td>
                             <td>{{ \Carbon\Carbon::parse($s->date)->format('d/m/Y') }}</td>
-                            <td>{{ ucwords(strtolower($s->subject)) }}</td>
+                            <td>{{ Str::ucfirst(Str::lower($s->subject)) }}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -30,3 +30,11 @@
         </div>
     </div>
 </div>
+
+@push('component-scripts')
+    <script>
+        $(document).ready(function () {
+            $('p#Seguimientos').html({{ $seguimientos->count() }});
+        })
+    </script>
+@endpush

@@ -23,7 +23,6 @@
                         <th class="text-center">Destino</th>
                     </tr>
                     @php
-                        $totDemandants = 0;
                         $totAdults = 0;
                         $totChildren = 0;
                         $totFollowUps = 0;
@@ -31,15 +30,14 @@
                     @foreach ($solicitantes as $s)
 
                     <tr>
-                        <td>{{ ucwords(strtolower($s->name . ' ' . substr_replace($s->surname, str_repeat('*', strlen($s->surname)),1))) }}</td>
-                        <td>{{ ucwords(strtolower($s->city)) }}</td>
+                        <td>{{ Str::ucfirst(Str::lower($s->name . ' ' . substr_replace($s->surname, str_repeat('*', strlen($s->surname)),1))) }}</td>
+                        <td>{{ Str::ucfirst(Str::lower($s->city)) }}</td>
                         <td class="text-center">{{ $s->country->alfa3 ?? '--'}}</td>
                         <td class="text-center">{{ $s->followups_count }}</td>
                         <td class="text-center">{{ $s->adults }}</td>
                         <td class="text-center">{{ $s->children }}</td>
                         <td class="text-center">{{ $s->provinceto->acronym ?? '--' }}</td>
                         @php
-                            $totDemandants++;
                             $totAdults = $totAdults + $s->adults;
                             $totChildren = $totChildren + $s->children;
                             $totFollowUps = $totFollowUps + $s->followups_count;
@@ -59,11 +57,15 @@
     </div>
 </div>
 
-@push('wtf')
-<script>
-    var totAdults = {{ $totAdults }};
-    var totChildren = {{ $totChildren }};
-    var totDemandants = {{ $totDemandants }};
-</script>
-@endpush
+@push('component-scripts')
+    <script>
+        var totAdults = {{ $totAdults }};
+        var totChildren = {{ $totChildren }};
 
+        $(document).ready(function () {
+            $('p#Solicitantes').html({{ $solicitantes->count() }});
+            $('p#Adultos').html(totAdults);
+            $('p#Menores').html(totChildren);
+        })
+    </script>
+@endpush

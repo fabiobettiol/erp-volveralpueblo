@@ -24,10 +24,10 @@
                     @foreach ($trabajos as $s)
                         <tr>
                             <td>{{ $s->reference }}</td>
-                            <td>{{ ucfirst(strtolower($s->position)) }}</td>
+                            <td>{{ Str::ucfirst(Str::lower($s->position)) }}</td>
                             <td>{{ $s->province->acronym ?? '--'}}</td>
                             <td>{{ $s->municipality->name ?? '--' }}</td>
-                            <td>{{ ucwords(strtolower($s->town ?? '--')) }}</td>
+                            <td>{{ Str::ucfirst(Str::lower($s->town ?? '--')) }}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -35,3 +35,11 @@
         </div>
     </div>
 </div>
+
+@push('component-scripts')
+    <script>
+        $(document).ready(function () {
+            $('p#Trabajos').html({{ $trabajos->count() }});
+        })
+    </script>
+@endpush

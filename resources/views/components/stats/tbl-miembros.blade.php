@@ -52,7 +52,7 @@
 
                         <tr>
                             <td>{{ $s->family->reference }}</td>
-                            <td>{{ ucwords(strtolower($s->name . ' ' . substr_replace($s->surname, str_repeat('*', strlen($s->surname)),1))) }}</td>
+                            <td>{{ Str::ucfirst(Str::lower($s->name . ' ' . substr_replace($s->surname, str_repeat('*', strlen($s->surname)),1))) }}</td>
                             <td class="text-center">{{ $s->gender->name }}</td>
                             <td>{{ ($s->employment_status == null) ? '--' : $situacion[$s->employment_status] }}</td>
                             <td class="text-center" style="font-family: FontAwesome">{{ $adult }}</td>

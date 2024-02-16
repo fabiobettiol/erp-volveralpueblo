@@ -22,7 +22,7 @@
                         <tr>
                             <td>{{ \Carbon\Carbon::parse($s->date)->format('d/m/Y') }}</td>
                             <td>{{ ucwords(strtolower(($s->demandant->name ?? '') . ' ' . substr_replace(($s->demandant->surname ?? ''), str_repeat('*', strlen(($s->demandant->surname ?? ''))),1))) }}</td>
-                            <td>{{ ucwords(strtolower($s->subject)) }}</td>
+                            <td>{{ Str::ucfirst(Str::lower($s->subject)) }}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -30,3 +30,11 @@
         </div>
     </div>
 </div>
+
+@push('component-scripts')
+    <script>
+        $(document).ready(function () {
+            $('p#Interacciones').html({{ $interacciones->count() }});
+        })
+    </script>
+@endpush

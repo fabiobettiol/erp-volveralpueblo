@@ -24,7 +24,7 @@
                             <td>{{ $s->reference }}</td>
                             <td>{{ $s->province->acronym ?? '--'}}</td>
                             <td>{{ $s->municipality->name ?? '--' }}</td>
-                            <td>{{ ucwords(strtolower($s->town ?? '--')) }}</td>
+                            <td>{{ Str::ucfirst(Str::lower($s->town ?? '--')) }}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -32,3 +32,11 @@
         </div>
     </div>
 </div>
+
+@push('component-scripts')
+    <script>
+        $(document).ready(function () {
+            $('p#Tierras').html({{ $tierras->count() }});
+        })
+    </script>
+@endpush

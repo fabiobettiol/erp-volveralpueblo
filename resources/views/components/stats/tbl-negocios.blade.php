@@ -27,7 +27,7 @@
                             <td>{{ $s->property_name ?? '--' }}</td>
                             <td>{{ $s->province->acronym }}</td>
                             <td>{{ $s->municipality->name ?? '--' }}</td>
-                            <td>{{ ucwords(strtolower($s->town ?? '--')) }}</td>
+                            <td>{{ Str::ucfirst(Str::lower($s->town ?? '--')) }}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -35,3 +35,11 @@
         </div>
     </div>
 </div>
+
+@push('component-scripts')
+    <script>
+        $(document).ready(function () {
+            $('p#Negocios').html({{ $negocios->count() }});
+        })
+    </script>
+@endpush

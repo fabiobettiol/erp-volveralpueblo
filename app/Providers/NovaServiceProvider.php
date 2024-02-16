@@ -182,6 +182,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 
 			MenuItem::link(__('Mi Calendario'), NovaCalendar::pathToCalendar('mi-calendario')),
 
+			MenuItem::externalLink('Estadísticas', 'http://localhost:8000/stats/' . \Auth::user()->cdr_id)->openInNewTab(),
+
 			MenuSection::make('Eventos', [
 				MenuItem::resource(EventCall::class),
 				MenuItem::resource(EventMeeting::class),
@@ -269,7 +271,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 
 			])->icon('adjustments')
 				->collapsible(),
-	
 
 		]);
 

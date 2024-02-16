@@ -22,19 +22,36 @@
                         <th class="text-center">Destino</th>
                         <th class="text-center">Estado Asentamiento</th>
                     </tr>
+                    @php
+                        $numMiembros = 0;
+                    @endphp
                     @foreach ($familias as $s)
-                    <tr>
-                        <td>{{ $s->reference }}</td>
-                        <td>{{ $s->settlementdate }}</td>
-                        <td align="center">{{ $s->members_count }}</td>
-                        <td align="center">{{ $s->contacts_count }}</td>
-                        <td align="center">{{ $s->nationality->alfa3 }}</td>
-                        <td align="center">{{ $s->destinationprovince->acronym ?? '--' }}</td>
-                        <td align="center">{{ $s->settlementstatus->name }}</td>
-                    </tr>
+                        <tr>
+                            <td>{{ $s->reference }}</td>
+                            <td>{{ $s->settlementdate->format('d/m/Y') }}</td>
+                            <td align="center">{{ $s->members_count }}</td>
+                            <td align="center">{{ $s->contacts_count }}</td>
+                            <td align="center">{{ $s->nationality->alfa3 }}</td>
+                            <td align="center">{{ $s->destinationprovince->acronym ?? '--' }}</td>
+                            <td align="center">{{ $s->settlementstatus->name }}</td>
+                        </tr>
+                        @php
+                            $numMiembros = $numMiembros + $s->members_count;
+                            @endphp
                     @endforeach
                 </table>
             </div>
         </div>
     </div>
 </div>
+
+@push('component-scripts')
+    <script>
+        var numMiembros = {{ $numMiembros }};
+
+        $(document).ready(function () {
+            $('p#Familias').html({{ $familias->count() }});
+            $('p#Miembros').html(numMiembros);
+        })
+    </script>
+@endpush

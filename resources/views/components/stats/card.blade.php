@@ -22,7 +22,7 @@
             <div class="col">
                 <div class="d-flex text-center">
                     <i class="fa {{ $icon }}"></i>
-                    <p class="h4 my-1"><strong>{{ $value }}</strong></p>
+                    <p id="{{ $title }}" class="h4 my-1"><strong>{{ $value }}</strong></p>
                 </div>
             </div>
         </div>

@@ -19,13 +19,12 @@
                         <th>Municipio</th>
                         <th>Localidad</th>
                     </tr>
-
                     @foreach ($viviendas as $s)
                         <tr>
                             <td>{{ $s->reference }}</td>
                             <td>{{ $s->province->acronym ?? '--'}}</td>
                             <td>{{ $s->municipality->name ?? '--'}}</td>
-                            <td>{{ ucwords(strtolower($s->town ?? '--')) }}</td>
+                            <td>{{ Str::ucfirst(Str::lower($s->town ?? '--')) }}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -33,3 +32,11 @@
         </div>
     </div>
 </div>
+
+@push('component-scripts')
+    <script>
+        $(document).ready(function () {
+            $('p#Viviendas').html({{ $viviendas->count() }});
+        })
+    </script>
+@endpush

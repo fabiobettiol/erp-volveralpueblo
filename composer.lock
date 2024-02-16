@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9a2533c5c03d6ba8505738b7b54a8a0",
+    "content-hash": "b1d85a93fc7afb7a03e1b8ee813173fc",
     "packages": [
         {
             "name": "alexpechkarev/geometry-library",
@@ -3847,6 +3847,53 @@
                 "source": "https://github.com/MarkBaker/PHPMatrix/tree/3.0.1"
             },
             "time": "2022-12-02T22:17:43+00:00"
+        },
+        {
+            "name": "metrixinfo/nova-iframe",
+            "version": "v4.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/metrixinfo/nova-iframe.git",
+                "reference": "882d1a7d3ff9308b3e9aa993a82b03bd20288d9c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/metrixinfo/nova-iframe/zipball/882d1a7d3ff9308b3e9aa993a82b03bd20288d9c",
+                "reference": "882d1a7d3ff9308b3e9aa993a82b03bd20288d9c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Metrixinfo\\Nova\\Fields\\Iframe\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Metrixinfo\\Nova\\Fields\\Iframe\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova iFrame field.",
+            "keywords": [
+                "field",
+                "iframe",
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/metrixinfo/nova-iframe/issues",
+                "source": "https://github.com/metrixinfo/nova-iframe/tree/v4.0.1"
+            },
+            "time": "2022-05-14T01:47:12+00:00"
         },
         {
             "name": "monolog/monolog",
