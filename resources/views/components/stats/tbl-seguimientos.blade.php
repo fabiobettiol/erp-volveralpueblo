@@ -2,9 +2,14 @@
     'seguimientos'
 ])
 
-<div class="resource-table mx-auto card my-4 shadow-sm tbl-seguimientos">
-  <div class="card-body">
-        <h3 class="p-2">Seguimientos</h3>
+<div id="tbl-seguimientos" class="resource-table mx-auto card my-4 shadow-sm tbl-seguimientos d-none">
+    <div class="card-header d-flex flex-row">
+        <h4 class="p-2 flex-grow-1">Seguimientos</h4>
+        <a id="x-seguimientos" href="#">
+            <i class="fa-solid fa-x py-3 px-1"></i>
+        </a>
+    </div>
+    <div class="card-body">
         <div class="row">
             <div class="col">
                 <table class="table table-sm table-borderless">

@@ -2,9 +2,14 @@
     'negocios'
 ])
 
-<div class="tbl-negocios card my-4 shadow-sm">
-  <div class="card-body">
-        <h3 class="p-2">Negocios</h3>
+<div id="tbl-negocios" class="tbl-negocios card my-4 shadow-sm d-none">
+    <div class="card-header d-flex flex-row">
+        <h4 class="p-2 flex-grow-1">Negocios</h4>
+        <a id="x-negocios" href="#">
+            <i class="fa-solid fa-x py-3 px-1"></i>
+        </a>
+    </div>
+    <div class="card-body">
         <div class="row">
             <div class="col">
                 <table class="table table-sm table-borderless ">

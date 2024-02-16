@@ -22,6 +22,12 @@ table {
     background-color: white;
 }
 
+.card-header a {
+    color:  grey;
+}
+.card-header a:hover {
+    color: black;
+}
 .card-header i {
     background: transparent !important;
 }
@@ -59,3 +65,11 @@ table {
 .info-recursos td {
     background-color: #8DD39C8C !important;
 }
+
+.filters select {
+    background-color: #B1E2F39E;
+}
+.filters select option {
+    background-color: white;
+}
+

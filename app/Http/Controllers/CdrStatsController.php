@@ -7,18 +7,21 @@ use App\Models\Land;
 use App\Models\House;
 use App\Models\Family;
 use App\Models\Business;
+use App\Models\Demandant;
 use App\Models\Familymember;
 use Illuminate\Http\Request;
 use App\Models\Familycontact;
 use App\Models\Familyfollowup;
 use App\Models\Demandantfollowup;
-use App\Models\Demandant;
+
 
 class CdrStatsController extends Controller
 {
     public $cdr;
-    public $desde;
-    public $hasta;
+    public $ano;
+    public $mes;
+    public $trimestre;
+    public $semestre;
     public $solicitantes;
     public $numSolicitantes;
     public $interacciones;
@@ -40,24 +43,29 @@ class CdrStatsController extends Controller
     public $tierras;
     public $trabajos;
 
+    public function filter() {
+        return view ('stats.cdr-stats-init');
+    }
 
-
-    public function init($cdr, $desde, $hasta) {
-        $this->cdr = $cdr;
-        $this->desde = $desde;
-        $this->hasta = $hasta;
+    public function init(Request $request) {
+        //dd($request->all());
+        $this->cdr = 22;
+        $this->ano = $request->filtro_ano;
+        $this->mes = $request->filtro_mes;
+        $this->trimestre = $request->filtro_trimestre;
+        $this->semestre = $request->filtro_semestre;
 
         // - Solicitantes (demandantes)
-        $this->numInteracciones = $this->numInteracciones();
         $this->numSolicitantes = $this->numSolicitantes();
         $this->solicitantes = $this->solicitantes();
+        $this->numInteracciones = $this->numInteracciones();
         $this->interacciones = $this->interacciones();
 
         // - Asentados (familias)
         $this->numFamilias = $this->numFamilias();
         $this->familias = $this->familias();
-        $this->miembros = $this->miembros();
         $this->numMiembros = $this->numMiembros();
+        $this->miembros = $this->miembros();
         $this->intervenciones = $this->intervenciones();
         $this->numIntervenciones = $this->numIntervenciones();
         $this->seguimientos = $this->seguimientos();
@@ -104,10 +112,20 @@ class CdrStatsController extends Controller
     protected function solicitantes() {
         return Demandant::whereHas('followups', function($query) {
                 $query->where('cdr_id', $this->cdr);
-                $query->whereDate('created_at', '>=', $this->desde);
-                $query->whereDate('created_at', '<=', $this->hasta);
+                $query->whereYear('date', $this->ano);
             })
-            ->withCount('followups')
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('created_at', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('created_at', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('created_at', $this->semestre);
+            })
+            ->withCount(['followups' => function ($query) {
+                $query->where('cdr_id', $this->cdr);
+            }])
             ->with('country:id,alfa3','provinceto:id,acronym')
             ->get();
     }
@@ -115,25 +133,51 @@ class CdrStatsController extends Controller
     protected function numSolicitantes() {
         return Demandantfollowup::distinct('demandant_id')
             ->where('cdr_id', $this->cdr)
-            ->whereDate('date', '>=', $this->desde)
-            ->whereDate('date', '<=', $this->hasta)
-            ->count();
+            ->whereYear('date', $this->ano)
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('date', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('date', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('date', $this->semestre);
+            })->count();
     }
 
     protected function interacciones() {
         return Demandantfollowup::with('demandant:id,name,surname')
             ->where('cdr_id', $this->cdr)
-            ->whereDate('date', '>=', $this->desde)
-            ->whereDate('date', '<=', $this->hasta)
-            ->get();
+            ->whereYear('date', $this->ano)
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('date', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('date', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('date', $this->semestre);
+            })->get();
     }
 
     protected function numInteracciones() {
-        return Demandantfollowup::where('cdr_id', $this->cdr)
-            ->whereDate('date', '>=', $this->desde)
-            ->whereDate('date', '<=', $this->hasta)
-            ->count();
+        if (!empty($this->ano)) {
+            return Demandantfollowup::where('cdr_id', $this->cdr)
+            ->whereYear('date', $this->ano)
+            ->when(!empty($this->mes), function ($q) {
+            return $q->whereMonth('date', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('date', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('date', $this->semestre);
+            })->count();
+        } else {
+            return 0;
+        }
     }
+
     protected function familias() {
         return Family::with(
                 'settlementstatus:id,name',
@@ -142,65 +186,113 @@ class CdrStatsController extends Controller
             )->withCount('members')
             ->withCount('contacts')
             ->where('cdr_id', $this->cdr)
-            ->whereDate('settlementdate', '>=', $this->desde)
-            ->whereDate('settlementdate', '<=', $this->hasta)
-            ->get();
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('settlementdate', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('settlementdate', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('settlementdate', $this->semestre);
+            })->get();
     }
 
 
     protected function numFamilias() {
         return Family::where('cdr_id', $this->cdr)
-            ->whereDate('settlementdate', '>=', $this->desde)
-            ->whereDate('settlementdate', '<=', $this->hasta)
-            ->count();
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('settlementdate', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('settlementdate', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('settlementdate', $this->semestre);
+            })->count();
     }
 
     protected function miembros() {
         return Familymember::with('family:id,reference')
             ->whereHas('family', function($query) {
-                $query->where('settlementdate', '>=', $this->desde);
-                $query->where('settlementdate', '<=', $this->hasta);
-            })->where('cdr_id', $this->cdr)
-        ->get();
+                $query->when(!empty($this->mes), function ($q) {
+                    return $q->whereMonth('settlementdate', $this->mes);
+                });
+                $query->when(!empty($this->trimestre), function ($q) {
+                    return $q->whereMonth('settlementdate', $this->trimestre);
+                });
+                $query->when(!empty($this->semestre), function ($q) {
+                    return $q->whereMonth('settlementdate', $this->semestre);
+                });
+            })->where('cdr_id', $this->cdr)->get();
     }
 
     protected function numMiembros() {
         return Familymember::where('cdr_id', $this->cdr)
             ->whereHas('family', function($query) {
-                $query->where('settlementdate', '>=', $this->desde);
-                $query->where('settlementdate', '<=', $this->hasta);
-            })
-        ->count();
+                $query->when(!empty($this->mes), function ($q) {
+                    return $q->whereMonth('settlementdate', $this->mes);
+                });
+                $query->when(!empty($this->trimestre), function ($q) {
+                    return $q->whereMonth('settlementdate', $this->trimestre);
+                });
+                $query->when(!empty($this->semestre), function ($q) {
+                    return $q->whereMonth('settlementdate', $this->semestre);
+                });
+            })->count();
     }
 
     protected function intervenciones() {
         return Familycontact::with('family:id,reference')
             ->where('cdr_id', $this->cdr)
-            ->whereDate('date', '>=', $this->desde)
-            ->whereDate('date', '<=', $this->hasta)
-            ->get();
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('date', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('date', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('date', $this->semestre);
+            })->get();
     }
 
     protected function numIntervenciones() {
         return Familycontact::where('cdr_id', $this->cdr)
-            ->whereDate('date', '>=', $this->desde)
-            ->whereDate('date', '<=', $this->hasta)
-            ->count();
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('date', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('date', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('date', $this->semestre);
+            })->count();
     }
 
     protected function seguimientos() {
         return Familyfollowup::with('family:id,reference')
             ->where('cdr_id', $this->cdr)
-            ->whereDate('date', '>=', $this->desde)
-            ->whereDate('date', '<=', $this->hasta)
-            ->get();
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('date', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('date', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('date', $this->semestre);
+            })->get();
     }
 
     protected function numSeguimientos() {
         return Familyfollowup::where('cdr_id', $this->cdr)
-            ->whereDate('date', '>=', $this->desde)
-            ->whereDate('date', '<=', $this->hasta)
-            ->count();
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('date', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('date', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('date', $this->semestre);
+            })->count();
     }
 
     protected function viviendas() {
@@ -208,16 +300,28 @@ class CdrStatsController extends Controller
                 'municipality:id,name',
                 'province:id,acronym'
             )->where('cdr_id', $this->cdr)
-            ->whereDate('created_at', '>=', $this->desde)
-            ->whereDate('created_at', '<=', $this->hasta)
-            ->get();
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('created_at', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('created_at', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('created_at', $this->semestre);
+            })->get();
     }
 
     protected function numViviendas() {
         return House::where('cdr_id', $this->cdr)
-            ->whereDate('created_at', '>=', $this->desde)
-            ->whereDate('created_at', '<=', $this->hasta)
-            ->count();
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('created_at', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('created_at', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('created_at', $this->semestre);
+            })->count();
     }
 
     protected function negocios() {
@@ -225,16 +329,28 @@ class CdrStatsController extends Controller
                 'municipality:id,name',
                 'province:id,acronym'
             )->where('cdr_id', $this->cdr)
-            ->whereDate('created_at', '>=', $this->desde)
-            ->whereDate('created_at', '<=', $this->hasta)
-            ->get();
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('created_at', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('created_at', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('created_at', $this->semestre);
+            })->get();
     }
 
     protected function numNegocios() {
         return Business::where('cdr_id', $this->cdr)
-            ->whereDate('created_at', '>=', $this->desde)
-            ->whereDate('created_at', '<=', $this->hasta)
-            ->count();
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('created_at', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('created_at', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('created_at', $this->semestre);
+            })->count();
     }
 
     protected function tierras() {
@@ -242,16 +358,28 @@ class CdrStatsController extends Controller
                 'municipality:id,name',
                 'province:id,acronym'
             )->where('cdr_id', $this->cdr)
-            ->whereDate('created_at', '>=', $this->desde)
-            ->whereDate('created_at', '<=', $this->hasta)
-            ->get();
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('created_at', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('created_at', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('created_at', $this->semestre);
+            })->get();
     }
 
     protected function numTierras() {
         return Land::where('cdr_id', $this->cdr)
-            ->whereDate('created_at', '>=', $this->desde)
-            ->whereDate('created_at', '<=', $this->hasta)
-            ->count();
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('created_at', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('created_at', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('created_at', $this->semestre);
+            })->count();
     }
 
     protected function trabajos() {
@@ -259,15 +387,27 @@ class CdrStatsController extends Controller
                 'municipality:id,name',
                 'province:id,acronym'
             )->where('cdr_id', $this->cdr)
-            ->whereDate('created_at', '>=', $this->desde)
-            ->whereDate('created_at', '<=', $this->hasta)
-            ->get();
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('created_at', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('created_at', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('created_at', $this->semestre);
+            })->get();
     }
 
     protected function numTrabajos() {
         return Job::where('cdr_id', $this->cdr)
-            ->whereDate('created_at', '>=', $this->desde)
-            ->whereDate('created_at', '<=', $this->hasta)
-            ->count();
+            ->when(!empty($this->mes), function ($q) {
+                return $q->whereMonth('created_at', $this->mes);
+            })
+            ->when(!empty($this->trimestre), function ($q) {
+                return $q->whereMonth('created_at', $this->trimestre);
+            })
+            ->when(!empty($this->semestre), function ($q) {
+                return $q->whereMonth('created_at', $this->semestre);
+            })->count();
     }
 }

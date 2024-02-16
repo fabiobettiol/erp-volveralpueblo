@@ -1,10 +1,15 @@
-@props([
+ @props([
     'interacciones'
 ])
 
-<div class="resource-table mx-auto card my-4 shadow-sm tbl-interacciones">
-  <div class="card-body">
-        <h3 class="p-2">Interacciones</h3>
+<div id="tbl-interacciones" class="resource-table mx-auto card my-4 shadow-sm tbl-interacciones d-none">
+    <div class="card-header d-flex flex-row">
+        <h4 class="p-2 flex-grow-1">Interacciones</h4>
+        <a id="x-interacciones" href="#">
+            <i class="fa-solid fa-x py-3 px-1"></i>
+        </a>
+    </div>
+    <div class="card-body">
         <div class="row">
             <div class="col">
                 <table class="table table-sm table-borderless">

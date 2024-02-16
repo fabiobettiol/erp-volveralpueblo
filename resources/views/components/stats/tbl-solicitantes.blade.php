@@ -2,9 +2,14 @@
     'solicitantes'
 ])
 
-<div class="mx-auto card my-4 shadow-sm tbl-solicitantes">
+<div id="tbl-solicitantes" class="mx-auto card my-4 shadow-sm tbl-solicitantes d-none">
+    <div class="card-header d-flex flex-row">
+        <h4 class="p-2 flex-grow-1">Solicitantes</h4>
+        <a id="x-solicitantes" href="#">
+            <i class="fa-solid fa-x py-3 px-1"></i>
+        </a>
+    </div>
     <div class="card-body">
-        <h3 class="p-2">Solicitantes</h3>
         <div class="row">
             <div class="col">
                 <table class="table table-sm table-borderless">
@@ -18,6 +23,7 @@
                         <th class="text-center">Destino</th>
                     </tr>
                     @php
+                        $totDemandants = 0;
                         $totAdults = 0;
                         $totChildren = 0;
                         $totFollowUps = 0;
@@ -33,6 +39,7 @@
                         <td class="text-center">{{ $s->children }}</td>
                         <td class="text-center">{{ $s->provinceto->acronym ?? '--' }}</td>
                         @php
+                            $totDemandants++;
                             $totAdults = $totAdults + $s->adults;
                             $totChildren = $totChildren + $s->children;
                             $totFollowUps = $totFollowUps + $s->followups_count;
@@ -52,4 +59,11 @@
     </div>
 </div>
 
+@push('wtf')
+<script>
+    var totAdults = {{ $totAdults }};
+    var totChildren = {{ $totChildren }};
+    var totDemandants = {{ $totDemandants }};
+</script>
+@endpush
 

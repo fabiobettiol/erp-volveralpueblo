@@ -2,9 +2,14 @@
     'trabajos'
 ])
 
-<div class="tbl-trabajos card my-4 shadow-sm">
-  <div class="card-body">
-        <h3 class="p-2">Trabajos</h3>
+<div id="tbl-trabajos" class="tbl-trabajos card my-4 shadow-sm d-none">
+    <div class="card-header d-flex flex-row">
+        <h4 class="p-2 flex-grow-1">Trabajos</h4>
+        <a id="x-trabajos" href="#">
+            <i class="fa-solid fa-x py-3 px-1"></i>
+        </a>
+    </div>
+    <div class="card-body">
         <div class="row">
             <div class="col">
                 <table class="table table-sm table-borderless ">

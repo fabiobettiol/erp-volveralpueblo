@@ -2,9 +2,14 @@
     'familias'
 ])
 
-<div class="resource-table mx-auto card my-4 shadow-sm tbl-familias">
+<div id="tbl-familias" class="resource-table mx-auto card my-4 shadow-sm tbl-familias d-none">
+    <div class="card-header d-flex flex-row">
+        <h4 class="p-2 flex-grow-1">Familias</h4>
+        <a id="x-familias" href="#">
+            <i class="fa-solid fa-x py-3 px-1"></i>
+        </a>
+    </div>
     <div class="card-body">
-        <h3>Familias</h3>
         <div class="row">
             <div class="col">
                 <table class="table table-sm table-borderless ">
