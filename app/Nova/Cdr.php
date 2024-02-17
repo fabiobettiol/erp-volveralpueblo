@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Image;
@@ -89,7 +90,7 @@ class Cdr extends Resource {
 	 */
 	public function fields(Request $request) {
 		return [
-			// ID::make(__('ID'), 'id')->sortable(),
+			ID::make(__('ID'), 'id')->sortable(),
 			Text::make('Enlace para demandantes', function () {
 				return 'https://erp-recursos.volveralpueblo.org/personas/' . $this->hash;
 			})->onlyOnDetail(),

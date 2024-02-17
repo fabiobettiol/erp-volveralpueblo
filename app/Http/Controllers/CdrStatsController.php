@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Cdr;
 use App\Models\Job;
 use App\Models\Land;
 use App\Models\House;
@@ -45,6 +46,7 @@ class CdrStatsController extends Controller
     public function init(Request $request) {
 
         $this->cdr = $request->cdr;
+        $this->cdrInfo = Cdr::find($this->cdr);
         $this->ano = $request->filtro_ano;
         $this->mes = $request->filtro_mes;
         $this->trimestre = $request->filtro_trimestre;
@@ -97,6 +99,7 @@ class CdrStatsController extends Controller
         $this->trabajos = $this->trabajos();
 
         return view('stats.cdr-stats', [
+            'cdrInfo' => $this->cdrInfo,
             'solicitantes' => $this->solicitantes,
             'interacciones' => $this->interacciones,
 

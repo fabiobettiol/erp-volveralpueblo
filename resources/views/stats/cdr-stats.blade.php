@@ -1,13 +1,16 @@
 @extends('layouts.app-stats')
 
 @section('solicitantes')
-    <div class="info-solicitantes">
-        <div class="row">
-            <div class="col">
-                <h3>Estadísticas CDR</h3>
-            </div>
+    <div class="row mt-3">
+        <div class="col-2">
+            <img src="/storage/{{ $cdrInfo->logo }}" style="height: 8rem">
         </div>
+        <div class="col-10">
+            <h3 style="line-height: 8rem; margin: 0">{{ $cdrInfo->name }}</h3>
+        </div>
+    </div>
 
+    <div class="info-solicitantes">
         <x-stats.filter-card cdr="{{ Request::get('cdr') }}" />
 
         <div class="row">
