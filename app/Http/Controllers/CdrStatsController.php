@@ -20,6 +20,7 @@ use App\Models\Demandantfollowup;
 class CdrStatsController extends Controller
 {
     public $cdr;
+    public $cdrInfo;
     public $ano;
     public $mes;
     public $trimestre;
@@ -38,8 +39,12 @@ class CdrStatsController extends Controller
     public $semestres;
 
     public function filter($cdr) {
+
+        $this->cdrInfo = Cdr::find($cdr);
+
         return view ('stats.cdr-stats-init', [
-            'cdr' => $cdr
+            'cdr' => $cdr,
+            'cdrInfo' => $this->cdrInfo,
         ]);
     }
 
