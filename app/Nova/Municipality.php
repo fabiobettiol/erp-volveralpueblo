@@ -79,13 +79,13 @@ class Municipality extends Resource
             // ID::make(__('ID'), 'id')->sortable(),
             Text::make('Nombre', 'name')
                 ->sortable(),
+            BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
+                ->sortable(),
             Number::make('Población', 'population')
                 ->sortable(),
             Number::make('Masculino', 'male')
                 ->sortable(),
             Number::make('Femenino', 'female')
-                ->sortable(),
-            BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
                 ->sortable(),
             HasMany::make('CDRs', 'cdrs', 'App\Nova\Cdr')
                 ->sortable(),
