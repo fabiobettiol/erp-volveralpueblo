@@ -2,11 +2,12 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use App\Nova\Filters\ByProvince;
+use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Municipality extends Resource
@@ -75,10 +76,11 @@ class Municipality extends Resource
     {
         return [
             // ID::make(__('ID'), 'id')->sortable(),
-            Text::make('Nombre', 'name'),
-            BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
-                ->filterable(),
+            Text::make('Nombre', 'name')
+                ->sortable(),
+            BelongsTo::make('Provincia', 'province', 'App\Nova\Province'),
             HasMany::make('CDRs', 'cdrs', 'App\Nova\Cdr'),
+            HasMany::make('Localidades', 'localities', 'App\Nova\Locality')
         ];
     }
 
@@ -101,7 +103,9 @@ class Municipality extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new ByProvince,
+        ];
     }
 
     /**

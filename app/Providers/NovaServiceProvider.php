@@ -24,6 +24,7 @@ use App\Nova\Jobform;
 use App\Nova\Landuse;
 use App\Nova\Business;
 use App\Nova\Landtype;
+use App\Nova\Locality;
 use App\Nova\Province;
 use Laravel\Nova\Nova;
 use App\Nova\Arearange;
@@ -241,6 +242,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 					MenuItem::resource(Community::class),
 					MenuItem::resource(Province::class),
 					MenuItem::resource(Municipality::class),
+					MenuItem::resource(Locality::class),
 					MenuItem::resource(Region::class),
 					MenuItem::resource(Zone::class),
 				]),
