@@ -8,7 +8,7 @@
 
 <div class="card shadow-sm my-4">
     <div class="card-header">
-        <div class="d-flex flex-row ">
+        <div class="d-flex flex-row">
             <h5 class="flex-grow-1 h6">{{ $title }}</h5>
             @if ($lens)
                 <a id="{{ $id }}" href="#">

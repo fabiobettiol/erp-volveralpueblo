@@ -18,6 +18,13 @@
     margin: 0.3rem;
 }
 
+.leyenda {
+    font-weight: bold;
+    line-height: 29px;
+    font-size: 0.8rem;
+    padding: 0 10px;
+}
+
 table {
     background-color: white;
 }

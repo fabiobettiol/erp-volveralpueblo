@@ -7,7 +7,10 @@
     <input type="hidden" name="cdr" value="{{ $cdr }}">
     <div class="card filters shadow-sm my-4">
         <div class="card-body">
-            <h4>Filtros</h4>
+            <div class="d-flex flex-row">
+                <span class="flex-grow-1 m-0 leyenda">Periodo</span>
+                <span id="leyenda" class="leyenda"></span>
+            </div>
             <div class="row py-2">
                 <div class="col">
                     <select id="filtro-ano" name="filtro_ano" class="form-select">

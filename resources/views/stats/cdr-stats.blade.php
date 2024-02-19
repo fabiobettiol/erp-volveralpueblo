@@ -3,10 +3,10 @@
 @section('solicitantes')
     <div class="row mt-3">
         <div class="col-2">
-            <img src="/storage/{{ $cdrInfo->logo }}" style="height: 8rem">
+            <img src="/storage/{{ $cdrInfo->logo }}" style="height: 6rem">
         </div>
-        <div class="col-10">
-            <h3 style="line-height: 8rem; margin: 0">{{ $cdrInfo->name }}</h3>
+        <div class="col-10 text-center">
+            <h5 style="line-height: 6rem; margin: 0">{{ $cdrInfo->name }}</h5>
         </div>
     </div>
 
@@ -87,7 +87,7 @@
 
 @section('recursos')
     <div class="info-recursos">
-        <div class="row">
+        <div class="row mb-5">
             <div class="col-md-3">
                 <x-stats.card id="lens-viviendas" title="Viviendas" icon="fa-solid fa-house-chimney" value=""/>
             </div>
@@ -130,21 +130,28 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
-            @php
-                if(Request::post('filtro_ano')) {
-                    echo "$('#filtro-ano').val('".Request::post('filtro_ano')."');";
-                }
-                if(Request::post('filtro_mes')) {
-                    //dd(Request::post('filtro_mes'));
-                    echo "$('#filtro-mes').val('".Request::post('filtro_mes')."');";
-                }
-                if(Request::post('filtro_trimestre')) {
-                    echo "$('#filtro-trimestre').val('".Request::post('filtro_trimestre')."');";
-                }
-                if(Request::post('filtro_semestre')) {
-                    echo "$('#filtro-semestre').val('".Request::post('filtro_semestre')."');";
-                }
-            @endphp
+
+            $('#leyenda').html('');
+
+            @if(Request::post('filtro_ano'))
+                $('#filtro-ano').val('{{ Request::post('filtro_ano') }}' );
+                $('#leyenda').html({{ Request::post('filtro_ano') }});
+            @endif
+            @if(Request::post('filtro_mes'))
+                $('#filtro-mes').val('{{ Request::post('filtro_mes') }}' );
+                var leyenda = $('#leyenda').html() + ' - ' + $('#filtro-mes option:selected').text();
+                $('#leyenda').html(leyenda);
+            @endif
+            @if(Request::post('filtro_trimestre'))
+                $('#filtro-trimestre').val('{{ Request::post('filtro_trimestre') }}' );
+                var leyenda = $('#leyenda').html() + ' - ' + $('#filtro-trimestre option:selected').text();
+                $('#leyenda').html(leyenda);
+            @endif
+            @if(Request::post('filtro_semestre'))
+                $('#filtro-semestre').val('{{ Request::post('filtro_semestre') }}' );
+                var leyenda = $('#leyenda').html() + ' - ' + $('#filtro-semestre option:selected').text();
+                $('#leyenda').html(leyenda);
+            @endif
 
             if ($('#filtro-ano').val() != 0) {
                 $('#filtro-mes').attr('disabled', false);
