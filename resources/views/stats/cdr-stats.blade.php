@@ -45,16 +45,16 @@
 @section('familias')
     <div class="info-familias">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col">
                 <x-stats.card id="lens-familias" title="Familias" icon="fa-solid fa-people-roof" value=""/>
             </div>
-            <div class="col-md-3">
+            <div class="col">
                 <x-stats.card id="lens-miembros" title="Miembros" icon="fa-solid fa-users-viewfinder" value=""/>
             </div>
-            <div class="col-md-3">
+            <div class="col">
                 <x-stats.card id="lens-intervenciones" title="Intervenciones" icon="fa-regular fa-handshake" value=""/>
             </div>
-            <div class="col-md-3">
+            <div class="col">
                 <x-stats.card id="lens-seguimientos" title="Seguimientos" icon="fa-regular fa-eye" value=""/>
             </div>
         </div>

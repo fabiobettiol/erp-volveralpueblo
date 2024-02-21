@@ -32,9 +32,22 @@ use App\Http\Controllers\CdrStatsController;
 
 require __DIR__ . '/auth.php';
 
-Route::get('/test', function () {
-	return view('reportes.pdf-houses');
-});
+// Route::get('/test', function () {
+// 	$d = Family::whereHas('impacts')
+// 		->where('cdr_id', 4)
+// 		->withCount('impacts as impactos')
+// 		->get();
+
+// 	dd($d);
+
+// 	$total = 0;
+// 	foreach($d as $e) {
+// 		$total = $total + $e->impactos;
+// 	}
+
+// 	dd($total);
+
+// });
 
 // RUTA PARA CAMAPAÑA DE CASTILLA Y LEON
 
