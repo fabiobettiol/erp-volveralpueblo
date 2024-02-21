@@ -80,8 +80,6 @@ class FamilyImpact extends Resource
                         //Date::make('Fecha', 'date'),
                     ];
                 })->hideFromIndex(),
-
-
         ];
     }
 

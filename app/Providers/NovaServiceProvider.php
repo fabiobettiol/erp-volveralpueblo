@@ -211,7 +211,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 				MenuItem::resource(Familycontact::class),
 				MenuItem::resource(Familyfollowup::class),
 				MenuItem::resource(Familydoc::class),
-				MenuItem::resource(FamilyImpact::class),
+
 			])->icon('user-group')
 				->collapsible(),
 

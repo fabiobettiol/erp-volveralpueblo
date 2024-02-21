@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Text;
 use App\Nova\Metrics\FamilyCDR;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
@@ -34,6 +35,9 @@ class Family extends Resource {
 	}
 
 	public static function indexQuery(NovaRequest $request, $query) {
+
+		$query->withCount('impacts');
+
 		if ($request->user()->is_admin) {
 			return $query;
 		} else {
@@ -103,6 +107,9 @@ class Family extends Resource {
 						->canSee(function ($request) {
 							return $request->user()->is_admin;
 						}),
+					Number::make('Impactos', 'impacts_count')
+						->onlyOnIndex()
+						->sortable(),
 					Date::make('Fecha de asentamiento', 'settlementdate')
 						->sortable()
 						->rules('required', 'date'),
