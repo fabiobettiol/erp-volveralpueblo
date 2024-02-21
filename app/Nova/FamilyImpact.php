@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Filters\ByCdr;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
@@ -104,7 +105,9 @@ class FamilyImpact extends Resource
      */
     public function filters(NovaRequest $request)
     {
-        return [];
+        return [
+            new ByCdr,
+        ];
     }
 
     /**
