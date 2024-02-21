@@ -15,7 +15,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 class FamilyImpact extends Resource
 {
     public static function label() {
-        return 'Impacto';
+        return 'Impactos';
     }
 
     /**
