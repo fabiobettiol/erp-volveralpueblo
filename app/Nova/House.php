@@ -40,35 +40,52 @@ class House extends Resource {
 
 	public static function indexQuery(NovaRequest $request, $query) {
 
-		if ($request->user()->is_admin) {
-			return $query;
-		} else {
-			$query->where('cdr_id', $request->user()->cdr_id);
-
-			if ($request->user()->is_collaborator) {
-				$query->orWhere('province_id', $request->user()->cdr->province->id);
-			}
-
+		if ($request->user()->hasPermissionTo('view all houses')) {
 			return $query;
 		}
+
+		if ($request->user()->hasPermissionTo('view own houses')) {
+			$query->where('cdr_id', $request->user()->cdr_id);
+		}
+
+		if ($request->user()->hasPermissionTo('view province houses')) {
+			$query->orWhere('province_id', $request->user()->cdr->province_id);
+		}
+
+		if ($request->user()->hasPermissionTo('view community houses')) {
+			$query->orWhere('community_id', $request->user()->cdr->community_id);
+		}
+
+		return $query;
 	}
 
 	public function authorizedToUpdate(Request $request): bool {
 
-		if (!$request->user()->is_admin && $this->cdr_id != $request->user()->cdr_id) {
-			return false;
-		} else {
+		if ($request->user()->hasPermissionTo('edit houses')) {
 			return true;
+		}
+
+		if ($request->user()->hasPermissionTo('edit own houses')) {
+			return $this->cdr_id == $request->user()->cdr_id;
 		}
 	}
 
 	public function authorizedToDelete(Request $request): bool {
 
-		if (!$request->user()->is_admin && $this->cdr_id != $request->user()->cdr_id) {
-			return false;
-		} else {
+		if ($request->user()->hasPermissionTo('delete houses')) {
 			return true;
 		}
+
+		return $request->user()->hasPermissionTo('delete own houses');
+	}
+
+	public function authorizedToRestore(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('restore houses')) {
+			return true;
+		}
+
+		return $request->user()->hasPermissionTo('restore own houses');
 	}
 
 	public static $group = 'Recursos';

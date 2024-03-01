@@ -158,6 +158,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 	public function tools() {
 		return [
 			new NovaCalendar('mi-calendario'),
+			new \Pktharindu\NovaPermissions\NovaPermissions(),
 		];
 	}
 
@@ -173,8 +174,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 	protected function footer () {
 	    Nova::footer(function () {
 			$year = Carbon::now()->format('Y');
-			return '<center><strong> COCEDER &copy  ' . $year . '</strong></center>';			
-		});			
+			return '<center><strong> COCEDER &copy  ' . $year . '</strong></center>';
+		});
 	}
 
 	protected function menu () {
@@ -190,8 +191,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 				MenuItem::resource(EventMeeting::class),
 				MenuItem::resource(EventDemandantfollowup::class),
 				MenuItem::resource(EventFamilycontact::class),
-				MenuItem::resource(EventFamilyfollowup::class),				
-				MenuItem::resource(EventOther::class),				
+				MenuItem::resource(EventFamilyfollowup::class),
+				MenuItem::resource(EventOther::class),
 			])->icon('calendar')
 				->collapsible(),
 

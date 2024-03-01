@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b1d85a93fc7afb7a03e1b8ee813173fc",
+    "content-hash": "bb11537a5855fa6e63aa889d4f2a78a5",
     "packages": [
         {
             "name": "alexpechkarev/geometry-library",
@@ -4718,6 +4718,69 @@
                 }
             ],
             "time": "2023-11-12T21:59:55+00:00"
+        },
+        {
+            "name": "pktharindu/nova-permissions",
+            "version": "v3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pktharindu/nova-permissions.git",
+                "reference": "f4b7197ad309320bdce5461d89278818910fcd44"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pktharindu/nova-permissions/zipball/f4b7197ad309320bdce5461d89278818910fcd44",
+                "reference": "f4b7197ad309320bdce5461d89278818910fcd44",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0|^8.0"
+            },
+            "require-dev": {
+                "laravel/nova": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Pktharindu\\NovaPermissions\\ToolServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Pktharindu\\NovaPermissions\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "P. K. Tharindu",
+                    "email": "pktharindu@outlook.com"
+                }
+            ],
+            "description": "Laravel Nova Grouped Permissions (ACL)",
+            "keywords": [
+                "Authentication",
+                "access control",
+                "acl",
+                "authorization",
+                "gates",
+                "laravel",
+                "nova",
+                "permissions",
+                "policies",
+                "roles",
+                "tool"
+            ],
+            "support": {
+                "issues": "https://github.com/pktharindu/nova-permissions/issues",
+                "source": "https://github.com/pktharindu/nova-permissions/tree/v3.0.1"
+            },
+            "time": "2023-05-10T13:52:24+00:00"
         },
         {
             "name": "psr/cache",

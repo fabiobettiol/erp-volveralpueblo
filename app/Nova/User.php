@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
@@ -29,6 +30,7 @@ class User extends Resource {
 			return $query->where('cdr_id', $request->user()->cdr_id);
 		}
 	}
+
 
 	/**
 	 * The model the resource corresponds to.
@@ -117,6 +119,8 @@ class User extends Resource {
 				->onlyOnForms()
 				->creationRules('required', 'string', 'min:8')
 				->updateRules('nullable', 'string', 'min:8'),
+
+			BelongsToMany::make('Roles', 'roles', \Pktharindu\NovaPermissions\Nova\Role::class),
 		];
 	}
 
