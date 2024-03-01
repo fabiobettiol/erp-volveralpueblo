@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Nova\Metrics\FamilyPerDayCDR;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use DigitalCreative\ColumnToggler\ColumnTogglerTrait;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Family extends Resource {
@@ -29,7 +28,6 @@ class Family extends Resource {
 //		return $request->user()->is_admin;
 //	}
 
-	use ColumnTogglerTrait;
 
 	public static $group = 'Asentad@s';
 
