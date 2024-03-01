@@ -17,6 +17,48 @@ class Familydoc extends Resource {
 		return 'Documentos';
 	}
 
+	public static function indexQuery(NovaRequest $request, $query) {
+
+		if ($request->user()->hasPermissionTo('view all familydocs')) {
+			return $query;
+		}
+
+		if ($request->user()->hasPermissionTo('view own familydocs')) {
+			return $query->whereHas('family', function($q) use ($request) {
+				return $q->where('cdr_id', $request->user()->cdr_id);
+			});
+		}
+	}
+
+	public function authorizedToUpdate(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('edit familydocs')) {
+			return true;
+		}
+
+		if ($request->user()->hasPermissionTo('edit own familydocs')) {
+			return $this->family->cdr_id == $request->user()->cdr_id;
+		}
+	}
+
+	public function authorizedToDelete(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('delete familydocs')) {
+			return true;
+		}
+
+		return $request->user()->hasPermissionTo('delete own familydocs');
+	}
+
+	public function authorizedToRestore(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('restore familydocs')) {
+			return true;
+		}
+
+		return $request->user()->hasPermissionTo('restore own familydocs');
+	}
+
 	public static function availableForNavigation(Request $request) {
 		return !$request->user()->is_collaborator;
 	}

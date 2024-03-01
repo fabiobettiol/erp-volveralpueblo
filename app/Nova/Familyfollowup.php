@@ -13,11 +13,45 @@ use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 class Familyfollowup extends Resource {
 
 	public static function indexQuery(NovaRequest $request, $query) {
-		if ($request->user()->is_admin) {
+
+		if ($request->user()->hasPermissionTo('view all familycontacts')) {
 			return $query;
-		} else {
-			return $query->where('cdr_id', $request->user()->cdr_id);
 		}
+
+		if ($request->user()->hasPermissionTo('view own familycontacts')) {
+			return $query->whereHas('family', function($q) use ($request) {
+				return $q->where('cdr_id', $request->user()->cdr_id);
+			});
+		}
+	}
+
+	public function authorizedToUpdate(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('edit familyfollowups')) {
+			return true;
+		}
+
+		if ($request->user()->hasPermissionTo('edit own familyfollowups')) {
+			return $this->family->cdr_id == $request->user()->cdr_id;
+		}
+	}
+
+	public function authorizedToDelete(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('delete familyfollowups')) {
+			return true;
+		}
+
+		return $request->user()->hasPermissionTo('delete own familyfollowups');
+	}
+
+	public function authorizedToRestore(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('restore familyfollowups')) {
+			return true;
+		}
+
+		return $request->user()->hasPermissionTo('restore own familyfollowups');
 	}
 
 	public static function availableForNavigation(Request $request) {

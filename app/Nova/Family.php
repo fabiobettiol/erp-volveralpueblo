@@ -37,13 +37,42 @@ class Family extends Resource {
 
 	public static function indexQuery(NovaRequest $request, $query) {
 
-		$query->withCount('impacts');
-
-		if ($request->user()->is_admin) {
+		if ($request->user()->hasPermissionTo('view all families')) {
 			return $query;
-		} else {
+		}
+
+		if ($request->user()->hasPermissionTo('view own families')) {
 			return $query->where('cdr_id', $request->user()->cdr_id);
 		}
+	}
+
+	public function authorizedToUpdate(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('edit families')) {
+			return true;
+		}
+
+		if ($request->user()->hasPermissionTo('edit own families')) {
+			return $this->cdr_id == $request->user()->cdr_id;
+		}
+	}
+
+	public function authorizedToDelete(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('delete families')) {
+			return true;
+		}
+
+		return $request->user()->hasPermissionTo('delete own families');
+	}
+
+	public function authorizedToRestore(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('restore families')) {
+			return true;
+		}
+
+		return $request->user()->hasPermissionTo('restore own families');
 	}
 
 	public static function availableForNavigation(Request $request) {

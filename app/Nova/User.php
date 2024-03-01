@@ -19,18 +19,52 @@ class User extends Resource {
 
 	public static $group = 'Colaboradores';
 
-	public static function availableForNavigation(Request $request) {
-		return
-			(!$request->user()->is_collaborator) &&
-			($request->user()->is_admin || $request->user()->is_cdr_admin);
-	}
-
 	public static function indexQuery(NovaRequest $request, $query) {
-		if ($request->user()->is_cdr_admin) {
+		if ($request->user()->hasPermissionTo('view all users')) {
+			return $query;
+		}
+
+		if ($request->user()->hasPermissionTo('view own users')) {
 			return $query->where('cdr_id', $request->user()->cdr_id);
 		}
 	}
 
+	public function authorizedToUpdate(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('edit users')) {
+			return true;
+		}
+
+		if ($request->user()->hasPermissionTo('edit own users')) {
+			return $this->cdr_id == $request->user()->cdr_id;
+		}
+
+		return $request->user()->hasPermissionTo('edit own users');
+	}
+
+	public function authorizedToDelete(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('delete users')) {
+			return true;
+		}
+
+		if($request->user()->hasPermissionTo('delete own users')) {
+			return $this->cdr_id == $request->user()->cdr_id;
+		}
+
+		return $request->user()->hasPermissionTo('delete own users');
+	}
+
+	public function authorizedToRestore(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('restore users')) {
+			return true;
+		}
+
+		if($request->user()->hasPermissionTo('delete own users')) {
+			return $this->cdr_id == $request->user()->cdr_id;
+		}
+	}
 
 	/**
 	 * The model the resource corresponds to.

@@ -24,11 +24,45 @@ class Familycontact extends Resource {
 	public static $group = 'Asentad@s';
 
 	public static function indexQuery(NovaRequest $request, $query) {
-		if ($request->user()->is_admin) {
+
+		if ($request->user()->hasPermissionTo('view all familycontacts')) {
 			return $query;
-		} else {
-			return $query->where('cdr_id', $request->user()->cdr_id);
 		}
+
+		if ($request->user()->hasPermissionTo('view own familycontacts')) {
+			return $query->whereHas('family', function($q) use ($request) {
+				return $q->where('cdr_id', $request->user()->cdr_id);
+			});
+		}
+	}
+
+	public function authorizedToUpdate(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('edit familycontacts')) {
+			return true;
+		}
+
+		if ($request->user()->hasPermissionTo('edit own familycontacts')) {
+			return $this->family->cdr_id == $request->user()->cdr_id;
+		}
+	}
+
+	public function authorizedToDelete(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('delete familycontacts')) {
+			return true;
+		}
+
+		return $request->user()->hasPermissionTo('delete own familycontacts');
+	}
+
+	public function authorizedToRestore(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('restore familycontacts')) {
+			return true;
+		}
+
+		return $request->user()->hasPermissionTo('restore own familycontacts');
 	}
 
 	public static function availableForNavigation(Request $request) {

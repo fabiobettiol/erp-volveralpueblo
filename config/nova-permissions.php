@@ -452,55 +452,372 @@ return [
             'group'        => 'Interacciones',
         ],
 
+        //---------------------------------------------------- Families
 
-        //----------------------------------------------------
+        'view all families' => [
+            'display_name' => 'Ver todas las familias',
+            'description'  => 'Ver todas las familias',
+            'group'        => 'Familias',
+        ],
 
-        'view users' => [
-            'display_name' => 'View users',
-            'description'  => 'Can view users',
-            'group'        => 'User',
+        'view own families' => [
+            'display_name' => 'Ver familias propias',
+            'description'  => 'Ver familias propias',
+            'group'        => 'Familias',
+        ],
+
+        'create families' => [
+            'display_name' => 'Crear familias',
+            'description'  => 'Puede crear familias',
+            'group'        => 'Familias',
+        ],
+
+         'create own families' => [
+            'display_name' => 'Crear familias propias',
+            'description'  => 'Puede crear familias propias',
+            'group'        => 'Familias',
+        ],
+
+        'edit families' => [
+            'display_name' => 'Editar familias',
+           'description'  => 'Puede editar familias',
+            'group'        => 'Familias',
+        ],
+
+        'edit own families' => [
+            'display_name' => 'Editar familias propias',
+           'description'  => 'Puede editar familias propias',
+            'group'        => 'Familias',
+        ],
+
+        'delete families' => [
+            'display_name' => 'Borrar familias',
+            'description'  => 'Puede borrar familias',
+            'group'        => 'Familias',
+        ],
+
+        'delete own families' => [
+            'display_name' => 'Borrar familias propias',
+            'description'  => 'Puede borrar familias propias',
+            'group'        => 'Familias',
+        ],
+
+        'restore families' => [
+            'display_name' => 'Restaurar familias',
+            'description'  => 'Puede restaurar familias',
+            'group'        => 'Familias',
+        ],
+
+        'restore own families' => [
+            'display_name' => 'Restaurar familias propias',
+            'description'  => 'Puede restaurar familias propias',
+            'group'        => 'Familias',
+        ],
+
+        //---------------------------------------------------- Members
+
+        'view all familymembers' => [
+            'display_name' => 'Ver todos los miembros',
+            'description'  => 'Ver todos los miembros',
+            'group'        => 'Miembros',
+        ],
+
+        'view own familymembers' => [
+            'display_name' => 'Ver miembros propios',
+            'description'  => 'Ver miembros propios',
+            'group'        => 'Miembros',
+        ],
+
+        'create familymembers' => [
+            'display_name' => 'Crear miembros',
+            'description'  => 'Puede crear miembros',
+            'group'        => 'Miembros',
+        ],
+
+         'create own familymembers' => [
+            'display_name' => 'Crear miembros propios',
+            'description'  => 'Puede crear miembros propios',
+            'group'        => 'Miembros',
+        ],
+
+        'edit familymembers' => [
+            'display_name' => 'Editar miembros',
+           'description'  => 'Puede editar miembros',
+            'group'        => 'Miembros',
+        ],
+
+        'edit own familymembers' => [
+            'display_name' => 'Editar miembros propios',
+           'description'  => 'Puede editar miembros propios',
+            'group'        => 'Miembros',
+        ],
+
+        'delete familymembers' => [
+            'display_name' => 'Borrar miembros',
+            'description'  => 'Puede borrar miembros',
+            'group'        => 'Miembros',
+        ],
+
+        'delete own familymembers' => [
+            'display_name' => 'Borrar miembros propios',
+            'description'  => 'Puede borrar miembros propios',
+            'group'        => 'Miembros',
+        ],
+
+        'restore familymembers' => [
+            'display_name' => 'Restaurar miembros',
+            'description'  => 'Puede restaurar miembros',
+            'group'        => 'Miembros',
+        ],
+
+        'restore own familymembers' => [
+            'display_name' => 'Restaurar miembros propios',
+            'description'  => 'Puede restaurar miembros propios',
+            'group'        => 'Miembros',
+        ],
+
+        //---------------------------------------------------- Families
+
+        'view all familycontacts' => [
+            'display_name' => 'Ver todas las intervenciones',
+            'description'  => 'Ver todas las intervenciones',
+            'group'        => 'Intervenciones',
+        ],
+
+        'view own familycontacts' => [
+            'display_name' => 'Ver intervenciones propias',
+            'description'  => 'Ver intervenciones propias',
+            'group'        => 'Intervenciones',
+        ],
+
+        'create familycontacts' => [
+            'display_name' => 'Crear intervenciones',
+            'description'  => 'Puede crear intervenciones',
+            'group'        => 'Intervenciones',
+        ],
+
+         'create own familycontacts' => [
+            'display_name' => 'Crear intervenciones propias',
+            'description'  => 'Puede crear intervenciones propias',
+            'group'        => 'Intervenciones',
+        ],
+
+        'edit familycontacts' => [
+            'display_name' => 'Editar intervenciones',
+           'description'  => 'Puede editar intervenciones',
+            'group'        => 'Intervenciones',
+        ],
+
+        'edit own familycontacts' => [
+            'display_name' => 'Editar intervenciones propias',
+           'description'  => 'Puede editar intervenciones propias',
+            'group'        => 'Intervenciones',
+        ],
+
+        'delete familycontacts' => [
+            'display_name' => 'Borrar intervenciones',
+            'description'  => 'Puede borrar intervenciones',
+            'group'        => 'Intervenciones',
+        ],
+
+        'delete own familycontacts' => [
+            'display_name' => 'Borrar intervenciones propias',
+            'description'  => 'Puede borrar intervenciones propias',
+            'group'        => 'Intervenciones',
+        ],
+
+        'restore familycontacts' => [
+            'display_name' => 'Restaurar intervenciones',
+            'description'  => 'Puede restaurar intervenciones',
+            'group'        => 'Intervenciones',
+        ],
+
+        'restore own familycontacts' => [
+            'display_name' => 'Restaurar intervenciones propias',
+            'description'  => 'Puede restaurar intervenciones propias',
+            'group'        => 'Intervenciones',
+        ],
+
+        //---------------------------------------------------- Seguimientos
+
+        'view all familyfollowups' => [
+            'display_name' => 'Ver todos los seguimientos',
+            'description'  => 'Ver todos los seguimientos',
+            'group'        => 'Seguimientos',
+        ],
+
+        'view own familyfollowups' => [
+            'display_name' => 'Ver seguimientos propios',
+            'description'  => 'Ver seguimientos propios',
+            'group'        => 'Seguimientos',
+        ],
+
+        'create familyfollowups' => [
+            'display_name' => 'Crear seguimientos',
+            'description'  => 'Puede crear seguimientos',
+            'group'        => 'Seguimientos',
+        ],
+
+         'create own familyfollowups' => [
+            'display_name' => 'Crear seguimientos propios',
+            'description'  => 'Puede crear seguimientos propios',
+            'group'        => 'Seguimientos',
+        ],
+
+        'edit familyfollowups' => [
+            'display_name' => 'Editar seguimientos',
+           'description'  => 'Puede editar seguimientos',
+            'group'        => 'Seguimientos',
+        ],
+
+        'edit own familyfollowups' => [
+            'display_name' => 'Editar seguimientos propios',
+           'description'  => 'Puede editar seguimientos propios',
+            'group'        => 'Seguimientos',
+        ],
+
+        'delete familyfollowups' => [
+            'display_name' => 'Borrar seguimientos',
+            'description'  => 'Puede borrar seguimientos',
+            'group'        => 'Seguimientos',
+        ],
+
+        'delete own familyfollowups' => [
+            'display_name' => 'Borrar seguimientos propios',
+            'description'  => 'Puede borrar seguimientos propios',
+            'group'        => 'Seguimientos',
+        ],
+
+        'restore familyfollowups' => [
+            'display_name' => 'Restaurar seguimientos',
+            'description'  => 'Puede restaurar seguimientos',
+            'group'        => 'Seguimientos',
+        ],
+
+        'restore own familyfollowups' => [
+            'display_name' => 'Restaurar seguimientos propios',
+            'description'  => 'Puede restaurar seguimientos propios',
+            'group'        => 'Seguimientos',
+        ],
+
+        //---------------------------------------------------- Documentos
+
+        'view all familydocs' => [
+            'display_name' => 'Ver todos los documentos',
+            'description'  => 'Ver todos los documentos',
+            'group'        => 'Documentos',
+        ],
+
+        'create familydocs' => [
+            'display_name' => 'Crear documentos',
+            'description'  => 'Puede crear documentos',
+            'group'        => 'Documentos',
+        ],
+
+        'edit familydocs' => [
+            'display_name' => 'Editar documentos',
+           'description'  => 'Puede editar documentos',
+            'group'        => 'Documentos',
+        ],
+
+        'delete familydocs' => [
+            'display_name' => 'Borrar documentos',
+            'description'  => 'Puede borrar documentos',
+            'group'        => 'Documentos',
+        ],
+
+        'restore familydocs' => [
+            'display_name' => 'Restaurar documentos',
+            'description'  => 'Puede restaurar documentos',
+            'group'        => 'Documentos',
+        ],
+
+        //---------------------------------------------------- Users
+
+        'view all users' => [
+            'display_name' => 'Ver todas los usuarios',
+            'description'  => 'Ver todas los usuarios',
+            'group'        => 'Usuarios',
+        ],
+
+        'view own users' => [
+            'display_name' => 'Ver usuarios propios',
+            'description'  => 'Ver usuarios propios',
+            'group'        => 'Usuarios',
         ],
 
         'create users' => [
-            'display_name' => 'Create users',
-            'description'  => 'Can create users',
-            'group'        => 'User',
+            'display_name' => 'Crear usuarios',
+            'description'  => 'Puede crear usuarios',
+            'group'        => 'Usuarios',
+        ],
+
+         'create own users' => [
+            'display_name' => 'Crear usuarios propios',
+            'description'  => 'Puede crear usuarios propios',
+            'group'        => 'Usuarios',
         ],
 
         'edit users' => [
-            'display_name' => 'Edit users',
-            'description'  => 'Can edit users',
-            'group'        => 'User',
+            'display_name' => 'Editar usuarios',
+           'description'  => 'Puede editar usuarios',
+            'group'        => 'Usuarios',
+        ],
+
+        'edit own users' => [
+            'display_name' => 'Editar usuarios propios',
+           'description'  => 'Puede editar usuarios propios',
+            'group'        => 'Usuarios',
         ],
 
         'delete users' => [
-            'display_name' => 'Delete users',
-            'description'  => 'Can delete users',
-            'group'        => 'User',
+            'display_name' => 'Borrar usuarios',
+            'description'  => 'Puede borrar usuarios',
+            'group'        => 'Usuarios',
         ],
 
+        'delete own users' => [
+            'display_name' => 'Borrar usuarios propios',
+            'description'  => 'Puede borrar usuarios propios',
+            'group'        => 'Usuarios',
+        ],
+
+        'restore users' => [
+            'display_name' => 'Restaurar usuarios',
+            'description'  => 'Puede restaurar usuarios',
+            'group'        => 'Usuarios',
+        ],
+
+        'restore own users' => [
+            'display_name' => 'Restaurar usuarios propios',
+            'description'  => 'Puede restaurar usuarios propios',
+            'group'        => 'Usuarios',
+        ],
+
+        //---------------------------------------------------- Roles
+
         'view roles' => [
-            'display_name' => 'View roles',
-            'description'  => 'Can view roles',
-            'group'        => 'Role',
+            'display_name' => 'Ver roles',
+            'description'  => 'Puede ver los roles',
+            'group'        => 'Roles',
         ],
 
         'create roles' => [
-            'display_name' => 'Create roles',
-            'description'  => 'Can create roles',
-            'group'        => 'Role',
+            'display_name' => 'Crear roles',
+            'description'  => 'Puede crear roles',
+            'group'        => 'Roles',
         ],
 
         'edit roles' => [
-            'display_name' => 'Edit roles',
-            'description'  => 'Can edit roles',
-            'group'        => 'Role',
+            'display_name' => 'Editar roles',
+            'description'  => 'Puede editar roles',
+            'group'        => 'Roles',
         ],
 
         'delete roles' => [
-            'display_name' => 'Delete roles',
-            'description'  => 'Can delete roles',
-            'group'        => 'Role',
+            'display_name' => 'Eliminar roles',
+            'description'  => 'Puede eliminar roles',
+            'group'        => 'Roles',
         ],
     ],
 ];
