@@ -233,6 +233,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 				->collapsible(),
 
 			MenuSection::make('Admin', [
+				MenuItem::externalLink('Roles', 'roles'),
 				MenuItem::resource(Gender::class),
 				MenuGroup::make('Cdrs', [
 					MenuItem::resource(Cdr::class),
