@@ -68,6 +68,7 @@ use Illuminate\Support\Facades\Blade;
 use App\Nova\Metrics\BusinessPerMonth;
 use Wdelfuego\NovaCalendar\NovaCalendar;
 use Laravel\Nova\NovaApplicationServiceProvider;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider {
 	/**
@@ -183,8 +184,15 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 		Nova::mainMenu(fn($request) => [
 
 			MenuItem::link(__('Mi Calendario'), NovaCalendar::pathToCalendar('mi-calendario')),
-
-			MenuItem::externalLink('Estadísticas', '/stats/' . \Auth::user()->cdr_id)->openInNewTab(),
+			MenuItem::externalLink('Estadísticas', '/stats/' . \Auth::user()->cdr_id)
+				->openInNewTab()
+		    	->canSee(function (NovaRequest $request) {
+		        	return ! $request->user()->hasPermissionTo('view global stats');
+		    	}),
+		    MenuItem::externalLink('Estadísticas', '/stats')
+		    	->canSee(function (NovaRequest $request) {
+		        	return $request->user()->hasPermissionTo('view global stats');
+		    	}),
 
 			MenuSection::make('Eventos', [
 				MenuItem::resource(EventCall::class),

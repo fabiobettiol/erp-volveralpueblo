@@ -819,5 +819,14 @@ return [
             'description'  => 'Puede eliminar roles',
             'group'        => 'Roles',
         ],
+
+        //---------------------------------------------------- Global Stats
+
+        'view global stats' => [
+            'display_name' => 'Ver estadísticas globales',
+            'description'  => 'Ver estadísticas de todos los CDRs',
+            'group'        => 'Estadísticas',
+        ],
+
     ],
 ];

@@ -37,8 +37,9 @@ class CdrStatsController extends Controller
     public $trabajos;
     public $trimestres;
     public $semestres;
+    public $request;
 
-    public function filter($cdr) {
+    public function filter($cdr = null) {
 
         $this->cdrInfo = Cdr::find($cdr);
 
@@ -50,6 +51,7 @@ class CdrStatsController extends Controller
 
     public function init(Request $request) {
 
+        $this->request = $request;
         $this->cdr = $request->cdr;
         $this->cdrInfo = Cdr::find($this->cdr);
         $this->ano = $request->filtro_ano;
@@ -122,8 +124,11 @@ class CdrStatsController extends Controller
     }
 
     protected function solicitantes() {
-        return Demandant::whereHas('followups', function($query) {
-            $query->where('cdr_id', $this->cdr);
+        return Demandant::whereHas('followups', function($query)  {
+            if ( ! $this->request->user()->hasPermissionTo('view global stats')) {
+                $query->where('cdr_id', $this->cdr);
+            }
+
             $query->whereYear('date', $this->ano);
             if (!empty($this->mes)) {
                 $query->whereMonth('date', $this->mes);
@@ -135,14 +140,18 @@ class CdrStatsController extends Controller
                 $query->where('date', '<=', $this->semestres[$this->semestre]['hasta']);
             }
         })->withCount(['followups' => function ($query) {
-            $query->where('cdr_id', $this->cdr);
+            if ( ! $this->request->user()->hasPermissionTo('view global stats')) {
+                $query->where('cdr_id', $this->cdr);
+            }
         }])->with('country:id,alfa3','provinceto:id,acronym')
         ->get();
     }
 
     protected function interacciones() {
         return Demandantfollowup::with('demandant:id,name,surname')
-            ->where('cdr_id', $this->cdr)
+            ->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                return $q->where('cdr_id', $this->cdr);
+            })
             ->whereYear('date', $this->ano)
             ->when(!empty($this->mes), function ($q) {
                 return $q->whereMonth('date', $this->mes);
@@ -164,7 +173,9 @@ class CdrStatsController extends Controller
                 'nationality:id,alfa3'
             )->withCount('members')
             ->withCount('contacts')
-            ->where('cdr_id', $this->cdr)
+            ->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                return $q->where('cdr_id', $this->cdr);
+            })
             ->whereYear('settlementdate', $this->ano)
             ->when(!empty($this->mes), function ($q) {
                 return $q->whereMonth('settlementdate', $this->mes);
@@ -194,13 +205,17 @@ class CdrStatsController extends Controller
                     return $q->where('settlementdate', '>=', $this->semestres[$this->semestre]['desde'])
                         ->where('settlementdate', '<=', $this->semestres[$this->semestre]['hasta']);
                 });
-            })->where('cdr_id', $this->cdr)->get();
+            })->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                return $q->where('cdr_id', $this->cdr);
+            });
     }
 
     protected function intervenciones() {
         return Familycontact::with('family:id,reference')
             ->whereYear('date', $this->ano)
-            ->where('cdr_id', $this->cdr)
+            ->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                return $q->where('cdr_id', $this->cdr);
+            })
             ->when(!empty($this->mes), function ($q) {
                 return $q->whereMonth('date', $this->mes);
             })
@@ -216,7 +231,9 @@ class CdrStatsController extends Controller
 
     protected function seguimientos() {
         return Familyfollowup::with('family:id,reference')
-            ->where('cdr_id', $this->cdr)
+            ->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                return $q->where('cdr_id', $this->cdr);
+            })
             ->whereYear('date', $this->ano)
             ->when(!empty($this->mes), function ($q) {
                 return $q->whereMonth('date', $this->mes);
@@ -235,7 +252,9 @@ class CdrStatsController extends Controller
         return House::with(
                 'municipality:id,name',
                 'province:id,acronym'
-            )->where('cdr_id', $this->cdr)
+            )->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                return $q->where('cdr_id', $this->cdr);
+            })
             ->whereYear('created_at', $this->ano)
             ->when(!empty($this->mes), function ($q) {
                 return $q->whereMonth('created_at', $this->mes);
@@ -254,7 +273,9 @@ class CdrStatsController extends Controller
         return Business::with(
                 'municipality:id,name',
                 'province:id,acronym'
-            )->where('cdr_id', $this->cdr)
+            )->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                return $q->where('cdr_id', $this->cdr);
+            })
             ->whereYear('created_at', $this->ano)
             ->when(!empty($this->mes), function ($q) {
                 return $q->whereMonth('created_at', $this->mes);
@@ -273,7 +294,9 @@ class CdrStatsController extends Controller
         return Land::with(
                 'municipality:id,name',
                 'province:id,acronym'
-            )->where('cdr_id', $this->cdr)
+            )->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                return $q->where('cdr_id', $this->cdr);
+            })
             ->whereYear('created_at', $this->ano)
             ->when(!empty($this->mes), function ($q) {
                 return $q->whereMonth('created_at', $this->mes);
@@ -292,7 +315,9 @@ class CdrStatsController extends Controller
         return Job::with(
                 'municipality:id,name',
                 'province:id,acronym'
-            )->where('cdr_id', $this->cdr)
+            )->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                return $q->where('cdr_id', $this->cdr);
+            })
             ->whereYear('created_at', $this->ano)
             ->when(!empty($this->mes), function ($q) {
                 return $q->whereMonth('created_at', $this->mes);

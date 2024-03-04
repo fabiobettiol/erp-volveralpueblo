@@ -120,9 +120,9 @@ Route::get('/cdr/{comarca}', function ($comarca = null) {
 | INACTVE (TEST) Routes
 |--------------------------------------------------------------------------
  */
-Route::get('/stats/{cdr}', [CdrStatsController::class, 'filter']);
+Route::get('/stats/{cdr?}', [CdrStatsController::class, 'filter']);
 
-Route::post('/stats/{cdr}', [CdrStatsController::class, 'init']);
+Route::post('/stats/{cdr?}', [CdrStatsController::class, 'init']);
 
 Route::get('/mapa-comarcas', function () {
 

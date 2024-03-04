@@ -1,13 +1,25 @@
 @extends('layouts.app-stats')
-@section('solicitantes')
+
+@section('header')
     <div class="row mt-3">
         <div class="col-2">
-            <img src="/storage/{{ $cdrInfo->logo }}" style="height: 8rem">
+            @if (auth()->user()->hasPermissionTo('view global stats'))
+                <img src="/logos/logo-coceder.png" style="height: 6rem">
+            @else
+                <img src="/storage/{{ $cdrInfo->logo }}" style="height: 6rem">
+            @endif
         </div>
-        <div class="col-10">
-            <h3 style="line-height: 8rem; margin: 0">{{ $cdrInfo->name }}</h3>
+        <div class="col-10 text-center">
+            @if (auth()->user()->hasPermissionTo('view global stats'))
+                <h5 style="line-height: 6rem; margin: 0">COCEDER - Estadísticas Globales</h5>
+            @else
+                <h5 style="line-height: 6rem; margin: 0">{{ $cdrInfo->name }}</h5>
+            @endif
         </div>
     </div>
+@endsection
+
+@section('solicitantes')
     <x-stats.filter-card cdr="{{ $cdr }}"/>
 @endsection
 
