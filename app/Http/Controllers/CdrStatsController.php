@@ -20,6 +20,7 @@ use App\Models\Demandantfollowup;
 class CdrStatsController extends Controller
 {
     public $cdr;
+    public $cdrs;
     public $cdrInfo;
     public $ano;
     public $mes;
@@ -42,15 +43,19 @@ class CdrStatsController extends Controller
     public function filter($cdr = null) {
 
         $this->cdrInfo = Cdr::find($cdr);
-
+        if (Auth()->user()->hasPermissionTo('view global stats')) {
+            $this->cdrs = Cdr::orderBy('name')->get();
+        } else {
+            $this->cdrs = null;
+        }
         return view ('stats.cdr-stats-init', [
             'cdr' => $cdr,
+            'cdrs' => $this->cdrs,
             'cdrInfo' => $this->cdrInfo,
         ]);
     }
 
     public function init(Request $request) {
-
         $this->request = $request;
         $this->cdr = $request->cdr;
         $this->cdrInfo = Cdr::find($this->cdr);
@@ -58,6 +63,12 @@ class CdrStatsController extends Controller
         $this->mes = $request->filtro_mes;
         $this->trimestre = $request->filtro_trimestre;
         $this->semestre = $request->filtro_semestre;
+
+        if ( Auth()->user()->hasPermissionTo('view global stats')) {
+            $this->cdrs = Cdr::orderBy('name')->get();
+        } else {
+            $this->cdrs = null;
+        }
 
         $this->trimestres = [
             '1' => [
@@ -107,6 +118,7 @@ class CdrStatsController extends Controller
 
         return view('stats.cdr-stats', [
             'cdrInfo' => $this->cdrInfo,
+            'cdrs' => $this->cdrs,
             'solicitantes' => $this->solicitantes,
             'interacciones' => $this->interacciones,
 

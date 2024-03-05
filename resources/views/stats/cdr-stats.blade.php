@@ -20,6 +20,7 @@
 @endsection
 
 @section('solicitantes')
+    <x-stats.filter-cdr-card cdr="{{ $cdrInfo->id }}" :cdrs="$cdrs" />
 
     <div class="info-solicitantes">
         <x-stats.filter-card cdr="{{ Request::get('cdr') }}" />
@@ -273,6 +274,10 @@
         $('#x-trabajos').click(function(e) {
             e.preventDefault();
             $('#tbl-trabajos').addClass('d-none');
+        });
+
+        $('#cdr-select').change(function() {
+            $('#cdr-id').val($('#cdr-select').val());
         });
 
         $('#filtro-ano').change(function() {
