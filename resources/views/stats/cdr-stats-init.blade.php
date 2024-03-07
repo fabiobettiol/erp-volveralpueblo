@@ -20,8 +20,8 @@
 @endsection
 
 @section('solicitantes')
-    <x-stats.filter-cdr-card cdr="{{ $cdr }}" :cdrs="$cdrs" />
-    <x-stats.filter-card cdr="{{ $cdr }}" />
+    <x-stats.filter-cdr-card :cdr="$cdrInfo" :cdrs="$cdrs" />
+    <x-stats.filter-card :cdr="$cdrInfo" />
 @endsection
 
 @section('scripts')
@@ -127,7 +127,7 @@
         });
 
         $('#cdr-select').change(function() {
-            $('#cdr-id').val($('#cdr-select').val());
+            $("input[id=cdr-id]").val($('#cdr-select').val());
         });
 
         $('#filtro-ano').change(function() {

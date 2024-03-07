@@ -56,9 +56,10 @@ class CdrStatsController extends Controller
     }
 
     public function init(Request $request) {
+        //dd($request->all());
         $this->request = $request;
+        $this->cdrInfo = Cdr::find($request->cdr);
         $this->cdr = $request->cdr;
-        $this->cdrInfo = Cdr::find($this->cdr);
         $this->ano = $request->filtro_ano;
         $this->mes = $request->filtro_mes;
         $this->trimestre = $request->filtro_trimestre;
@@ -137,7 +138,11 @@ class CdrStatsController extends Controller
 
     protected function solicitantes() {
         return Demandant::whereHas('followups', function($query)  {
-            if ( ! $this->request->user()->hasPermissionTo('view global stats')) {
+            if ($this->request->user()->hasPermissionTo('view global stats')) {
+                if($this->cdr != null) {
+                    $query->where('cdr_id', $this->cdr);
+                }
+            } else {
                 $query->where('cdr_id', $this->cdr);
             }
 
@@ -161,7 +166,12 @@ class CdrStatsController extends Controller
 
     protected function interacciones() {
         return Demandantfollowup::with('demandant:id,name,surname')
-            ->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+            ->when($this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                if ($this->cdr != null) {
+                    return $q->where('cdr_id', $this->cdr);
+                }
+            })
+            ->when(! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
                 return $q->where('cdr_id', $this->cdr);
             })
             ->whereYear('date', $this->ano)
@@ -185,7 +195,12 @@ class CdrStatsController extends Controller
                 'nationality:id,alfa3'
             )->withCount('members')
             ->withCount('contacts')
-            ->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+            ->when($this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                if ($this->cdr != null) {
+                    return $q->where('cdr_id', $this->cdr);
+                }
+            })
+            ->when(! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
                 return $q->where('cdr_id', $this->cdr);
             })
             ->whereYear('settlementdate', $this->ano)
@@ -217,7 +232,11 @@ class CdrStatsController extends Controller
                     return $q->where('settlementdate', '>=', $this->semestres[$this->semestre]['desde'])
                         ->where('settlementdate', '<=', $this->semestres[$this->semestre]['hasta']);
                 });
-            })->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+            })->when($this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                if ($this->cdr != null) {
+                    return $q->where('cdr_id', $this->cdr);
+                }
+            })->when(! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
                 return $q->where('cdr_id', $this->cdr);
             });
     }
@@ -225,17 +244,18 @@ class CdrStatsController extends Controller
     protected function intervenciones() {
         return Familycontact::with('family:id,reference')
             ->whereYear('date', $this->ano)
-            ->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+            ->when($this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                if ($this->cdr != null) {
+                    return $q->where('cdr_id', $this->cdr);
+                }
+            })->when(! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
                 return $q->where('cdr_id', $this->cdr);
-            })
-            ->when(!empty($this->mes), function ($q) {
+            })->when(!empty($this->mes), function ($q) {
                 return $q->whereMonth('date', $this->mes);
-            })
-            ->when(!empty($this->trimestre), function ($q) {
+            })->when(!empty($this->trimestre), function ($q) {
                 return $q->where('date', '>=', $this->trimestres[$this->trimestre]['desde'])
                     ->where('date', '<=', $this->trimestres[$this->trimestre]['hasta']);
-            })
-            ->when(!empty($this->semestre), function ($q) {
+            })->when(!empty($this->semestre), function ($q) {
                 return $q->where('date', '>=', $this->semestres[$this->semestre]['desde'])
                     ->where('date', '<=', $this->semestres[$this->semestre]['hasta']);
             })->get();
@@ -243,18 +263,20 @@ class CdrStatsController extends Controller
 
     protected function seguimientos() {
         return Familyfollowup::with('family:id,reference')
-            ->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
-                return $q->where('cdr_id', $this->cdr);
+            ->when($this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                if ($this->cdr != null) {
+                    return $q->where('cdr_id', $this->cdr);
+                }
             })
-            ->whereYear('date', $this->ano)
+            ->when(! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                return $q->where('cdr_id', $this->cdr);
+            })->whereYear('date', $this->ano)
             ->when(!empty($this->mes), function ($q) {
                 return $q->whereMonth('date', $this->mes);
-            })
-            ->when(!empty($this->trimestre), function ($q) {
+            })->when(!empty($this->trimestre), function ($q) {
                 return $q->where('date', '>=', $this->trimestres[$this->trimestre]['desde'])
                     ->where('date', '<=', $this->trimestres[$this->trimestre]['hasta']);
-            })
-            ->when(!empty($this->semestre), function ($q) {
+            })->when(!empty($this->semestre), function ($q) {
                 return $q->where('date', '>=', $this->semestres[$this->semestre]['desde'])
                     ->where('date', '<=', $this->semestres[$this->semestre]['hasta']);
             })->get();
@@ -264,18 +286,19 @@ class CdrStatsController extends Controller
         return House::with(
                 'municipality:id,name',
                 'province:id,acronym'
-            )->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+            )->when($this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                if ($this->cdr != null) {
+                    return $q->where('cdr_id', $this->cdr);
+                }
+            })->when(! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
                 return $q->where('cdr_id', $this->cdr);
-            })
-            ->whereYear('created_at', $this->ano)
+            })->whereYear('created_at', $this->ano)
             ->when(!empty($this->mes), function ($q) {
                 return $q->whereMonth('created_at', $this->mes);
-            })
-            ->when(!empty($this->trimestre), function ($q) {
+            })->when(!empty($this->trimestre), function ($q) {
                 return $q->where('created_at', '>=', $this->trimestres[$this->trimestre]['desde'])
                     ->where('created_at', '<=', $this->trimestres[$this->trimestre]['hasta']);
-            })
-            ->when(!empty($this->semestre), function ($q) {
+            })->when(!empty($this->semestre), function ($q) {
                 return $q->where('created_at', '>=', $this->semestres[$this->semestre]['desde'])
                     ->where('created_at', '<=', $this->semestres[$this->semestre]['hasta']);
             })->get();
@@ -285,18 +308,19 @@ class CdrStatsController extends Controller
         return Business::with(
                 'municipality:id,name',
                 'province:id,acronym'
-            )->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+            )->when($this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                if ($this->cdr != null) {
+                    return $q->where('cdr_id', $this->cdr);
+                }
+            })->when(! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
                 return $q->where('cdr_id', $this->cdr);
-            })
-            ->whereYear('created_at', $this->ano)
+            })->whereYear('created_at', $this->ano)
             ->when(!empty($this->mes), function ($q) {
                 return $q->whereMonth('created_at', $this->mes);
-            })
-            ->when(!empty($this->trimestre), function ($q) {
+            })->when(!empty($this->trimestre), function ($q) {
                 return $q->where('created_at', '>=', $this->trimestres[$this->trimestre]['desde'])
                     ->where('created_at', '<=', $this->trimestres[$this->trimestre]['hasta']);
-            })
-            ->when(!empty($this->semestre), function ($q) {
+            })->when(!empty($this->semestre), function ($q) {
                 return $q->where('created_at', '>=', $this->semestres[$this->semestre]['desde'])
                     ->where('created_at', '<=', $this->semestres[$this->semestre]['hasta']);
             })->get();
@@ -306,7 +330,11 @@ class CdrStatsController extends Controller
         return Land::with(
                 'municipality:id,name',
                 'province:id,acronym'
-            )->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+            )->when($this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                if ($this->cdr != null) {
+                    return $q->where('cdr_id', $this->cdr);
+                }
+            })->when(! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
                 return $q->where('cdr_id', $this->cdr);
             })
             ->whereYear('created_at', $this->ano)
@@ -327,7 +355,12 @@ class CdrStatsController extends Controller
         return Job::with(
                 'municipality:id,name',
                 'province:id,acronym'
-            )->when( ! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
+            )->when($this->request->user()->hasPermissionTo('view global stats'), function($q) {
+                if ($this->cdr != null) {
+                    return $q->where('cdr_id', $this->cdr);
+                }
+            })
+            ->when(! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
                 return $q->where('cdr_id', $this->cdr);
             })
             ->whereYear('created_at', $this->ano)
