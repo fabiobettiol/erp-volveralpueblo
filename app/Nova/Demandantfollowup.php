@@ -15,6 +15,35 @@ use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Demandantfollowup extends Resource {
 
+	public function authorizedToUpdate(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('edit demandantfollowups')) {
+			return true;
+		}
+
+		if ($request->user()->hasPermissionTo('edit own demandantfollowups')) {
+			return $this->cdr_id == $request->user()->cdr_id;
+		}
+	}
+
+	public function authorizedToDelete(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('delete demandantfollowups')) {
+			return true;
+		}
+
+		return $request->user()->hasPermissionTo('delete own demandantfollowups');
+	}
+
+	public function authorizedToRestore(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('restore demandantfollowups')) {
+			return true;
+		}
+
+		return $request->user()->hasPermissionTo('restore own demandantfollowups');
+	}
+
 	public static $group = 'Demandantes';
 
 	public static function label() {

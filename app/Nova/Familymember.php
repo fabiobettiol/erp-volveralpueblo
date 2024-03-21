@@ -30,11 +30,45 @@ class Familymember extends Resource {
 	public static $perPageViaRelationship = 10;
 
 	public static function indexQuery(NovaRequest $request, $query) {
-		if ($request->user()->is_admin) {
+
+		if ($request->user()->hasPermissionTo('view all familymembers')) {
 			return $query;
-		} else {
-			return $query->where('cdr_id', $request->user()->cdr_id);
 		}
+
+		if ($request->user()->hasPermissionTo('view own familymembers')) {
+			return $query->whereHas('family', function($q) use ($request) {
+				return $q->where('cdr_id', $request->user()->cdr_id);
+			});
+		}
+	}
+
+	public function authorizedToUpdate(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('edit familymembers')) {
+			return true;
+		}
+
+		if ($request->user()->hasPermissionTo('edit own familymembers')) {
+			return $this->family->cdr_id == $request->user()->cdr_id;
+		}
+	}
+
+	public function authorizedToDelete(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('delete familymembers')) {
+			return true;
+		}
+
+		return $request->user()->hasPermissionTo('delete own familymembers');
+	}
+
+	public function authorizedToRestore(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('restore familymembers')) {
+			return true;
+		}
+
+		return $request->user()->hasPermissionTo('restore own familymembers');
 	}
 
 	public static function availableForNavigation(Request $request) {

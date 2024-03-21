@@ -1,14 +1,25 @@
 @extends('layouts.app-stats')
 
-@section('solicitantes')
+@section('header')
     <div class="row mt-3">
         <div class="col-2">
-            <img src="/storage/{{ $cdrInfo->logo }}" style="height: 6rem">
+            @if (auth()->user()->hasPermissionTo('view global stats'))
+                <img src="/logos/logo-coceder.png" style="height: 6rem">
+            @else
+                <img src="/storage/{{ $cdrInfo->logo }}" style="height: 6rem">
+            @endif
         </div>
         <div class="col-10 text-center">
-            <h5 style="line-height: 6rem; margin: 0">{{ $cdrInfo->name }}</h5>
+            @if (auth()->user()->hasPermissionTo('view global stats'))
+                <h5 style="line-height: 6rem; margin: 0">COCEDER - Estadísticas Globales</h5>
+            @else
+                <h5 style="line-height: 6rem; margin: 0">{{ $cdrInfo->name }}</h5>
+            @endif
         </div>
     </div>
+@endsection
+
+@section('solicitantes')
 
     <div class="info-solicitantes">
         <x-stats.filter-card cdr="{{ Request::get('cdr') }}" />
@@ -45,16 +56,16 @@
 @section('familias')
     <div class="info-familias">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col">
                 <x-stats.card id="lens-familias" title="Familias" icon="fa-solid fa-people-roof" value=""/>
             </div>
-            <div class="col-md-3">
+            <div class="col">
                 <x-stats.card id="lens-miembros" title="Miembros" icon="fa-solid fa-users-viewfinder" value=""/>
             </div>
-            <div class="col-md-3">
+            <div class="col">
                 <x-stats.card id="lens-intervenciones" title="Intervenciones" icon="fa-regular fa-handshake" value=""/>
             </div>
-            <div class="col-md-3">
+            <div class="col">
                 <x-stats.card id="lens-seguimientos" title="Seguimientos" icon="fa-regular fa-eye" value=""/>
             </div>
         </div>

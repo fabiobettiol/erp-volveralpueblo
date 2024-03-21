@@ -38,35 +38,52 @@ class Land extends Resource {
 
 	public static function indexQuery(NovaRequest $request, $query) {
 
-		if ($request->user()->is_admin) {
-			return $query;
-		} else {
-			$query->where('cdr_id', $request->user()->cdr_id);
-
-			if ($request->user()->is_collaborator) {
-				$query->orWhere('province_id', $request->user()->cdr->province->id);
-			}
-
+		if ($request->user()->hasPermissionTo('view all lands')) {
 			return $query;
 		}
+
+		if ($request->user()->hasPermissionTo('view own lands')) {
+			$query->where('cdr_id', $request->user()->cdr_id);
+		}
+
+		if ($request->user()->hasPermissionTo('view province lands')) {
+			$query->orWhere('province_id', $request->user()->cdr->province_id);
+		}
+
+		if ($request->user()->hasPermissionTo('view community lands')) {
+			$query->orWhere('community_id', $request->user()->cdr->community_id);
+		}
+
+		return $query;
 	}
 
 	public function authorizedToUpdate(Request $request): bool {
 
-		if (!$request->user()->is_admin && $this->cdr_id != $request->user()->cdr_id) {
-			return false;
-		} else {
+		if ($request->user()->hasPermissionTo('edit lands')) {
 			return true;
+		}
+
+		if ($request->user()->hasPermissionTo('edit own lands')) {
+			return $this->cdr_id == $request->user()->cdr_id;
 		}
 	}
 
 	public function authorizedToDelete(Request $request): bool {
 
-		if (!$request->user()->is_admin && $this->cdr_id != $request->user()->cdr_id) {
-			return false;
-		} else {
+		if ($request->user()->hasPermissionTo('delete lands')) {
 			return true;
 		}
+
+		return $request->user()->hasPermissionTo('delete own lands');
+	}
+
+	public function authorizedToRestore(Request $request): bool {
+
+		if ($request->user()->hasPermissionTo('restore lands')) {
+			return true;
+		}
+
+		return $request->user()->hasPermissionTo('restore own lands');
 	}
 
 	public static $group = 'Recursos';

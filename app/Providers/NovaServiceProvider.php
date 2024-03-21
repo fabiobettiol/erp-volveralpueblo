@@ -68,6 +68,7 @@ use Illuminate\Support\Facades\Blade;
 use App\Nova\Metrics\BusinessPerMonth;
 use Wdelfuego\NovaCalendar\NovaCalendar;
 use Laravel\Nova\NovaApplicationServiceProvider;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider {
 	/**
@@ -158,6 +159,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 	public function tools() {
 		return [
 			new NovaCalendar('mi-calendario'),
+			new \Pktharindu\NovaPermissions\NovaPermissions(),
 		];
 	}
 
@@ -173,8 +175,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 	protected function footer () {
 	    Nova::footer(function () {
 			$year = Carbon::now()->format('Y');
-			return '<center><strong> COCEDER &copy  ' . $year . '</strong></center>';			
-		});			
+			return '<center><strong> COCEDER &copy  ' . $year . '</strong></center>';
+		});
 	}
 
 	protected function menu () {
@@ -182,16 +184,23 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 		Nova::mainMenu(fn($request) => [
 
 			MenuItem::link(__('Mi Calendario'), NovaCalendar::pathToCalendar('mi-calendario')),
-
-			MenuItem::externalLink('Estadísticas', '/stats/' . \Auth::user()->cdr_id)->openInNewTab(),
+			MenuItem::externalLink('Estadísticas', '/stats/' . \Auth::user()->cdr_id)
+				->openInNewTab()
+		    	->canSee(function (NovaRequest $request) {
+		        	return ! $request->user()->hasPermissionTo('view global stats');
+		    	}),
+		    MenuItem::externalLink('Estadísticas', '/stats')
+		    	->canSee(function (NovaRequest $request) {
+		        	return $request->user()->hasPermissionTo('view global stats');
+		    	}),
 
 			MenuSection::make('Eventos', [
 				MenuItem::resource(EventCall::class),
 				MenuItem::resource(EventMeeting::class),
 				MenuItem::resource(EventDemandantfollowup::class),
 				MenuItem::resource(EventFamilycontact::class),
-				MenuItem::resource(EventFamilyfollowup::class),				
-				MenuItem::resource(EventOther::class),				
+				MenuItem::resource(EventFamilyfollowup::class),
+				MenuItem::resource(EventOther::class),
 			])->icon('calendar')
 				->collapsible(),
 
@@ -232,6 +241,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 				->collapsible(),
 
 			MenuSection::make('Admin', [
+				MenuItem::externalLink('Roles', 'roles'),
 				MenuItem::resource(Gender::class),
 				MenuGroup::make('Cdrs', [
 					MenuItem::resource(Cdr::class),
