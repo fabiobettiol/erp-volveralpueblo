@@ -1,5 +1,7 @@
 @extends('reportes.pdf-resources-layout')
 
+@dd()
+
 @section('resourceTitle')
     <table classs="page-title">
         <tr>
