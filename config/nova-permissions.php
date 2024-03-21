@@ -89,13 +89,13 @@ return [
         ],
 
         'edit houses' => [
-            'display_name' => 'Editar vivinedas',
+            'display_name' => 'Editar vivieedas',
            'description'  => 'Puede editar viviendas',
             'group'        => 'Viviendas',
         ],
 
         'edit own houses' => [
-            'display_name' => 'Editar vivinedas propias',
+            'display_name' => 'Editar viviendas propias',
            'description'  => 'Puede editar viviendas propias',
             'group'        => 'Viviendas',
         ],

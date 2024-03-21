@@ -32,8 +32,6 @@ use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 class House extends Resource {
 	// use TabsOnEdit;
 
-	public static $tableStyle = 'tight';
-
 	public static function label() {
 		return 'Viviendas';
 	}
