@@ -70,7 +70,7 @@
 
 </head>
 <body>
-    <div class="row"><img class="logo" src="{{ public_path('storage/logos/logo-volver-al-pueblo.jpg') }}"></div>
+    <div class="row"><img class="logo" src="{{ public_path('storage/logos/logo-volver-al-pueblo.png') }}"></div>
         @yield('resourceTitle')
         @yield('content')
 </body>
