@@ -20,7 +20,9 @@
 @endsection
 
 @section('solicitantes')
-    <x-stats.filter-cdr-card :cdr="$cdrInfo" :cdrs="$cdrs" />
+    @if (auth()->user()->hasPermissionTo('view global stats'))
+        <x-stats.filter-cdr-card :cdr="$cdrInfo" :cdrs="$cdrs" />
+    @endif
 
     <div class="info-solicitantes">
         <x-stats.filter-card :cdr="$cdrInfo" />
