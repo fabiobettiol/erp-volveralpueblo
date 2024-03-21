@@ -20,7 +20,7 @@
                 <select id="cdr-select" class="form-select">
                     <option value="0">Selecciona un CDR</option>
                     @foreach ($cdrs as $cdr)
-                    <option value="{{ $cdr->id }}">{{ $cdr->name }}</option>
+                        <option value="{{ $cdr->id }}">{{ $cdr->name }}</option>
                     @endforeach
                 </select>
             </div>

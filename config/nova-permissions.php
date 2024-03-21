@@ -82,7 +82,7 @@ return [
             'group'        => 'Viviendas',
         ],
 
-         'create own houses' => [
+        'create own houses' => [
             'display_name' => 'Crear viviendas propias',
             'description'  => 'Puede crear viviendas propias',
             'group'        => 'Viviendas',
@@ -90,13 +90,13 @@ return [
 
         'edit houses' => [
             'display_name' => 'Editar vivieedas',
-           'description'  => 'Puede editar viviendas',
+            'description'  => 'Puede editar viviendas',
             'group'        => 'Viviendas',
         ],
 
         'edit own houses' => [
             'display_name' => 'Editar viviendas propias',
-           'description'  => 'Puede editar viviendas propias',
+            'description'  => 'Puede editar viviendas propias',
             'group'        => 'Viviendas',
         ],
 
