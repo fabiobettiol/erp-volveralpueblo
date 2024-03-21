@@ -4,7 +4,11 @@
 
 <form id="filtro-form" method="post">
     @csrf
-    <input type="hidden" name="cdr" value="{{ $cdr }}">
+    @if (is_null($cdr) )
+        <input id="cdr-id" type="hidden" name="cdr" value="">
+    @else
+        <input id="cdr-id" type="hidden" name="cdr" value="{{ $cdr->id }}">
+    @endif
     <div class="card filters shadow-sm my-4">
         <div class="card-body">
             <div class="d-flex flex-row">

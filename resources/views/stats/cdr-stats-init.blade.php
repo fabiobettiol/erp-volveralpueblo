@@ -20,7 +20,8 @@
 @endsection
 
 @section('solicitantes')
-    <x-stats.filter-card cdr="{{ $cdr }}"/>
+    <x-stats.filter-cdr-card :cdr="$cdrInfo" :cdrs="$cdrs" />
+    <x-stats.filter-card :cdr="$cdrInfo" />
 @endsection
 
 @section('scripts')
@@ -123,6 +124,10 @@
         $('#x-trabajos').click(function(e) {
             e.preventDefault();
             $('#tbl-trabajos').addClass('d-none');
+        });
+
+        $('#cdr-select').change(function() {
+            $("input[id=cdr-id]").val($('#cdr-select').val());
         });
 
         $('#filtro-ano').change(function() {

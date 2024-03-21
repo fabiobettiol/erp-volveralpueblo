@@ -20,9 +20,10 @@
 @endsection
 
 @section('solicitantes')
+    <x-stats.filter-cdr-card :cdr="$cdrInfo" :cdrs="$cdrs" />
 
     <div class="info-solicitantes">
-        <x-stats.filter-card cdr="{{ Request::get('cdr') }}" />
+        <x-stats.filter-card :cdr="$cdrInfo" />
 
         <div class="row">
             <div class="col-md-3">
@@ -143,9 +144,12 @@
         $(document).ready(function() {
 
             $('#leyenda').html('');
+            @if(Request::post('cdr'))
+                $('#cdr-select').val('{{ Request::post('cdr') }}');
+            @endif
 
             @if(Request::post('filtro_ano'))
-                $('#filtro-ano').val('{{ Request::post('filtro_ano') }}' );
+                $('#filtro-ano').val('{{ Request::post('filtro_ano') }}');
                 $('#leyenda').html({{ Request::post('filtro_ano') }});
             @endif
             @if(Request::post('filtro_mes'))
@@ -273,6 +277,18 @@
         $('#x-trabajos').click(function(e) {
             e.preventDefault();
             $('#tbl-trabajos').addClass('d-none');
+        });
+
+        $('#cdr-select').change(function() {
+            $("input[id=cdr-id]").val($('#cdr-select').val());
+            $('#cdr-id').val($('#cdr-select').val());
+            $('#filtro-ano').val('0');
+            $('#filtro-mes').val('0');
+            $('#filtro-trimestre').val('0');
+            $('#filtro-semestre').val('0');
+            $('#filtro-mes').attr('disabled', true);
+            $('#filtro-trimestre').attr('disabled', true);
+            $('#filtro-semestre').attr('disabled', true);
         });
 
         $('#filtro-ano').change(function() {
