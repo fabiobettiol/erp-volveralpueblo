@@ -19,7 +19,7 @@ class Gender extends Resource {
 	}
 
 	public static function availableForNavigation(Request $request) {
-		return $request->user()->is_admin;
+		return $request->user()->hasPermissionTo('administrator');
 	}
 
 	/**

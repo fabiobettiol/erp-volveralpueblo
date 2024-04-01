@@ -82,7 +82,7 @@ class Demandant extends Resource {
 			Belongsto::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->filterable()
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 			BelongsTo::make('Sexo', 'gender', 'App\Nova\Gender')
 				->sortable(),

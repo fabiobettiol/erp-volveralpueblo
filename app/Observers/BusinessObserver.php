@@ -105,7 +105,7 @@ class BusinessObserver
 
         $user = Auth::user();
 
-        if (!$user->is_admin && $user->is_cdr) { // - Only applies to 'is_cdr' users
+        if (!$request->user()->hasPermissionTo('administrator') && $user->is_cdr) { // - Only applies to 'is_cdr' users
             // - Update Business with the cdr_id of the current user
             $updateBusiness = Business::find($business->id);
             $updateBusiness->cdr_id = $user->cdr_id;

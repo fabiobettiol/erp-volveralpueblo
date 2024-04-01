@@ -57,6 +57,12 @@ return [
             'description'  => 'Puede acceder a Nova',
             'group'        => 'Globales',
         ],
+
+        'administrator' => [
+            'display_name' => 'Es un administrador del sistema',
+            'description'  => 'Es un administrador del sistema',
+            'group'        => 'Globales',
+        ],
         // ---------------------------------------------- House
         'view all houses' => [
             'display_name' => 'Ver todas las viviendas',

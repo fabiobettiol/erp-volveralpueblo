@@ -21,7 +21,7 @@ class Cdr extends Resource {
 
 	public static function availableForNavigation(Request $request) {
 		return
-			($request->user()->is_admin ||
+			($request->user()->hasPermissionTo('administrator') ||
 			($request->user()->is_cdr_admin && $request->user()->cdr_id));
 	}
 
@@ -33,15 +33,10 @@ class Cdr extends Resource {
 	 * @return \Illuminate\Database\Eloquent\Builder
 	 */
 	public static function indexQuery(NovaRequest $request, $query) {
-		if ($request->user()->is_cdr_admin) {
-
+		if ($request->user()->hasPermissionTo('administrator')) {
+			return $query;
+		} else {
 			return $query->where('id', $request->user()->cdr_id);
-
-		} elseif (static::$defaultSort && empty($request->get('orderBy'))) {
-
-			$query->getQuery()->orders = [];
-			return $query->orderBy(static::$defaultSort);
-
 		}
 
 		return $query;
@@ -52,11 +47,11 @@ class Cdr extends Resource {
 	}
 
 	public static function authorizedToCreate(Request $request) {
-		return $request->user() ? $request->user()->is_admin : true;
+		return $request->user() ? $request->user()->hasPermissionTo('administrator') : true;
 	}
 
 	public function authorizedToDelete(Request $request) {
-		return $request->user() ? $request->user()->is_admin : false;
+		return $request->user() ? $request->user()->hasPermissionTo('administrator') : false;
 	}
 
 	/**
@@ -98,12 +93,12 @@ class Cdr extends Resource {
 			Boolean::make('Mapa', 'mapinfo')
 				->hideWhenCreating()
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return$request->user()->hasPermissionTo('administrator');
 				}),
 			Image::make('Logo')->path('logos/cdr'),
 			BelongsTo::make('Zona', 'zone', 'App\Nova\Zone')
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
 				->filterable(),
@@ -139,59 +134,59 @@ class Cdr extends Resource {
 
 			Boolean::make('Web Coceder', 'web_coceder')
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 			Boolean::make('Web Volver al Pueblo', 'web_volveralpueblo')
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 			Boolean::make('Web Biocuidados', 'web_biocuidados')
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 			Boolean::make('Mapa', 'mapinfo')
 				->hideFromIndex()
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 			Text::make('Latitud', 'lat')
 				->hideFromIndex()
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 			Text::make('Longitud', 'lng')
 				->hideFromIndex()
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 			Boolean::make('Activo', 'active')
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 			Text::make('Comentarios', 'comments')
 				->hideFromIndex()
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 
 			Textarea::make('Webhook Teams', 'teams_webhook')
 				->hideFromIndex()
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 
 			HasMany::make('Colaboradores', 'users', 'App\Nova\User')
 				->canSee(function ($request) {
-					return $request->user()->is_admin || $request->user()->is_cdr;
+					return $request->user()->hasPermissionTo('administrator') || $request->user()->is_cdr;
 				}),
 			HasMany::make('Comarcas', 'comarcas', 'App\Nova\Region')
 				->canSee(function ($request) {
-					return $request->user()->is_admin || $request->user()->is_cdr;
+					return $request->user()->hasPermissionTo('administrator') || $request->user()->is_cdr;
 				}),
 
 			HasMany::make('Convenios', 'convenios', 'App\Nova\Cdragreement')
 				->canSee(function ($request) {
-					return $request->user()->is_admin || $request->user()->is_cdr;
+					return $request->user()->hasPermissionTo('administrator') || $request->user()->is_cdr;
 				}),
 			//HasMany::make('Noticias', 'news', 'App\Nova\Cdrnew'),
 		];

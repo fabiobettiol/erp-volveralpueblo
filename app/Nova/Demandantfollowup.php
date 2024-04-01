@@ -113,7 +113,7 @@ class Demandantfollowup extends Resource {
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->filterable()
 				->readonly(function ($request) {
-					return !$request->user()->is_admin;
+					return !$request->user()->hasPermissionTo('administrator');
 				}),
 			BelongsTo::make('Usuario', 'user', 'App\Nova\User')
 				->sortable()

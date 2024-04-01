@@ -77,11 +77,13 @@ class EventFamilycontact extends Resource
 				->alwaysShow(),
 			BelongsTo::make('Usuario', 'user', 'App\Nova\User')
 				->canSee(function ($request) {
-					return $request->user()->is_admin || ($request->user()->is_cdr_admin && ($request->user()->cdr_id == $this->cdr_id))	;
+					return $request->user()->hasPermissionTo('administrator') ||
+                        ($request->user()->is_cdr_admin &&
+                        ($request->user()->cdr_id == $this->cdr_id));
 				}),
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 			DateTime::make('Inicia', 'start')
 				->filterable()

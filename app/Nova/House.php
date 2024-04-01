@@ -135,7 +135,7 @@ class House extends Resource {
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->sortable()
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 			Date::make('Fecha', 'created_at')
 				->onlyOnIndex()
@@ -347,17 +347,17 @@ class House extends Resource {
 					Text::make('Contacto', 'contact')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->hasPermissionTo('administrator') || $request->user()->cdr_id == $this->cdr_id;
 						}),
 					Text::make('Teléfono', 'phone')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->hasPermissionTo('administrator') || $request->user()->cdr_id == $this->cdr_id;
 						}),
 					Text::make('Email')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->hasPermissionTo('administrator') || $request->user()->cdr_id == $this->cdr_id;
 						}),
 				]),
 				Tab::make('Comentarios', [

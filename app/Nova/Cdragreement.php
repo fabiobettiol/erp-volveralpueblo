@@ -20,7 +20,7 @@ class Cdragreement extends Resource
     }
 
 	public static function indexQuery(NovaRequest $request, $query) {
-		if ($request->user()->is_admin) {
+		if ($request->user()->hasPermissionTo('administrator')) {
 			return $query;
 		} else {
 			return $query->where('cdr_id', $request->user()->cdr_id);
@@ -29,7 +29,7 @@ class Cdragreement extends Resource
 
     public static function availableForNavigation(Request $request) {
         return
-            ($request->user()->is_admin ||
+            ($request->user()->hasPermissionTo('administrator') ||
             ($request->user()->is_cdr_admin && $request->user()->cdr_id));
     }
 

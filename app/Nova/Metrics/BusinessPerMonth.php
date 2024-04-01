@@ -18,7 +18,7 @@ class BusinessPerMonth extends Trend
      */
     public function calculate(NovaRequest $request)
     {
-        if ($request->user()->is_admin) {
+        if ($request->user()->hasPermissionTo('administrator')) {
             return $this->countByMonths($request, Business::class)
                 ->showLatestValue();
         } else {

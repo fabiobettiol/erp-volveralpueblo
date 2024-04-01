@@ -24,11 +24,6 @@ use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Family extends Resource {
 
-//	public static function availableForNavigation(Request $request) {
-//		return $request->user()->is_admin;
-//	}
-
-
 	public static $group = 'Asentad@s';
 
 	public static function label() {
@@ -135,7 +130,7 @@ class Family extends Resource {
 					Belongsto::make('CDR', 'cdr', 'App\Nova\Cdr')
 						->filterable()
 						->canSee(function ($request) {
-							return $request->user()->is_admin;
+							return $request->user()->hasPermissionTo('administrator');
 						}),
 					Number::make('Impactos', 'impacts_count')
 						->onlyOnIndex()

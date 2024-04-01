@@ -133,7 +133,7 @@ class Land extends Resource {
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->sortable()
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 			Date::make('Fecha', 'created_at')
 				->onlyOnIndex()
@@ -247,23 +247,27 @@ class Land extends Resource {
 					Text::make('Nombre', 'bidder_name')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->hasPermissionTo('administrator') ||
+							$request->user()->cdr_id == $this->cdr_id;
 						}),
 					Text::make('Teléfono', 'bidder_phone')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->hasPermissionTo('administrator') ||
+							$request->user()->cdr_id == $this->cdr_id;
 						}),
 					Text::make('Email', 'bidder_email')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->hasPermissionTo('administrator') ||
+							$request->user()->cdr_id == $this->cdr_id;
 						}),
 					Textarea::make('Comentarios', 'bidder_comments')
 						->hideFromIndex()
 						->alwaysShow()
 						->canSee(function ($request) {
-							return $request->user()->is_admin || $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->hasPermissionTo('administrator') ||
+							$request->user()->cdr_id == $this->cdr_id;
 						}),
 				]),
 

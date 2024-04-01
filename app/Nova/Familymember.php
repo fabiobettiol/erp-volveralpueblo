@@ -17,10 +17,6 @@ use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Familymember extends Resource {
 
-//	public static function availableForNavigation(Request $request) {
-//		return $request->user()->is_admin;
-//	}
-
 	public static $group = 'Asentad@s';
 
 	public static function label() {
@@ -130,7 +126,7 @@ class Familymember extends Resource {
 				->sortable()
 				->filterable()
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 			Boolean::make('Persona de referencia', 'is_responsible')->sortable(),
 			Boolean::make('Es menor', 'is_child')->sortable(),
