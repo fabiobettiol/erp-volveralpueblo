@@ -28,9 +28,7 @@ class Cdragreement extends Resource
 	}
 
     public static function availableForNavigation(Request $request) {
-        return
-            ($request->user()->hasPermissionTo('administrator') ||
-            ($request->user()->is_cdr_admin && $request->user()->cdr_id));
+        return $request->user()->hasPermissionTo('administrator');
     }
 
     /**

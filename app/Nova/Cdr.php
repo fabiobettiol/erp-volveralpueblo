@@ -20,9 +20,7 @@ class Cdr extends Resource {
 	public static $defaultSort = 'name'; // Update to your default column
 
 	public static function availableForNavigation(Request $request) {
-		return
-			($request->user()->hasPermissionTo('administrator') ||
-			($request->user()->is_cdr_admin && $request->user()->cdr_id));
+		return $request->user()->hasPermissionTo('administrator');
 	}
 
 	/**
@@ -175,19 +173,9 @@ class Cdr extends Resource {
 					return $request->user()->hasPermissionTo('administrator');
 				}),
 
-			HasMany::make('Colaboradores', 'users', 'App\Nova\User')
-				->canSee(function ($request) {
-					return $request->user()->hasPermissionTo('administrator') || $request->user()->is_cdr;
-				}),
-			HasMany::make('Comarcas', 'comarcas', 'App\Nova\Region')
-				->canSee(function ($request) {
-					return $request->user()->hasPermissionTo('administrator') || $request->user()->is_cdr;
-				}),
-
-			HasMany::make('Convenios', 'convenios', 'App\Nova\Cdragreement')
-				->canSee(function ($request) {
-					return $request->user()->hasPermissionTo('administrator') || $request->user()->is_cdr;
-				}),
+			HasMany::make('Colaboradores', 'users', 'App\Nova\User'),
+			HasMany::make('Comarcas', 'comarcas', 'App\Nova\Region'),
+			HasMany::make('Convenios', 'convenios', 'App\Nova\Cdragreement'),
 			//HasMany::make('Noticias', 'news', 'App\Nova\Cdrnew'),
 		];
 	}

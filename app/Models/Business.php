@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Spatie\Image\Manipulations;
 use App\Models\registerMediaConversions;
+use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
 use Illuminate\Database\Eloquent\Model;

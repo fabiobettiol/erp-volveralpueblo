@@ -64,7 +64,7 @@ class FamilyObserver {
 
 		$user = Auth::user();
 
-		if (!$request->user()->hasPermissionTo('administrator') && $user->is_cdr) {
+		if (!$request->user()->hasPermissionTo('administrator')) {
 			$cdr = $user->cdr->id;
 			$community = $user->cdr->community->id;
 			$acronym = $user->cdr->community->acronym;

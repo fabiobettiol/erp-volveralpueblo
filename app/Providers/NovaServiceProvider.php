@@ -123,15 +123,15 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 	protected function cards() {
 		return [
 			// new Help,
-			(new HouseCount)->width('1/4'),
-			(new LandCount)->width('1/4'),
-			(new BusinessCount)->width('1/4'),
-			(new JobCount)->width('1/4'),
-			(new CdrCount)->width('2/3'),
-			(new HousePerMonth)->width('1/2'),
-			(new BusinessPerMonth)->width('1/2'),
-			(new LandPerMonth)->width('1/2'),
-			(new JobPerMonth)->width('1/2'),
+			// (new HouseCount)->width('1/4'),
+			// (new LandCount)->width('1/4'),
+			// (new BusinessCount)->width('1/4'),
+			// (new JobCount)->width('1/4'),
+			// (new CdrCount)->width('2/3'),
+			// (new HousePerMonth)->width('1/2'),
+			// (new BusinessPerMonth)->width('1/2'),
+			// (new LandPerMonth)->width('1/2'),
+			// (new JobPerMonth)->width('1/2'),
 		];
 	}
 

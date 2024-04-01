@@ -37,7 +37,7 @@ class House extends Resource {
 		return 'Viviendas';
 	}
 
-	public static function indexQuery(NovaRequest $request, $query) {
+	/*public static function indexQuery(NovaRequest $request, $query) {
 
 		if ($request->user()->hasPermissionTo('view all houses')) {
 			return $query;
@@ -85,7 +85,7 @@ class House extends Resource {
 		}
 
 		return $request->user()->hasPermissionTo('restore own houses');
-	}
+	}*/
 
 	public static $group = 'Recursos';
 
@@ -347,17 +347,20 @@ class House extends Resource {
 					Text::make('Contacto', 'contact')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->hasPermissionTo('administrator') || $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->hasPermissionTo('administrator') ||
+							$request->user()->cdr_id == $this->cdr_id;
 						}),
 					Text::make('Teléfono', 'phone')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->hasPermissionTo('administrator') || $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->hasPermissionTo('administrator') ||
+							$request->user()->cdr_id == $this->cdr_id;
 						}),
 					Text::make('Email')
 						->hideFromIndex()
 						->canSee(function ($request) {
-							return $request->user()->hasPermissionTo('administrator') || $request->user()->cdr_id == $this->cdr_id;
+							return $request->user()->hasPermissionTo('administrator') ||
+							$request->user()->cdr_id == $this->cdr_id;
 						}),
 				]),
 				Tab::make('Comentarios', [
