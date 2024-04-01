@@ -124,6 +124,8 @@ class User extends Resource {
 					return $request->user()->is_super;
 				}),
 
+/*			Replaced by roles-permissions scheme
+			Fabio - 21.02,2022
 			Boolean::make('Administrador', 'is_admin')
 				->canSee(function ($request) {
 					return $request->user()->is_super;
@@ -137,7 +139,7 @@ class User extends Resource {
 			Boolean::make('Administrador de CDR', 'is_cdr_admin')
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
-				}),
+				}),*/
 
 			Boolean::make('Entidad Asociada', 'is_associated')
 				->canSee(function ($request) {

@@ -6,6 +6,7 @@ use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Tabs;
 use App\Models\Community;
 use App\Nova\Filters\ByCdr;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\ID;
 use App\Models\Municipality;
 use Illuminate\Http\Request;
@@ -182,7 +183,7 @@ class House extends Resource {
 			// - Municipality: Show abbreviated name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
 				->display(function ($municipality) {
-					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
+					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : Str::substr($municipality->name, 0, 10);
 				})->sortable()
 				->onlyOnIndex(),
 			Text::make('Código Postal', 'postcode')

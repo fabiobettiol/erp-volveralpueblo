@@ -182,7 +182,7 @@ class Business extends Resource {
 			// - Municipality: Show abbreviated name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
 				->display(function ($municipality) {
-					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : htmlspecialchars(substr($municipality->name,0,10)).'...';
+					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : Str::substr($municipality->name, 0, 10);
 				})->sortable()
 				->onlyOnIndex(),
 
