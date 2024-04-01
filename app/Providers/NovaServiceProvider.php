@@ -110,13 +110,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 	 * @return void
 	 */
 	protected function gate() {
-		// - Prevenir los soft-deletes para usuarios que no son admin
-		Gate::define('canSoftDelete', function ($user) {
-			return $user->is_admin;
-		});
-
 		Gate::define('viewNova', function ($user) {
-			return ($user->is_admin || $user->is_cdr);
+			return  $user()->hasPermissionTo('access nova');
 		});
 	}
 

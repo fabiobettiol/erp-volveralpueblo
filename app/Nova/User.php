@@ -108,7 +108,7 @@ class User extends Resource {
 			BelongsTo::make('CDR', 'cdr', 'App\Nova\Cdr')
 				->filterable()
 				->canSee(function ($request) {
-					return $request->user()->is_admin;
+					return $request->user()->hasPermissionTo('edit users');
 				}),
 
 			Text::make('Email')
@@ -139,7 +139,7 @@ class User extends Resource {
 			Boolean::make('Administrador de CDR', 'is_cdr_admin')
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
-				}),*/
+				}),
 
 			Boolean::make('Entidad Asociada', 'is_associated')
 				->canSee(function ($request) {
@@ -150,7 +150,7 @@ class User extends Resource {
 				->canSee(function ($request) {
 					return $request->user()->is_admin;
 				}),
-
+			*/
 			Password::make('Password')
 				->onlyOnForms()
 				->creationRules('required', 'string', 'min:8')

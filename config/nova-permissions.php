@@ -51,6 +51,12 @@ return [
     */
 
     'permissions' => [
+        // ---------------------------------------------- Global access
+        'access nova' => [
+            'display_name' => 'Puede acceder a Nova',
+            'description'  => 'Puede acceder a Nova',
+            'group'        => 'Globales',
+        ],
         // ---------------------------------------------- House
         'view all houses' => [
             'display_name' => 'Ver todas las viviendas',
@@ -752,7 +758,7 @@ return [
             'group'        => 'Usuarios',
         ],
 
-         'create own users' => [
+        'create own users' => [
             'display_name' => 'Crear usuarios propios',
             'description'  => 'Puede crear usuarios propios',
             'group'        => 'Usuarios',
@@ -760,13 +766,13 @@ return [
 
         'edit users' => [
             'display_name' => 'Editar usuarios',
-           'description'  => 'Puede editar usuarios',
+            'description'  => 'Puede editar usuarios',
             'group'        => 'Usuarios',
         ],
 
         'edit own users' => [
             'display_name' => 'Editar usuarios propios',
-           'description'  => 'Puede editar usuarios propios',
+            'description'  => 'Puede editar usuarios propios',
             'group'        => 'Usuarios',
         ],
 
