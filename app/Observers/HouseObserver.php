@@ -99,7 +99,7 @@ class HouseObserver {
 
 		$user = Auth::user();
 
-		if (!$request->user()->hasPermissionTo('administrator')) {
+		if (!$user->hasPermissionTo('administrator')) {
 			// - Only applies to 'is_cdr' users
 			// - Update House with the cdr_id of the current user
 			$updateHouse = House::find($house->id);

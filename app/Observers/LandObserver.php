@@ -105,7 +105,7 @@ class LandObserver
 
         $user = Auth::user();
 
-        if (!$request->user()->hasPermissionTo('administrator')) { // - Only applies to 'is_cdr' users
+        if (!$user->hasPermissionTo('administrator')) { // - Only applies to 'is_cdr' users
             // - Update Land with the cdr_id of the current user
             $updateLand = Land::find($land->id);
             $updateLand->cdr_id = $user->cdr_id;
