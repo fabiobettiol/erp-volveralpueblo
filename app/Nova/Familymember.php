@@ -185,9 +185,6 @@ class Familymember extends Resource {
 	 */
 	public function cards(Request $request) {
 		return [
-			(new FamilyMemberCDR)->width('1/3'),
-			(new FamilyMemberGenderCDR)->width('1/3'),
-			(new FamilyMemberAgeCDR)->width('1/3')
 		];
 	}
 

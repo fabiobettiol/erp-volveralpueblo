@@ -136,8 +136,7 @@ class Demandantfollowup extends Resource {
 	 */
 	public function cards(Request $request) {
 		return [
-			(new DemandantFollowUpCDR)->width('1/3'),
-			(new DemandantFollowUpPerDayCDR)->width('2/3')
+
 		];
 	}
 

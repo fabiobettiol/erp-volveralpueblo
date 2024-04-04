@@ -53,6 +53,14 @@ class Family extends Model {
 		return $this->belongsTo(Province::class, 'toprovince_id' );
 	}
 
+	public function destinationmunicipality() {
+		return $this->belongsTo(Municipality::class, 'tomunicipality_id' );
+	}
+
+	public function destinationlocality() {
+		return $this->belongsTo(Locality::class, 'tolocality_id' );
+	}
+
 	public function impacts() {
 		return $this->belongsToMany(FamilyImpact::class, 'family_impact', 'family_id', 'familyimpact_id')
 			->using(FamilyImpactPivot::class)

@@ -11,6 +11,7 @@ use Laravel\Nova\Fields\Text;
 use App\Nova\Metrics\FamilyCDR;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\DateTime;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Nova\Metrics\FamilyPerDayCDR;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Maatwebsite\LaravelNovaExcel\Actions\DownloadExcel;
 
 class Family extends Resource {
@@ -149,6 +151,26 @@ class Family extends Resource {
 					BelongsTo::make('Provincia de destino', 'destinationprovince', 'App\Nova\Province')
 						->sortable()
 						->filterable(),
+					// - Municipality: Show full name when not on index view
+					BelongsTo::make('Municipio', 'destinationmunicipality', 'App\Nova\Municipality')
+						->dependsOn(['destinationprovince'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
+							$field->relatableQueryUsing(function (NovaRequest $request, Builder $query) use ($formData) {
+								$query->when($formData->destinationprovince, function ($query) use ($formData) {
+									$query->where('province_id', $formData->destinationprovince);
+								});
+							});
+						})->hideFromIndex(),
+
+					// - Locality: Show full name when not on index view
+					BelongsTo::make('Localidad', 'destinationlocality', 'App\Nova\Locality')
+						->dependsOn(['destinationmunicipality'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
+							$field->relatableQueryUsing(function (NovaRequest $request, Builder $query) use ($formData) {
+								$query->when($formData->destinationmunicipality, function ($query) use ($formData) {
+									$query->where('municipality_id', $formData->destinationmunicipality);
+								});
+							});
+						})->hideFromIndex(),
+
 					Text::make('Localidad de destino', 'tocityname')
 						->rules('required', 'max:60')
 						->hideFromIndex(),
@@ -249,8 +271,6 @@ class Family extends Resource {
 	 */
 	public function cards(Request $request) {
 		return [
-			(new FamilyCDR)->width('1/3'),
-			(new FamilyPerDayCDR)->width('2/3')
 		];
 	}
 

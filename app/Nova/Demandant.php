@@ -162,8 +162,6 @@ class Demandant extends Resource {
 	 */
 	public function cards(Request $request) {
 		return [
-			(new DemandantCDR)->width('1/3'),
-			(new DemandantPerDayCDR)->width('2/3')
 		];
 	}
 
