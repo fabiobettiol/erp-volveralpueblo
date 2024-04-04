@@ -6,6 +6,7 @@ use App\Models\Community;
 use App\Models\House;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class HouseObserver {
 	public function creating(House $house) {

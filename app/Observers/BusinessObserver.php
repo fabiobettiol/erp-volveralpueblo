@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\Community;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class BusinessObserver
 {

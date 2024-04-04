@@ -27,6 +27,10 @@ class House extends Model implements HasMedia {
 		return $this->belongsTo(Municipality::class);
 	}
 
+	public function locality() {
+		return $this->belongsTo(Locality::class);
+	}
+
 	public function cdr() {
 		return $this->belongsTo(Cdr::class);
 	}

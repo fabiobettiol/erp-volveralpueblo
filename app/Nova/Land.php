@@ -178,6 +178,16 @@ class Land extends Resource {
 					});
 				})->hideFromIndex(),
 
+			// - Locality: Show full name when not on index view
+			BelongsTo::make('Localidad', 'locality', 'App\Nova\Locality')
+				->dependsOn(['municipality'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
+					$field->relatableQueryUsing(function (NovaRequest $request, Builder $query) use ($formData) {
+						$query->when($formData->municipality, function ($query) use ($formData) {
+							$query->where('municipality_id', $formData->municipality);
+						});
+					});
+				})->hideFromIndex(),
+
 			// - Municipality: Show abbreviated name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
 				->sortable()
