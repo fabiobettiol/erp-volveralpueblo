@@ -65,9 +65,6 @@
             height: auto;
           }
 
-          .body {
-            background: transparent !important;
-          }
     </style>
 @endsection
 @section('content')
