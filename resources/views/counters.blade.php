@@ -66,7 +66,7 @@
           }
 
           .body {
-            background: transparent;
+            background: transparent !important;
           }
     </style>
 @endsection
