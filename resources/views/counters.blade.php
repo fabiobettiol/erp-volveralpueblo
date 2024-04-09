@@ -62,8 +62,7 @@
           }
 
           .wrapper {
-            height: 150px;
-            padding: 20px 0;
+            height: auto;
           }
     </style>
 @endsection
