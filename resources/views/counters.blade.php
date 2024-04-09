@@ -60,10 +60,15 @@
             display: block;
             font-size: 18px;
           }
+
+          .wrapper {
+            height: 120px;
+            padding: 20px 0;
+          }
     </style>
 @endsection
 @section('content')
-    <div class="container">
+    <div class="container-fluid wrapper">
         <div class="row">
         <div class="col-md-2">
           <div class="card-counter primary">
