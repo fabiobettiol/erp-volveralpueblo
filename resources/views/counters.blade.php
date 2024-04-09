@@ -105,7 +105,7 @@
           <div class="card-counter bg-warning">
             <i class="fa-solid fa-people-roof"></i>
             <span class="count-numbers">{{ $counters['families'] }}</span>
-            <span class="count-name">Familias Asentadas</span>
+            <span class="count-name">Familias</span>
           </div>
         </div>
 
