@@ -82,7 +82,7 @@
           <div class="card-counter danger">
             <i class="fa-solid fa-person-digging"></i>
             <span class="count-numbers">{{ $counters['jobs'] }}</span>
-            <span class="count-name">Trabajos</span>
+            <span class="count-name">Empleos</span>
           </div>
         </div>
 
@@ -114,7 +114,7 @@
           <div class="card-counter bg-light">
             <i class="fas fa-users"></i>
             <span class="count-numbers">{{ $counters['demandants'] }}</span>
-            <span class="count-name">Solicitantes</span>
+            <span class="count-name">Personas</span>
           </div>
         </div>
       </div>
