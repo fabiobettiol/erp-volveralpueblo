@@ -64,6 +64,10 @@
           .wrapper {
             height: auto;
           }
+
+          .body {
+            background: transparent;
+          }
     </style>
 @endsection
 @section('content')
