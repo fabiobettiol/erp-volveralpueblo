@@ -62,7 +62,7 @@
           }
 
           .wrapper {
-            height: 120px;
+            height: 150px;
             padding: 20px 0;
           }
     </style>
