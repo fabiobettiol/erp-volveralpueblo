@@ -17,6 +17,7 @@ use App\Models\Demandantfollowup;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MapController;
+use App\Http\Controllers\CounterController;
 use App\Http\Controllers\CdrStatsController;
 
 /*
@@ -123,6 +124,8 @@ Route::get('/cdr/{comarca}', function ($comarca = null) {
 Route::get('/stats/{cdr?}', [CdrStatsController::class, 'filter']);
 
 Route::post('/stats/{cdr?}', [CdrStatsController::class, 'init']);
+
+Route::get('/counters', [CounterController::class, 'count']);
 
 Route::get('/mapa-comarcas', function () {
 
