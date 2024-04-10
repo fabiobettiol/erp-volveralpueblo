@@ -12,7 +12,9 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Locality extends Resource
 {
-     public static $defaultSort = [
+    public static $relatableSearchResults = 500;
+
+    public static $defaultSort = [
             'municipality_id' => 'asc',
             'locality_code' => 'asc'
         ];
