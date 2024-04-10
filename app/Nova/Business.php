@@ -144,14 +144,15 @@ class Business extends Resource {
 
 			// - Community: Show the full name when not on index view
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
-				->hideFromIndex(),
+				//->hideFromIndex()
+				,
 			
-			// - Community: Show acronym on index view
+/*			// - Community: Show acronym on index view
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
 				->display(function ($community) {
 					return $community->acronym;
 				})->sortable()
-				->onlyOnIndex(),
+				->onlyOnIndex(),*/
 
 			// - Province: Show full name when not on index view
 			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
@@ -161,14 +162,15 @@ class Business extends Resource {
 							$query->where('community_id', $formData->community);
 						});
 					});
-				})->hideFromIndex(),
+				})//->hideFromIndex()
+				,
 
-			// - Province: Show abbreviated name on index view
+/*			// - Province: Show abbreviated name on index view
 			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
 				->display(function ($province) {
 					return ( strlen($province->name) <= 10 ) ? $province->name : substr($province->name,0,10).'...';
 				})->sortable()
-				->onlyOnIndex(),
+				->onlyOnIndex(),*/
 
 			// - Municipality: Show full name when not on index view
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
@@ -178,8 +180,17 @@ class Business extends Resource {
 							$query->where('province_id', $formData->province);
 						});
 					});
-				})->hideFromIndex(),
+				})
+				//->hideFromIndex()
+				,
 
+/*			// - Municipality: Show abbreviated name when not on index view
+			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
+				->display(function ($municipality) {
+					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : Str::substr($municipality->name, 0, 10);
+				})->sortable()
+				->onlyOnIndex(),
+*/
 			// - Locality: Show full name when not on index view
 			BelongsTo::make('Localidad', 'locality', 'App\Nova\Locality')
 				->dependsOn(['municipality'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
@@ -189,13 +200,6 @@ class Business extends Resource {
 						});
 					});
 				})->hideFromIndex(),
-
-			// - Municipality: Show abbreviated name when not on index view
-			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
-				->display(function ($municipality) {
-					return ( strlen($municipality->name) <= 10 ) ? $municipality->name : Str::substr($municipality->name, 0, 10);
-				})->sortable()
-				->onlyOnIndex(),
 
 			Text::make('Localidad', 'town')
 				->sortable()
