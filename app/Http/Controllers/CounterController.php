@@ -18,7 +18,7 @@ class CounterController extends Controller
             'jobs' => Job::where('available', true)->count(),
             'lands' => Land::where('available', true)->count(),
             'businesses' => Business::where('available', true)->count(),
-            'families' => Family::where('settlementstatus_id', 2)->count(), // Status 2 = Asentados
+            'families' => Family::count(), // Status 2 = Asentados
             'demandants' => Demandant::count(),
         ];
 
