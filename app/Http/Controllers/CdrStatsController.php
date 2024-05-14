@@ -108,6 +108,7 @@ class CdrStatsController extends Controller
         // - Asentados (familias)
         $this->familias = $this->familias();
         $this->miembros = $this->miembros();
+
         $this->intervenciones = $this->intervenciones();
         $this->seguimientos = $this->seguimientos();
 
@@ -238,7 +239,7 @@ class CdrStatsController extends Controller
                 }
             })->when(! $this->request->user()->hasPermissionTo('view global stats'), function($q) {
                 return $q->where('cdr_id', $this->cdr);
-            });
+            })->get();
     }
 
     protected function intervenciones() {
