@@ -21,6 +21,10 @@ class Enterprise extends Model
         return $this->belongsTo(Locality::class);
     }
 
+    public function municipality () {
+        return $this->belongsTo(Municipality::class);
+    }
+
     public function province () {
         return $this->belongsTo(Province::class);
     }

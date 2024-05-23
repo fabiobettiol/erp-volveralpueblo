@@ -59,8 +59,34 @@ class Enterprise extends Resource
             Text::make('CIF', 'cif'),
             Textarea::make('Dirección', 'address'),
             BelongsTo::make('Comunidad','community','App\Nova\Community'),
-            BelongsTo::make('Provincia','province','App\Nova\Province'),
-            BelongsTo::make('Localidad','locality','App\Nova\Locality'),
+
+            BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
+                ->dependsOn(['community'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
+                    $field->relatableQueryUsing(function (NovaRequest $request, Builder $query) use ($formData) {
+                        $query->when($formData->community, function ($query) use ($formData) {
+                            $query->where('community_id', $formData->community);
+                        });
+                    });
+                })
+                ,
+            BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
+                ->dependsOn(['province'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
+                    $field->relatableQueryUsing(function (NovaRequest $request, Builder $query) use ($formData) {
+                        $query->when($formData->province, function ($query) use ($formData) {
+                            $query->where('province_id', $formData->province);
+                        });
+                    });
+                }),
+
+            BelongsTo::make('Localidad', 'locality', 'App\Nova\Locality')
+                ->dependsOn(['municipality'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
+                    $field->relatableQueryUsing(function (NovaRequest $request, Builder $query) use ($formData) {
+                        $query->when($formData->municipality, function ($query) use ($formData) {
+                            $query->where('municipality_id', $formData->municipality);
+                        });
+                    });
+                })->hideFromIndex(),
+
             Text::make('Código Postal', 'post_code'),
             Date::make('Fecha de fundación', 'date'),
             Text::make('Teléfono', 'phone'),
