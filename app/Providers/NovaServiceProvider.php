@@ -35,6 +35,8 @@ use App\Nova\Familydoc;
 use App\Nova\Ownership;
 use App\Nova\EventOther;
 use App\Nova\Pricerange;
+use App\Nova\Entrepreneur;
+use App\Nova\Enterprise;
 use App\Nova\Cdragreement;
 use App\Nova\Demandantdoc;
 use App\Nova\EventMeeting;
@@ -277,6 +279,13 @@ class NovaServiceProvider extends NovaApplicationServiceProvider {
 				]),
 
 			])->icon('adjustments')
+				->collapsible(),
+
+			MenuSection::make('Emprededores', [
+				MenuItem::resource(Entrepreneur::class),
+				MenuItem::resource(Enterprise::class),
+
+			])->icon('user-group')
 				->collapsible(),
 
 		]);
