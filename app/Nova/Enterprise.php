@@ -10,6 +10,8 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Fields\FormData;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class Enterprise extends Resource
 {
