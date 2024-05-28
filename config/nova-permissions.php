@@ -783,7 +783,7 @@ return [
         ],
 
         'delete cdragreement' => [
-            'display_name' => 'Borrar familias',
+            'display_name' => 'Borrar convenios',
             'description'  => 'Puede borrar familias',
             'group'        => 'Convenios',
         ],
