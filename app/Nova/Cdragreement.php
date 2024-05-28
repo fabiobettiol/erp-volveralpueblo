@@ -37,7 +37,7 @@ class Cdragreement extends Resource
         }
 
         if ($request->user()->hasPermissionTo('edit own cdragreement')) {
-            return $query->where('cdr_id', $request->user()->cdr_id);
+            return $request->user()->hasPermissionTo('edit own cdragreement');
         }
     }
 
