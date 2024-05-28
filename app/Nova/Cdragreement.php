@@ -26,9 +26,7 @@ class Cdragreement extends Resource
         }
 
         if ($request->user()->hasPermissionTo('view own cdragreement')) {
-            return $query->whereHas('family', function($q) use ($request) {
-                return $q->where('cdr_id', $request->user()->cdr_id);
-            });
+            return $query->where('cdr_id', $request->user()->cdr_id);
         }
     }
 
@@ -39,7 +37,7 @@ class Cdragreement extends Resource
         }
 
         if ($request->user()->hasPermissionTo('edit own cdragreement')) {
-            return $this->family->cdr_id == $request->user()->cdr_id;
+            return $query->where('cdr_id', $request->user()->cdr_id);
         }
     }
 
