@@ -19,16 +19,50 @@ class Cdragreement extends Resource
         return 'Convenios';
     }
 
-	public static function indexQuery(NovaRequest $request, $query) {
-		if ($request->user()->hasPermissionTo('administrator')) {
-			return $query;
-		} else {
-			return $query->where('cdr_id', $request->user()->cdr_id);
-		}
-	}
+    public static function indexQuery(NovaRequest $request, $query) {
+
+        if ($request->user()->hasPermissionTo('view all cdragreement')) {
+            return $query;
+        }
+
+        if ($request->user()->hasPermissionTo('view own cdragreement')) {
+            return $query->whereHas('family', function($q) use ($request) {
+                return $q->where('cdr_id', $request->user()->cdr_id);
+            });
+        }
+    }
+
+    public function authorizedToUpdate(Request $request): bool {
+
+        if ($request->user()->hasPermissionTo('edit cdragreement')) {
+            return true;
+        }
+
+        if ($request->user()->hasPermissionTo('edit own cdragreement')) {
+            return $this->family->cdr_id == $request->user()->cdr_id;
+        }
+    }
+
+    public function authorizedToDelete(Request $request): bool {
+
+        if ($request->user()->hasPermissionTo('delete cdragreement')) {
+            return true;
+        }
+
+        return $request->user()->hasPermissionTo('delete own cdragreement');
+    }
+
+    public function authorizedToRestore(Request $request): bool {
+
+        if ($request->user()->hasPermissionTo('restore cdragreement')) {
+            return true;
+        }
+
+        return $request->user()->hasPermissionTo('restore own cdragreement');
+    }
 
     public static function availableForNavigation(Request $request) {
-        return $request->user()->hasPermissionTo('administrator');
+        return !$request->user()->is_collaborator;
     }
 
     /**

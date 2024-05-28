@@ -744,6 +744,68 @@ return [
             'group'        => 'Documentos',
         ],
 
+        //---------------------------------------------------- Families
+
+        'view all cdragreement' => [
+            'display_name' => 'Ver todos los convenios',
+            'description'  => 'Ver todos los convenios',
+            'group'        => 'Convenios',
+        ],
+
+        'view own cdragreement' => [
+            'display_name' => 'Ver convenios propios',
+            'description'  => 'Ver convennios propios',
+            'group'        => 'Convenios',
+        ],
+
+        'create cdragreement' => [
+            'display_name' => 'Crear covenios',
+            'description'  => 'Puede crear convenios',
+            'group'        => 'Convenios',
+        ],
+
+         'create own cdragreement' => [
+            'display_name' => 'Crear convenios propios',
+            'description'  => 'Puede crear convenios propios',
+            'group'        => 'Convenios',
+        ],
+
+        'edit cdragreement' => [
+            'display_name' => 'Editar convenios',
+           'description'  => 'Puede editar convenios',
+            'group'        => 'Convenios',
+        ],
+
+        'edit own cdragreement' => [
+            'display_name' => 'Editar convenios propios',
+           'description'  => 'Puede editar convenios propios',
+            'group'        => 'Convenios',
+        ],
+
+        'delete cdragreement' => [
+            'display_name' => 'Borrar familias',
+            'description'  => 'Puede borrar familias',
+            'group'        => 'Convenios',
+        ],
+
+        'delete own cdragreement' => [
+            'display_name' => 'Borrar convenios propios',
+            'description'  => 'Puede borrar convenios propios',
+            'group'        => 'Convenios',
+        ],
+
+        'restore cdragreement' => [
+            'display_name' => 'Restaurar convenios',
+            'description'  => 'Puede restaurar convenios',
+            'group'        => 'Convenios',
+        ],
+
+        'restore own cdragreement' => [
+            'display_name' => 'Restaurar convenios propios',
+            'description'  => 'Puede restaurar convenios propios',
+            'group'        => 'Convenios',
+        ],
+
         //---------------------------------------------------- Users
 
         'view all users' => [
