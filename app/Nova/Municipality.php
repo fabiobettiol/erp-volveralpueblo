@@ -13,6 +13,9 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Municipality extends Resource
 {
+
+    public static $relatableSearchResults = 500;
+
     public static $defaultSort = 'name' ; // Update to your default column
 
     public static function availableForNavigation(Request $request)
