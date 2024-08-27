@@ -2,16 +2,17 @@
 
 namespace App\Nova;
 
-use Laravel\Nova\Fields\ID;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Image;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Fields\BelongsTo;
 use Illuminate\Support\Facades\Http;
-use Metrixinfo\Nova\Fields\Iframe\Iframe;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\FormData;
+use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Image;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Cdr extends Resource {
@@ -91,7 +92,7 @@ class Cdr extends Resource {
 			Boolean::make('Mapa', 'mapinfo')
 				->hideWhenCreating()
 				->canSee(function ($request) {
-					return$request->user()->hasPermissionTo('administrator');
+					return $request->user()->hasPermissionTo('administrator');
 				}),
 			Image::make('Logo')->path('logos/cdr'),
 			BelongsTo::make('Zona', 'zone', 'App\Nova\Zone')
@@ -100,10 +101,24 @@ class Cdr extends Resource {
 				}),
 			BelongsTo::make('Comunidad', 'community', 'App\Nova\Community')
 				->filterable(),
+
 			BelongsTo::make('Provincia', 'province', 'App\Nova\Province')
-				->filterable(),
+				->dependsOn(['community'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
+					$field->relatableQueryUsing(function (NovaRequest $request, Builder $query) use ($formData) {
+						$query->when($formData->community, function ($query) use ($formData) {
+							$query->where('community_id', $formData->community);
+						});
+					});
+				}),
+
 			BelongsTo::make('Municipio', 'municipality', 'App\Nova\Municipality')
-				->filterable(),
+				->dependsOn(['province'], function (BelongsTo $field, NovaRequest $request, FormData $formData) {
+					$field->relatableQueryUsing(function (NovaRequest $request, Builder $query) use ($formData) {
+						$query->when($formData->province, function ($query) use ($formData) {
+							$query->where('province_id', $formData->province);
+						});
+					});
+				}),
 			BelongsTo::make('Tipo', 'cdrtype', 'App\Nova\Cdrtype'),
 			Textarea::make('Dirección', 'address'),
 			Text::make('Ciudad', 'city')
